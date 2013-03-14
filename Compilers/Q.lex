@@ -54,6 +54,7 @@ char = \'[a-z0-9A-Z]\'
 	"!"             {   return symbol(sym.NOT);    }
 	"||"             {   return symbol(sym.OR);    }
 	"&&"             {   return symbol(sym.AND);    }
+	"in"             {   return symbol(sym.IN);    }
 	"["				{	return symbol(sym.LSQPAREN);	}
 	"]"				{	return symbol(sym.RSQPAREN);	}
 	"("				{	return symbol(sym.LPAREN);	}
