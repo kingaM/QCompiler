@@ -18,7 +18,7 @@ import java_cup.runtime.*;
   }
   
   public int getLineNumber() { return yyline + 1; }
-%}
+%}  
 
 lineTerminator = \r|\n|\r\n
 digit = [0-9]
