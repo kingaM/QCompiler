@@ -1,4 +1,4 @@
 fdef myfunction(a:list, b:int):void {
-	testexpr;
+	testexpr + abc - ert;
 	return;
 }
