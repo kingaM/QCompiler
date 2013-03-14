@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import java_cup.runtime.*; 
 
 parser code {:
@@ -104,4 +105,106 @@ statement     ::= expr SEMI
 				  
 expr          ::= TEST
 			      ;
+=======
+import java_cup.runtime.*; 
+
+parser code {:
+public String section = "main";
+public void syntax_error(Symbol cur_token) {
+report_error("Syntax error at line " + (cur_token.left+1) +
+", column " + cur_token.right + " at section " + section, cur_token);
+}
+:} 
+ 
+terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER, NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE,
+				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, TEST, RETURN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
+
+non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple,
+				fieldDecl, typeDecl, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody,
+				statement, statementList, expr, expr_optional, if_then, if_then_else, While, do_while, repeat_until ;
+
+program ::= grammar {: System.out.println("========end parsing=========="); :}
+	; 
+
+grammar			::= typeDeclList variableDeclList functionDecl
+	 				;
+	 				
+typeDeclList	::= typeDeclList typeDecl
+{: parser.section = "Type Declaration"; :}
+					| 
+					;
+					
+variableDeclList::= variableDeclList variableDecl
+{: parser.section = "Variable Declaration"; :} 
+					| 
+					;
+					
+typeDecl 		::= TDEF ID COLON fieldDecl SEMI
+					| TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
+					;
+
+fieldDecl		::= fieldDecl COMMA ID COLON TYPE 
+					| fieldDecl COMMA ID COLON ID 
+					| ID COLON TYPE
+					| ID COLON ID
+					;
+ 				
+variableDecl  	::=	ID COLON TYPE SEMI
+					| ID COLON TYPE EQ initalisation SEMI 
+					| ID COLON ID EQ newDT SEMI
+					| error SEMI {: System.err.println("Invalid variable declaration"); :}
+					;
+
+newDT			::= newDT COMMA initalisation
+					| initalisation
+					;
+
+initalisation	::= LSQPAREN PIPE tuple PIPE RSQPAREN 
+					| LSQPAREN list RSQPAREN
+					| simpleInit
+					| ID
+					;
+					
+tuple			::= tuple COMMA initalisation
+					| initalisation
+					;
+				
+list 			::= list COMMA initalisation
+					| initalisation
+					;
+				 
+simpleInit		::=  BOOL
+					| INT
+					| FLOAT
+					| STRING_LITERAL
+					| CHAR
+					; 
+				
+type_specifier  ::= TYPE
+					| VOID
+					| ID
+					; 			
+	
+functionDecl	::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
+
+fbody 			::= statementList:sl 
+					  {: RESULT = sl; 
+				        System.out.println( "entering function body and result is " + sl); 
+				      :}
+				    ;
+
+statementList ::= statementList statement 
+				  | statement 
+				  ;
+		  
+statement     ::= expr SEMI
+				  ;
+				  
+expr_optional ::= 
+                  | expr
+                  ;
+				  
+expr          ::= TEST
+			      ;
+>>>>>>> ca2e5bf829ca8bb2aa3f19a4694dd9fca44e3420
 				
