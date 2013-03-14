@@ -1,0 +1,23 @@
+l1: list = ["a","b", "c", "d", "e"];
+l2: list = [1,2,3,4,5];
+ 
+s1:string = "";
+s2:string = "hello";
+
+{
+
+  newlist : list = l1 :: l2;
+  anotherlist : list = [s1] + [s2] + newlist;
+  thirdlist : list = l2[:-2] :: l2[3:];
+
+  b:bool = len(thirdlist) == len(l2);
+
+
+  if (len(newlist) <= len(anotherlist)) {
+     newlist = newlist + anotherlist[0];
+  } else {
+     newlist = newlist - newlist[0];
+  }
+
+  
+}

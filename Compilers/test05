@@ -1,0 +1,19 @@
+s1:string = "Alice in Wonderland";
+s2:string = "Gilgamesh";
+s3:string = "One Thousand and One Nights";
+
+
+{
+  key:str="ic";  
+  books:list=[s1,s2,s3];
+
+  found : bool = false;
+  i : int = 0;
+
+  while (i<len(books)) do {
+     tmp : string = books[i];
+     if (key in tmp) { found = true; }
+     else {}
+     i = i + 1;
+  }
+}
