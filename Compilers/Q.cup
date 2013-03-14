@@ -13,6 +13,11 @@ terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREA
 
 non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple, fieldDecl, typeDecl, functionDeclList, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody, statement, statementList, returnStatement, ifThenStatement, ifThenElseStatement, whileDoStatement, repeatUntilStatement, expr, exprOptional, statementOptional, statementNoFollowingSubstatement, emptyStatement;
 
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence right POWER;
+precedence nonassoc EQ;
+
 program ::= grammar {: System.out.println("========end parsing=========="); :}
 	; 
 
@@ -118,6 +123,12 @@ statementOptional ::=
                       
 				  
 expr          ::= TEST
+                  | ID
+                  | expr PLUS expr
+                  | expr MINUS expr
+                  | expr TIMES expr
+                  | expr DIVIDE expr
+                  | expr POWER expr
 			      ;
 			   
 exprOtional ::= 
