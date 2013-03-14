@@ -13,7 +13,7 @@ terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREA
 
 non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple,
 				fieldDecl, typeDecl, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody,
-				statement, statementList, expr;
+				statement, statementList, expr, expr_optional;
 
 program ::= grammar {: System.out.println("========end parsing=========="); :}
 	; 
@@ -91,6 +91,10 @@ statementList ::= statementList statement
 		  
 statement     ::= expr SEMI
 				  ;
+				  
+expr_optional ::= 
+                  | expr
+                  ;
 				  
 expr          ::= TEST
 			      ;
