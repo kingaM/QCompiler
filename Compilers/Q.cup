@@ -12,15 +12,20 @@ terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREA
 				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, TEST, RETURN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
 
 non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple,
-				fieldDecl, typeDecl, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody,
-				statement, statementList, expr;
+				fieldDecl, typeDecl, functionDeclList, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody,
+				statement, statementList, returnStatement, expr;
 
 program ::= grammar {: System.out.println("========end parsing=========="); :}
 	; 
 
-grammar			::= typeDeclList variableDeclList functionDecl
+grammar			::= typeDeclList variableDeclList functionDeclList
 	 				;
-	 				
+	 	 				
+functionDeclList::= functionDeclList functionDecl
+{: parser.section = "Function Declaration"; :}
+					| 
+					;
+									
 typeDeclList	::= typeDeclList typeDecl
 {: parser.section = "Type Declaration"; :}
 					| 
@@ -79,17 +84,22 @@ type_specifier  ::= TYPE
 	
 functionDecl	::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
 
-fbody 			::= statementList:sl 
-					  {: RESULT = sl; 
-				        System.out.println( "entering function body and result is " + sl); 
-				      :}
+
+fbody 			::= statementList
 				    ;
 
+			  
+returnStatement ::=  RETURN SEMI 
+					| RETURN expr SEMI
+					;
+					
+					
 statementList ::= statementList statement 
-				  | statement 
+				  |  
 				  ;
 		  
 statement     ::= expr SEMI
+				  | returnStatement 
 				  ;
 				  
 expr          ::= TEST
