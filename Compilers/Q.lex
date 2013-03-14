@@ -20,6 +20,7 @@ import java_cup.runtime.*;
   public int getLineNumber() { return yyline + 1; }
 %}
 
+lineTerminator = \r|\n|\r\n
 digit = [0-9]
 identifier = [a-z][:jletterdigit:]*
 int = 0 | -?[1-9]{digit}*
@@ -30,7 +31,7 @@ whitespace = [ \t\n\r\f]
 myType = int|float|list|tuple|bool|string|char
 char = \'[a-z0-9A-Z]\'
 
-%state STRING
+%state STRING ENDOFLINECOMMENT TRADITIONALCOMMENT
 
 %%
 
@@ -95,5 +96,16 @@ char = \'[a-z0-9A-Z]\'
   \\r                            { string.append('\r'); }
   \\\"                           { string.append('\"'); }
   \\                             { string.append('\\'); }
+}
+
+<ENDOFLINECOMMENT> {
+	{lineTerminator}	{	yybegin(YYINITIAL);	}
+	  .					{	}
+}
+
+<TRADITIONALCOMMENT> {
+	"*/"           		{	yybegin(YYINITIAL);	}
+	{lineTerminator}	{	}
+	.					{	}
 }
 
