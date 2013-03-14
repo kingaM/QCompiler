@@ -9,19 +9,21 @@ report_error("Syntax error at line " + (cur_token.left+1) +
 :} 
  
 terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER, NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE,
-				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, TEST, RETURN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
+				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, TEST, RETURN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, MAIN;
 
 non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple,
-				fieldDecl, typeDecl, functionDeclList, typeDeclList, variableDeclList, newDT, type_specifier, functionDecl, fbody,
-				statement, statementList, returnStatement, expr;
+				fieldDecl, typeDecl, fcall, parametersOptional, parameters, functionDeclList, typeDeclList, 
+				variableDeclList, newDT, type_specifier, functionDecl, fbody, fbodyblock,
+				statement, statementList, returnStatement, expr, mainFunction;
 
 program ::= grammar {: System.out.println("========end parsing=========="); :}
 	; 
 
 grammar			::= typeDeclList variableDeclList functionDeclList
 	 				;
+
 	 	 				
-functionDeclList::= functionDeclList functionDecl
+functionDeclList::= functionDeclList functionDecl mainFunction
 {: parser.section = "Function Declaration"; :}
 					| 
 					;
@@ -82,15 +84,36 @@ type_specifier  ::= TYPE
 					| ID
 					; 			
 	
-functionDecl	::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
+	
+mainFunction 	 ::= MAIN LBRACE fbody RBRACE;
+					  
+					  
+functionDecl	  ::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
 
 
-fbody 			::= statementList
+fbodyblock 		::= variableDecl
+					| statement
+					| fcall
+					;
+
+
+fbody 			::= fbody fbodyblock
+					| fbodyblock					
 				    ;
 
+
+parametersOptional ::= | parameters
+					   ;
+
+parameters 		::= expr
+					| parameters COMMA expr
+					;
 			  
+fcall  			::= ID LPAREN parametersOptional RPAREN SEMI
+					;
+
 returnStatement ::=  RETURN SEMI 
-					| RETURN expr SEMI
+					| RETURN expr SEMI 
 					;
 					
 					
@@ -100,9 +123,10 @@ statementList ::= statementList statement
 		  
 statement     ::= expr SEMI
 				  | returnStatement 
+				  | fcall SEMI
 				  ;
 				  
 expr          ::= TEST
+				  | ID  //for the sake of testing
 			      ;
-
-				
+			      

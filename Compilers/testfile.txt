@@ -1,4 +1,8 @@
 fdef myfunction(a:list, b:int):void {
 	testexpr;
+	testfunction(v,z,m);
+	c : int = 10;
+	anothertestf(c);
 	return;
 }
+

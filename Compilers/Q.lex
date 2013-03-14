@@ -73,6 +73,7 @@ char = \'[a-z0-9A-Z]\'
 	"testexpr"		{	return symbol(sym.TEST);	}
 	"tdef"			{	return symbol(sym.TDEF);	}
 	"fdef"			{	return symbol(sym.FDEF);	}
+	"main" 			{   return new Symbol(sym.MAIN);}
 	"//"				{ 	yybegin(ENDOFLINECOMMENT); 	}
 	"/*"				{ 	yybegin(TRADITIONALCOMMENT);}
 	{char}			{ 	return symbol(sym.CHAR, yytext());	}
