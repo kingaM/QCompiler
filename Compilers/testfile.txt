@@ -1,7 +1,10 @@
 fdef myfunction(a:list, b:int):void {
 	testexpr + abc - ert;
 	a in d;
-	if(r+t) d!=g;
+	if(r+t) {
+	d!=g;
+	}
+	else u>f;
 	if(f) {
 	testexpr + abc - ert;
 	}

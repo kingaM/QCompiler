@@ -21,7 +21,7 @@ precedence left TIMES, DIVIDE;
 precedence right POWER;
 precedence left NOT;
 precedence left LPAREN, RPAREN;
-precedence left LBRACE, RBRACE;
+precedence left ELSE;
 
 
 program ::= grammar {: System.out.println("========end parsing=========="); :}
@@ -120,7 +120,8 @@ blockStatement ::= LBRACE statementList RBRACE
 ifThenStatement ::= IF LPAREN expr RPAREN blockStatement
                     ;
        
-           
+ifThenElseStatement ::= IF LPAREN expr RPAREN blockStatement ELSE blockStatement
+                    ;             
 				  
 statementNoFollowingSubstatement ::= emptyStatement
                                     | returnStatement
