@@ -54,6 +54,7 @@ char = \'[a-z0-9A-Z]\'
 	"!"             {   return symbol(sym.NOT);    }
 	"||"             {   return symbol(sym.OR);    }
 	"&&"             {   return symbol(sym.AND);    }
+	"in"             {   return symbol(sym.IN);    }
 	"["				{	return symbol(sym.LSQPAREN);	}
 	"]"				{	return symbol(sym.RSQPAREN);	}
 	"("				{	return symbol(sym.LPAREN);	}
@@ -73,7 +74,6 @@ char = \'[a-z0-9A-Z]\'
 	"testexpr"		{	return symbol(sym.TEST);	}
 	"tdef"			{	return symbol(sym.TDEF);	}
 	"fdef"			{	return symbol(sym.FDEF);	}
-	"main" 			{   return new Symbol(sym.MAIN);}
 	"//"				{ 	yybegin(ENDOFLINECOMMENT); 	}
 	"/*"				{ 	yybegin(TRADITIONALCOMMENT);}
 	{char}			{ 	return symbol(sym.CHAR, yytext());	}
@@ -111,4 +111,3 @@ char = \'[a-z0-9A-Z]\'
 	{lineTerminator}	{	}
 	.					{	}
 }
-

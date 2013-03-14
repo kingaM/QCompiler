@@ -1,8 +1,21 @@
 fdef myfunction(a:list, b:int):void {
-	testexpr;
-	testfunction(v,z,m);
-	c : int = 10;
-	anothertestf(c);
+	testexpr + abc - ert;
+	a in d;
+	if(2.5+t) {
+	d!=g;
+	}
+	else u>f;
+	if(f) {
+	testexpr + abc - false;
+	}
+	while(7) do {
+	f==u;
+	}
+	
+	repeat {
+	g<=y;
+	}
+	until(y>i);
+	
 	return;
 }
-
