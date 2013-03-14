@@ -1,12 +1,21 @@
 fdef myfunction(a:list, b:int):void {
 	testexpr + abc - ert;
 	a in d;
-	if(r+t) {
+	if(2.5+t) {
 	d!=g;
 	}
 	else u>f;
 	if(f) {
-	testexpr + abc - ert;
+	testexpr + abc - false;
 	}
+	while(7) do {
+	f==u;
+	}
+	
+	repeat {
+	g<=y;
+	}
+	until(y>i);
+	
 	return;
 }

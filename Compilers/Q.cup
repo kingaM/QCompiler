@@ -121,13 +121,20 @@ ifThenStatement ::= IF LPAREN expr RPAREN blockStatement
                     ;
        
 ifThenElseStatement ::= IF LPAREN expr RPAREN blockStatement ELSE blockStatement
-                    ;             
-				  
+                    ;    
+                    
+whileDoStatement    ::= WHILE LPAREN expr RPAREN DO blockStatement         
+				       ;
+				      
 statementNoFollowingSubstatement ::= emptyStatement
                                     | returnStatement
                                     | repeatUntilStatement
                                     | expr SEMI
                                     ; 
+                                    
+repeatUntilStatement ::= REPEAT blockStatement UNTIL LPAREN expr RPAREN
+                        ;
+                                    
                                     
 emptyStatement ::= 
                    SEMI
@@ -137,6 +144,9 @@ emptyStatement ::=
 				  
 expr          ::= TEST
                   | ID
+                  | BOOL
+                  | INT
+                  | FLOAT
                   | expr PLUS expr
                   | expr MINUS expr
                   | expr TIMES expr
