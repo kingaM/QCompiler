@@ -114,11 +114,11 @@ parametersOptional 	::= | parameters
 					  	;
 
 parameters 			::= expr
-						| expr COMMA parameters
+						| parameters COMMA expr
 						;
 						
 						
-fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
+fcall  				::= ID LPAREN parametersOptional RPAREN
 						;
 
 				  

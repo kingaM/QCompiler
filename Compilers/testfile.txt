@@ -1,6 +1,7 @@
+b:int = test(h);
 {
 
-	test(b,m,n,k,l);
+	
 
 }
 
