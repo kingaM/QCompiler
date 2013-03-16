@@ -1,21 +1,13 @@
 fdef myfunction(a:list, b:int):void {
 	testexpr + abc - ert;
-	a in d;
-	if(2.5+t) {
-	d!=g;
-	}
-	else u>f;
-	if(f) {
-	testexpr + abc - false;
-	}
-	while(7) do {
-	f==u;
-	}
-	
-	repeat {
-	g<=y;
-	}
-	until(y>i);
-	
-	return;
+}
+
+l1: list = ["a","b", "c", "d", "e"];
+l2: list = [1,2,3,4,5];
+ 
+s1:string = "";
+s2:string = "hello";
+
+{
+	test;
 }
