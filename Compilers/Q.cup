@@ -109,12 +109,11 @@ fbody 				::= fbody fbodyblock
 						| 	 			
 					    ;
 
-
 parametersOptional 	::= | parameters
 					  	;
 
 parameters 			::= expr
-						| expr COMMA parameters
+						| parameters COMMA expr
 						;
 						
 						
@@ -137,7 +136,7 @@ blockStatement		::= LBRACE fbody RBRACE
 statementNoFollowingSubstatement ::= SEMI
                                     | returnStatement
                                     | REPEAT blockStatement UNTIL LPAREN expr RPAREN
-                                    | expr SEMI
+                                    | expr 
                                     ; 
 returnStatement 	::= RETURN SEMI 
 						| RETURN expr SEMI 

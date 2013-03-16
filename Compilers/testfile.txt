@@ -1,6 +1,6 @@
 {
 
-	test(b,m,n,k,l);
+	b:int = test(k);
 
 }
 
