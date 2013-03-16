@@ -15,7 +15,7 @@ terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREA
 				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
 
 non terminal	program, grammar, variableDecl, initalisation, list, tuple,
-				fieldDecl, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
+				fieldDecl, fieldDeclOptional, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
 				functionDecl, fbody, fbodyblock, 
 				statement, statementList, returnStatement, expr, mainFunction, 
 				exprOptional, statementNoFollowingSubstatement, blockStatement;
@@ -60,10 +60,13 @@ variableDecl  		::=	ID COLON TYPE SEMI
 						| error SEMI {: System.err.println("Invalid variable declaration"); :}
 						;
 					
-functionDecl		::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE
+functionDecl		::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON type_specifier LBRACE fbody RBRACE
 						| FDEF error RBRACE {: System.err.println("Invalid function definition"); :};
 
 mainFunction 	 	::= LBRACE fbody RBRACE
+						;
+
+fieldDeclOptional 	::= | fieldDecl
 						;		  
 
 fieldDecl			::= fieldDecl COMMA ID COLON TYPE 
@@ -101,7 +104,7 @@ fbodyblock 			::= variableDecl
 
 
 fbody 				::= fbody fbodyblock
-						| 				
+						| 	 			
 					    ;
 
 
@@ -109,9 +112,10 @@ parametersOptional 	::= | parameters
 					  	;
 
 parameters 			::= expr
-						| parameters COMMA expr 
+						| expr COMMA parameters
 						;
-			  
+						
+						
 fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
 						;
 
