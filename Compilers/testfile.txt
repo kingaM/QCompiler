@@ -3,5 +3,6 @@
 if(a>v){
 f==u;
 len(s);
+5 in s[i:j];
 }
 }
