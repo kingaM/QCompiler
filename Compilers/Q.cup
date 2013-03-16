@@ -80,8 +80,10 @@ newDT				::= newDT COMMA initalisation
 						;
 
 initalisation		::= LSQPAREN PIPE tuple PIPE RSQPAREN 
+						| LSQPAREN PIPE PIPE RSQPAREN 
 						| LSQPAREN list RSQPAREN
-						| expr
+						| LSQPAREN RSQPAREN
+						| expr 
 						;
 					
 tuple				::= tuple COMMA initalisation

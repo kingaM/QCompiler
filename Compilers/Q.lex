@@ -32,7 +32,7 @@ myType = int|float|list|tuple|bool|string|char
 char = \'[a-z0-9A-Z]\'
 
 %state STRING ENDOFLINECOMMENT TRADITIONALCOMMENT
-
+ 
 %%
 
 <YYINITIAL> {
@@ -61,7 +61,7 @@ char = \'[a-z0-9A-Z]\'
 	"("				{	return symbol(sym.LPAREN);	}
 	")"				{	return symbol(sym.RPAREN);	}
 	"{"				{	return symbol(sym.LBRACE);	}
-	"}"				{	return symbol(sym.RBRACE);	}
+	"}"				{	return symbol(sym.RBRACE);	} 
 	","				{	return symbol(sym.COMMA);	}
 	"|"				{ 	return symbol(sym.PIPE);	}
 	\"		        { 	string.setLength(0); yybegin(STRING); }
