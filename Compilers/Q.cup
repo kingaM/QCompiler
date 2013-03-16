@@ -97,7 +97,6 @@ type_specifier  	::= TYPE
 
 fbodyblock 			::= variableDecl 
 						| statement
-						| fcall
 						;
 
 
@@ -158,6 +157,7 @@ expr          		::= ID
 		                | NOT expr
 		                | expr IN expr
 		                | LPAREN expr RPAREN  
+		                | fcall
 					    ;
 			   
 exprOptional		::= expr
