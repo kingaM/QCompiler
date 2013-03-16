@@ -4,6 +4,7 @@ parser code {:
 public String section = "main";
 public static int numOfErrors = 0;
 public void syntax_error(Symbol cur_token) {
+numOfErrors++;
 report_error("Syntax error at line " + (cur_token.left+1) +
 ", column " + (cur_token.right+1) + " at section " + section, cur_token);
 }
@@ -31,12 +32,12 @@ precedence left LPAREN, RPAREN;
 precedence left ELSE;
 
 
-
 program 			::= grammar mainFunction
 					{: 
 					parser.section = "Variable Declaration"; 
-					if(QCup.numOfErrors == 0) System.out.println("Parsing was successful");
-					else System.out.println("Parsing was unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
+					if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
+					else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
+					| grammar error {: System.err.println("No main declaration"); :}
 					; 
 
 grammar				::= grammar typeDecl
@@ -45,7 +46,8 @@ grammar				::= grammar typeDecl
 						{: parser.section = "Variable Declaration"; :} 
 						| grammar functionDecl
 						{: parser.section = "Function Declaration"; :}
-						|
+						| {: System.out.println("GRAMMAR"); :}
+						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
 		 				;
 					
 typeDecl 			::= TDEF ID COLON fieldDecl SEMI
@@ -58,7 +60,8 @@ variableDecl  		::=	ID COLON TYPE SEMI
 						| error SEMI {: System.err.println("Invalid variable declaration"); :}
 						;
 					
-functionDecl		::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
+functionDecl		::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE
+						| FDEF error RBRACE {: System.err.println("Invalid function definition"); :};
 
 mainFunction 	 	::= LBRACE fbody RBRACE
 						;		  

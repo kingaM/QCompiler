@@ -1,12 +1,4 @@
-fdef myfunction(a:list, b:int):void {
-}
-
-l1: list = ["a","b", "c", "d", "e"];
-l2: list = [1,2,3,4,5];
- 
-s1:string = "";
-s2:string = "hello";
-
 {
-	test;
+
+a = a::b;
 }
