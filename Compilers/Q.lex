@@ -50,7 +50,7 @@ char = \'[a-z0-9A-Z]\'
 	"-"             {   return symbol(sym.MINUS);    }
 	"*"             {   return symbol(sym.TIMES);    }
 	"/"             {   return symbol(sym.DIVIDE);    }
-	"^"             {   return symbol(sym.POWER);    }
+	"^"             {   return symbol(sym.POWER);    } 
 	"!"             {   return symbol(sym.NOT);    }
 	"||"             {   return symbol(sym.OR);    }
 	"&&"             {   return symbol(sym.AND);    }
@@ -71,7 +71,6 @@ char = \'[a-z0-9A-Z]\'
 	"while"         {	return symbol(sym.WHILE);	}
 	"repeat"        {	return symbol(sym.REPEAT);	}
 	"until"        {	return symbol(sym.UNTIL);	}
-	"testexpr"		{	return symbol(sym.TEST);	}
 	"tdef"			{	return symbol(sym.TDEF);	}
 	"fdef"			{	return symbol(sym.FDEF);	}
 	"//"				{ 	yybegin(ENDOFLINECOMMENT); 	}

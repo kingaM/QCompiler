@@ -11,14 +11,12 @@ report_error("Syntax error at line " + (cur_token.left+1) +
  
 terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
 				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE,
-				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, TEST, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
+				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
 
-non terminal	program, grammar, variableDecl, initalisation, list, simpleInit, tuple,
-				fieldDecl, typeDecl, fcall, parametersOptional, parameters, functionDeclList, typeDeclList, 
-				variableDeclList, newDT, type_specifier, functionDecl, fbody, fbodyblock,
+non terminal	program, grammar, variableDecl, initalisation, list, tuple,
+				fieldDecl, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, functionDecl, fbody, fbodyblock,
 				statement, statementList, returnStatement, expr, mainFunction, 
-				ifThenStatement, ifThenElseStatement, whileDoStatement, repeatUntilStatement, 
-				exprOptional, statementNoFollowingSubstatement, emptyStatement, blockStatement;
+				exprOptional, statementNoFollowingSubstatement, blockStatement;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -33,162 +31,132 @@ precedence left ELSE;
 
 
 
-program ::= grammar mainFunction
-			{: 
-			parser.section = "Variable Declaration"; 
-			if(QCup.numOfErrors == 0) System.out.println("Parsing was successful");
-			else System.out.println("Parsing was unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
-	; 
-
-grammar			::= grammar typeDecl
-					{: parser.section = "Type Declaration"; :}
-					| grammar variableDecl
-					{: parser.section = "Variable Declaration"; :} 
-					| grammar functionDecl
-					{: parser.section = "Function Declaration"; :}
-					|
-	 				;
-					
-typeDecl 		::= TDEF ID COLON fieldDecl SEMI
-					| TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
-					;
-
-fieldDecl		::= fieldDecl COMMA ID COLON TYPE 
-					| fieldDecl COMMA ID COLON ID 
-					| ID COLON TYPE
-					| ID COLON ID
-					;
- 				
-variableDecl  	::=	ID COLON TYPE SEMI
-					| ID COLON TYPE EQ initalisation SEMI 
-					| ID COLON ID EQ newDT SEMI
-					| error SEMI {: System.err.println("Invalid variable declaration"); :}
-					;
-
-newDT			::= newDT COMMA initalisation
-					| initalisation
-					;
-
-initalisation	::= LSQPAREN PIPE tuple PIPE RSQPAREN 
-					| LSQPAREN list RSQPAREN
-					| simpleInit
-					| ID
-					;
-					
-tuple			::= tuple COMMA initalisation
-					| initalisation
-					;
-				
-list 			::= list COMMA initalisation
-					| initalisation
-					;
-				 
-simpleInit		::=  BOOL
-					| INT
-					| FLOAT
-					| STRING_LITERAL
-					| CHAR
+program 			::= grammar mainFunction
+					{: 
+					parser.section = "Variable Declaration"; 
+					if(QCup.numOfErrors == 0) System.out.println("Parsing was successful");
+					else System.out.println("Parsing was unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
 					; 
+
+grammar				::= grammar typeDecl
+						{: parser.section = "Type Declaration"; :}
+						| grammar variableDecl
+						{: parser.section = "Variable Declaration"; :} 
+						| grammar functionDecl
+						{: parser.section = "Function Declaration"; :}
+						|
+		 				;
+					
+typeDecl 			::= TDEF ID COLON fieldDecl SEMI
+						| TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
+						;
+					
+variableDecl  		::=	ID COLON TYPE SEMI
+						| ID COLON TYPE EQ initalisation SEMI 
+						| ID COLON ID EQ newDT SEMI
+						| error SEMI {: System.err.println("Invalid variable declaration"); :}
+						;
+					
+functionDecl		::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
+
+mainFunction 	 	::= LBRACE fbody RBRACE
+						;		  
+
+fieldDecl			::= fieldDecl COMMA ID COLON TYPE 
+						| fieldDecl COMMA ID COLON ID 
+						| ID COLON TYPE
+						| ID COLON ID
+						;
+
+newDT				::= newDT COMMA initalisation
+						| initalisation
+						;
+
+initalisation		::= LSQPAREN PIPE tuple PIPE RSQPAREN 
+						| LSQPAREN list RSQPAREN
+						| expr
+						;
+					
+tuple				::= tuple COMMA initalisation
+						| initalisation
+						;
 				
-type_specifier  ::= TYPE
-					| VOID
-					| ID
-					; 			
+list 				::= list COMMA initalisation
+						| initalisation
+						;
+		
+type_specifier  	::= TYPE
+						| VOID
+						| ID
+						; 			
 	
-	
-mainFunction 	 ::= LBRACE fbody RBRACE
-					;
-					  
-					  
-functionDecl	  ::= FDEF ID LPAREN fieldDecl RPAREN COLON type_specifier LBRACE fbody RBRACE;
+
+fbodyblock 			::= variableDecl 
+						| statement
+						| fcall
+						;
 
 
-fbodyblock 		::= variableDecl 
-					| statement
-					| fcall
-					;
+fbody 				::= fbody fbodyblock
+						| fbodyblock					
+					    ;
 
 
-fbody 			::= fbody fbodyblock
-					| fbodyblock					
-				    ;
+parametersOptional 	::= | parameters
+					  	;
 
-
-parametersOptional ::= | parameters
-					   ;
-
-parameters 		::= expr
-					| parameters COMMA expr 
-					;
+parameters 			::= expr
+						| parameters COMMA expr 
+						;
 			  
-fcall  			::= ID LPAREN parametersOptional RPAREN SEMI
-					;
+fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
+						;
 
-returnStatement ::=  RETURN SEMI 
-					| RETURN expr SEMI 
-					;
-					
-					
-statementList ::= statementList statement 
-				  |  
-				  ;
-statement     ::= statementNoFollowingSubstatement
-                  | ifThenStatement
-                  | ifThenElseStatement
-                  | whileDoStatement
-				  ;
+
 				  
-blockStatement ::= LBRACE statementList RBRACE
-                   | statement
-                 ;
+statement     		::= statementNoFollowingSubstatement
+	                  	| IF LPAREN expr RPAREN blockStatement
+	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
+	                  	| WHILE LPAREN expr RPAREN DO blockStatement   
+					  	;
 				  
-ifThenStatement ::= IF LPAREN expr RPAREN blockStatement
-                    ;
-       
-ifThenElseStatement ::= IF LPAREN expr RPAREN blockStatement ELSE blockStatement
-                    ;    
-                    
-whileDoStatement    ::= WHILE LPAREN expr RPAREN DO blockStatement         
-				       ;
+blockStatement		::= LBRACE fbody RBRACE
+                   		| fbodyblock
+                 		;
 				      
-statementNoFollowingSubstatement ::= emptyStatement
+statementNoFollowingSubstatement ::= SEMI
                                     | returnStatement
-                                    | repeatUntilStatement
+                                    | REPEAT blockStatement UNTIL LPAREN expr RPAREN
                                     | expr SEMI
                                     ; 
-                                    
-repeatUntilStatement ::= REPEAT blockStatement UNTIL LPAREN expr RPAREN
-                        ;
-                                    
-                                    
-emptyStatement ::= 
-                   SEMI
-                   ;
-			
-                      			  
-expr          ::= TEST
-                  | ID
-                  | BOOL
-                  | INT
-                  | FLOAT
-                  | expr PLUS expr
-                  | expr MINUS expr
-                  | expr TIMES expr
-                  | expr DIVIDE expr
-                  | expr POWER expr
-                  | expr EQCOMP expr
-                  | expr NOTEQ expr
-                  | expr LESS expr
-                  | expr LESSOREQ expr
-                  | expr GREATER expr
-                  | expr GREATEROREQ expr
-                  | expr OR expr
-                  | expr AND expr
-                  | NOT expr
-                  | expr IN expr
-                  | LPAREN expr RPAREN 
-			      ;
+returnStatement 	::= RETURN SEMI 
+						| RETURN expr SEMI 
+						;
+  
+expr          		::= ID
+	                 	| BOOL
+		                | INT
+		                | FLOAT
+		                | STRING_LITERAL
+		                | CHAR
+		                | expr PLUS expr
+		                | expr MINUS expr
+		                | expr TIMES expr
+		                | expr DIVIDE expr
+		                | expr POWER expr
+		                | expr EQCOMP expr
+		                | expr NOTEQ expr
+		                | expr LESS expr
+		                | expr LESSOREQ expr
+		                | expr GREATER expr
+		                | expr GREATEROREQ expr
+		                | expr OR expr
+		                | expr AND expr
+		                | NOT expr
+		                | expr IN expr
+		                | LPAREN expr RPAREN 
+					    ;
 			   
-exprOptional ::= 
-                 | expr
-                 ;
+exprOptional		::= expr
+						|	
+                 		;
