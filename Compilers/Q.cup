@@ -118,8 +118,10 @@ fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
 				  
 statement     		::= statementNoFollowingSubstatement
 	                  	| IF LPAREN expr RPAREN blockStatement
+	                  	| IF error SEMI {: System.err.println("Invalid if statement"); :}
 	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
-	                  	| WHILE LPAREN expr RPAREN DO blockStatement   
+	                  	| WHILE LPAREN expr RPAREN DO blockStatement  
+	                  	| WHILE error SEMI {: System.err.println("Invalid while statement"); :} 
 					  	;
 				  
 blockStatement		::= LBRACE fbody RBRACE
