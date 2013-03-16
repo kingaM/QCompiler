@@ -1,5 +1,4 @@
 fdef myfunction(a:list, b:int):void {
-	testexpr + abc - ert;
 }
 
 l1: list = ["a","b", "c", "d", "e"];
