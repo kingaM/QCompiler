@@ -29,7 +29,7 @@ precedence left TIMES, DIVIDE;
 precedence right POWER;
 precedence left NOT;
 precedence left LPAREN, RPAREN;
-precedence left ELSE;
+precedence left ELSE, COLON;
 
 
 program 			::= grammar mainFunction
@@ -142,6 +142,8 @@ expr          		::= ID
 		                | STRING_LITERAL
 		                | CHAR
 		                | fcall
+		                | expr EQ expr 
+		                | expr COLON COLON expr
 		                | LEN LPAREN expr RPAREN 
 		                | expr LSQPAREN expr RSQPAREN
 		                | expr LSQPAREN expr COLON expr RSQPAREN
