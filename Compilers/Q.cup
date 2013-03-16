@@ -11,7 +11,7 @@ report_error("Syntax error at line " + (cur_token.left+1) +
 :} 
  
 terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
-				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE,
+				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE, LEN,
 				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
 
 non terminal	program, grammar, variableDecl, initalisation, list, tuple,
@@ -141,6 +141,12 @@ expr          		::= ID
 		                | FLOAT
 		                | STRING_LITERAL
 		                | CHAR
+		                | fcall
+		                | LEN LPAREN expr RPAREN 
+		                | expr LSQPAREN expr RSQPAREN
+		                | expr LSQPAREN expr COLON expr RSQPAREN
+		                | expr LSQPAREN COLON expr RSQPAREN
+		                | expr LSQPAREN expr COLON RSQPAREN
 		                | expr PLUS expr
 		                | expr MINUS expr
 		                | expr TIMES expr
@@ -157,7 +163,6 @@ expr          		::= ID
 		                | NOT expr
 		                | expr IN expr
 		                | LPAREN expr RPAREN  
-		                | fcall
 					    ;
 			   
 exprOptional		::= expr
