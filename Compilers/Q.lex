@@ -25,7 +25,6 @@ digit = [0-9]
 identifier = [a-z][:jletterdigit:]*
 int = 0 | -?[1-9]{digit}*
 boolean = true|false
-void = VOID
 float = -?{digit}+\.{digit}+
 whitespace = [ \t\n\r\f]
 myType = int|float|list|tuple|bool|string|char
@@ -52,6 +51,8 @@ char = \'[a-z0-9A-Z]\'
 	"/"             {   return symbol(sym.DIVIDE);    }
 	"^"             {   return symbol(sym.POWER);    } 
 	"!"             {   return symbol(sym.NOT);    }
+	"[|"			{   return symbol(sym.LTUPLE);    }
+	"|]"			{   return symbol(sym.RTUPLE);    }
 	"||"             {   return symbol(sym.OR);    }
 	"&&"             {   return symbol(sym.AND);    }
 	"in"             {   return symbol(sym.IN);    }
@@ -75,6 +76,7 @@ char = \'[a-z0-9A-Z]\'
 	"until"        {	return symbol(sym.UNTIL);	}
 	"tdef"			{	return symbol(sym.TDEF);	}
 	"fdef"			{	return symbol(sym.FDEF);	}
+	"void"			{   return symbol(sym.VOID); }
 	"//"				{ 	yybegin(ENDOFLINECOMMENT); 	}
 	"/*"				{ 	yybegin(TRADITIONALCOMMENT);}
 	{char}			{ 	return symbol(sym.CHAR, yytext());	}
@@ -83,7 +85,6 @@ char = \'[a-z0-9A-Z]\'
 	{int}			{	return symbol(sym.INT, new Integer(yytext())); }
 	{float} 		{	return symbol(sym.FLOAT, new Float(yytext())); }
 	{whitespace} 	{} 
-	{void}			{   return symbol(sym.VOID); }
 	.				{ System.err.println("Illegal character <"+
                                                     yytext()+">"); }
 
