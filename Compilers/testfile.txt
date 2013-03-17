@@ -1,11 +1,17 @@
 fdef test() : int {
 	return;
 }
+
+{
+
+ c=d;
+ 
+}
+
 fdef test() : void {
 	
 }
 
-{
-	return;
-}
+
+
 

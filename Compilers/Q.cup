@@ -47,6 +47,8 @@ grammar				::= grammar typeDecl
 						{: parser.section = "Variable Declaration"; :} 
 						| grammar functionDecl
 						{: parser.section = "Function Declaration"; :}
+						| grammar mainFunction 
+						{: System.err.println("Invalid main declaration"); :}
 						| 
 						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
 		 				;
