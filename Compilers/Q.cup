@@ -42,7 +42,7 @@ precedence left ELSE, CONCAT, DOT;
 
 program             ::= declList mainDecl
 	                    {: 
-	                    QCup.section = "Main Declaration"; 
+	                    QCup.section = "Main Body Declaration"; 
 	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
 	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
 	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
@@ -71,27 +71,22 @@ variableDecl        ::= ID COLON typeSpecifier SEMI
                         | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
                         ;
 
-
 functionDecl        ::= functionDeclVoid
                         | functionDeclReturn                        
                         | FDEF error RBRACE {: System.err.println("Invalid function definition or missing return statement"); :}
                         ;
                     
-
 functionDeclReturn  ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON typeSpecifier LBRACE funcStmtList returnStmt RBRACE
                         ;
                         
-
 functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE funcStmtList RBRACE
                         ;
-
 
 mainDecl     		::= LBRACE mainStmtList RBRACE 
                         {: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
                             else parser.numOfMains ++; :}
                         | LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
                         ;
-
 
 fieldDeclOptional   ::= fieldDecl
 						|
@@ -114,8 +109,7 @@ mainStmtList        ::= mainStmtList variableDecl
 						| mainStmtList mainStmt
                         |
                         ;
-                        
-                        
+                                           
 funcStmtList		::= funcStmtList variableDecl
                      	| funcStmtList funcStmt
                     	|
@@ -132,8 +126,7 @@ mainStmt           	::= mainStmtNoSubstmt
                         | WHILE LPAREN expr RPAREN DO mainBlockStmt  
                         | WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
                         ;
-                        
-                  
+                                   
 funcStmt          	::= funcStmtNoSubstmt
                         | IF LPAREN expr RPAREN funcBlockStmt
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
@@ -199,9 +192,7 @@ expr				 ::= ID
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
                         | ID error SEMI {: System.err.println("Invalid expression"); :} 
                         | value error SEMI {: System.err.println("Invalid expression"); :} 
-                        ;
-                        
-                        
+                        ;                      
                         
 fcall               ::= ID LPAREN sequenceOptional RPAREN
                         ;

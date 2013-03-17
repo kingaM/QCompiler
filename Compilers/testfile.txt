@@ -1,7 +1,0 @@
-fdef a():void {}
-
-a:bool = true;
-
-{ 
-	a::b;
-}
