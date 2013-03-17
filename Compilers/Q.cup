@@ -23,10 +23,10 @@ terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER
                 STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL,
                 LTUPLE, RTUPLE;
 
-non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, 
+non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, value, 
                 fieldDecl, fieldDeclOptional, variableDecl, typeDecl, returnStmt,
                 functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoFollowingSubstmt, funcBlockStmt,
-                mainDecl, mainStmtList, mainStmt,mainStmtNoFollowingSubstmt, mainBlockStmt;
+                mainDecl, mainStmtList, mainStmt, mainStmtNoFollowingSubstmt, mainBlockStmt;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -87,8 +87,9 @@ functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRAC
 
 
 mainDecl     		::= LBRACE mainStmtList RBRACE 
-                        {: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
-                            else parser.numOfMains ++; :}
+                        {: parser.section = "main body";
+                           if(parser.numOfMains > 1){ parser.numOfErrors ++; }
+                               else parser.numOfMains ++; :}
                         | LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
                         ;
 
@@ -151,18 +152,18 @@ funcBlockStmt      	::= LBRACE funcStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                         
-mainBlockStmt     	 ::= LBRACE funcStmtList RBRACE
+mainBlockStmt     	::= LBRACE funcStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
-funcStmtNoFollowingSubstmt ::= SEMI
+funcStmtNoFollowingSubstmt 		::= SEMI
                                     | returnStmt
                                     | REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
                                     | expr SEMI
                                     | REPEAT error SEMI
                                     ; 
      
-mainStmtNoFollowingSubstmt ::= SEMI
+mainStmtNoFollowingSubstmt 		::= SEMI
                                     | REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
                                     | expr SEMI
                                     | REPEAT error SEMI
@@ -173,11 +174,7 @@ returnStmt    		 ::= RETURN SEMI
                         ;
   
 expr				 ::= ID
-                        | BOOL
-                        | INT
-                        | FLOAT
-                        | STRING_LITERAL
-                        | CHAR
+                        | value
                         | fcall
                         | expr DOT expr 
                         | expr EQ expr 
@@ -197,7 +194,7 @@ expr				 ::= ID
                         | expr LESS expr
                         | expr LESSOREQ expr
                         | expr GREATER expr
-                        | expr GREATEROREQ expr
+                        | expr GREATEROREQ expr 
                         | expr OR expr
                         | expr AND expr
                         | NOT expr
@@ -206,5 +203,13 @@ expr				 ::= ID
                         | LTUPLE sequenceOptional RTUPLE
                         | LSQPAREN sequenceOptional RSQPAREN
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
-                        | expr error SEMI {: System.err.println("Invalid expression"); :} 
+                        | ID error SEMI {: System.err.println("Invalid expression"); :} 
+                        | value error SEMI {: System.err.println("Invalid expression"); :} 
+                        ;
+
+value 				::= BOOL
+                        | INT
+                        | FLOAT
+                        | STRING_LITERAL
+                        | CHAR
                         ;
