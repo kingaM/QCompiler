@@ -6,7 +6,6 @@ import java_cup.runtime.*;
 %cup
 %line
 %column
-%class QCup
 
 %{
   StringBuffer string = new StringBuffer();
