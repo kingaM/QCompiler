@@ -58,8 +58,6 @@ grammar				::= grammar mainDeclaration
 						{: parser.section = "Variable Declaration"; :} 
 						| grammar functionDecl
 						{: parser.section = "Function Declaration"; :}
-						| grammar mainFunction 
-						{: System.err.println("Invalid main declaration"); :}
 						| 
 						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
 		 				;
@@ -186,7 +184,7 @@ mainStatementNoFollowingSubstatement ::= SEMI
                                     ;     
                                
 returnStatement 	::= RETURN SEMI 
-						| RETURN expr SEMI 
+						| RETURN expr SEMI  
 						;
   
 expr          		::= ID
@@ -224,5 +222,6 @@ expr          		::= ID
 						| LTUPLE RTUPLE
 						| LSQPAREN sequence RSQPAREN
 						| LSQPAREN RSQPAREN
+						| INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
 						| expr error SEMI {: System.err.println("Invalid expression"); :} 
 					    ;
