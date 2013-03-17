@@ -3,11 +3,19 @@ import java_cup.runtime.*;
 parser code {:
 public String section = "main";
 public static int numOfErrors = 0;
-public void syntax_error(Symbol cur_token) {
-numOfErrors++;
-report_error("Syntax error at line " + (cur_token.left+1) +
-", column " + (cur_token.right+1) + " at section " + section , cur_token);
+public static int numOfMains = 0;
+
+public void report_fatal_error(String message, Object info) {
+    report_error(message, info);
+    System.exit(1);
 }
+
+public void syntax_error(Symbol cur_token) {
+	numOfErrors++;
+	report_error("Syntax error at line " + (cur_token.left+1) +
+   ", column " + (cur_token.right+1) + " at section " + section , cur_token);
+}
+
 :} 
  
 terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
@@ -18,7 +26,7 @@ terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREA
 non terminal	program, grammar, variableDecl, sequence,
 				fieldDecl, fieldDeclOptional, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
 				functionDecl, functionDeclVoid, functionDeclReturn, fbody, fbodyblock, mbodyblock, mainStatement,
-				statement, returnStatement, expr, mainFunction, mainStatementNoFollowingSubstatement, mbody,
+				statement, returnStatement, expr, mainDeclaration, mainStatementNoFollowingSubstatement, mbody,
 				statementNoFollowingSubstatement, blockStatement;
 
 
@@ -33,15 +41,18 @@ precedence left LPAREN, RPAREN;
 precedence left ELSE, COLON, DOT;
 
 
-program 			::= grammar mainFunction
+program 			::= grammar mainDeclaration
 					{: 
-					parser.section = "Variable Declaration"; 
+					parser.section = "Main Declaration"; 
 					if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
-					else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
-					| grammar error {: System.err.println("No main declaration"); :}
+					else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
+					else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
+					if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); :}
+					| grammar error {: System.err.println("No main declaration at the end of file"); :}
 					; 
 
-grammar				::= grammar typeDecl
+grammar				::= grammar mainDeclaration
+						| typeDecl
 						{: parser.section = "Type Declaration"; :}
 						| grammar variableDecl
 						{: parser.section = "Variable Declaration"; :} 
@@ -76,7 +87,9 @@ functionDeclVoid	::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE f
 						;
 
 
-mainFunction 	 	::= LBRACE mbody RBRACE
+mainDeclaration	 	::= LBRACE mbody RBRACE 
+						{: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
+							else parser.numOfMains ++; :}
 						| LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
 						;
 
