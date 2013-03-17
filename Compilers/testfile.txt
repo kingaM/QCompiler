@@ -1,7 +1,4 @@
-b:int = test(h);
+ b : bool =  s1 + s2  >= 30;
 {
-
-	
-
 }
 

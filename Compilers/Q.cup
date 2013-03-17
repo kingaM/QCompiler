@@ -12,13 +12,14 @@ report_error("Syntax error at line " + (cur_token.left+1) +
  
 terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
 				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE, LEN, DOT,
-				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
+				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL,
+				LTUPLE, RTUPLE;
 
-non terminal	program, grammar, variableDecl, initalisation, list, tuple,
+non terminal	program, grammar, variableDecl, sequence,
 				fieldDecl, fieldDeclOptional, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
 				functionDecl, fbody, fbodyblock, 
-				statement, statementList, returnStatement, expr, mainFunction, 
-				exprOptional, statementNoFollowingSubstatement, blockStatement;
+				statement, returnStatement, expr, mainFunction, 
+				statementNoFollowingSubstatement, blockStatement;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -46,7 +47,7 @@ grammar				::= grammar typeDecl
 						{: parser.section = "Variable Declaration"; :} 
 						| grammar functionDecl
 						{: parser.section = "Function Declaration"; :}
-						| {: System.out.println("GRAMMAR"); :}
+						| 
 						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
 		 				;
 					
@@ -55,7 +56,7 @@ typeDecl 			::= TDEF ID COLON fieldDecl SEMI
 						;
 					
 variableDecl  		::=	ID COLON TYPE SEMI
-						| ID COLON TYPE EQ initalisation SEMI 
+						| ID COLON TYPE EQ expr SEMI 
 						| ID COLON ID EQ newDT SEMI
 						| error SEMI {: System.err.println("Invalid variable declaration"); :}
 						;
@@ -75,23 +76,12 @@ fieldDecl			::= fieldDecl COMMA ID COLON TYPE
 						| ID COLON ID
 						;
 
-newDT				::= newDT COMMA initalisation
-						| initalisation
-						;
-
-initalisation		::= LSQPAREN PIPE tuple PIPE RSQPAREN 
-						| LSQPAREN PIPE PIPE RSQPAREN 
-						| LSQPAREN list RSQPAREN
-						| LSQPAREN RSQPAREN
-						| expr 
+newDT				::= newDT COMMA expr
+						| expr
 						;
 					
-tuple				::= tuple COMMA initalisation
-						| initalisation
-						;
-				
-list 				::= list COMMA initalisation
-						| initalisation
+sequence			::= sequence COMMA expr
+						| expr
 						;
 		
 type_specifier  	::= TYPE
@@ -162,7 +152,7 @@ expr          		::= ID
 		                | expr MINUS expr
 		                | expr TIMES expr
 		                | expr DIVIDE expr
-		                | expr POWER expr
+		                | expr POWER expr 
 		                | expr EQCOMP expr
 		                | expr NOTEQ expr
 		                | expr LESS expr
@@ -173,9 +163,9 @@ expr          		::= ID
 		                | expr AND expr
 		                | NOT expr
 		                | expr IN expr
-		                | LPAREN expr RPAREN  
+		                | LPAREN expr RPAREN
+		                | LTUPLE sequence RTUPLE
+						| LTUPLE RTUPLE
+						| LSQPAREN sequence RSQPAREN
+						| LSQPAREN RSQPAREN
 					    ;
-			   
-exprOptional		::= expr
-						|	
-                 		;

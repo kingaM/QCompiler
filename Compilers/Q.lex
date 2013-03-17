@@ -52,6 +52,8 @@ char = \'[a-z0-9A-Z]\'
 	"/"             {   return symbol(sym.DIVIDE);    }
 	"^"             {   return symbol(sym.POWER);    } 
 	"!"             {   return symbol(sym.NOT);    }
+	"[|"			{   return symbol(sym.LTUPLE);    }
+	"|]"			{   return symbol(sym.RTUPLE);    }
 	"||"             {   return symbol(sym.OR);    }
 	"&&"             {   return symbol(sym.AND);    }
 	"in"             {   return symbol(sym.IN);    }
