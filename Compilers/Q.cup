@@ -117,7 +117,7 @@ parameters 			::= expr
 						;
 						
 						
-fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
+fcall  				::= ID LPAREN parametersOptional RPAREN
 						;
 
 				  

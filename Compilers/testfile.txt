@@ -1,6 +1,5 @@
 {
-
-	b:int = test(k);
+b:int = test();
 
 }
 
