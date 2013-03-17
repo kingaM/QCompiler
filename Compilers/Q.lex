@@ -36,6 +36,7 @@ char = \'[a-z0-9A-Z]\'
 
 <YYINITIAL> {
 	{myType}		{	return symbol(sym.TYPE);	}
+	"::"			{	return symbol(sym.CONCAT);	}
 	";"				{	return symbol(sym.SEMI);	}
 	":"				{	return symbol(sym.COLON);	}
 	"="				{	return symbol(sym.EQ);	}

@@ -20,7 +20,7 @@ public void syntax_error(Symbol cur_token) {
  
 terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
                 NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
-                STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL,
+                STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, CONCAT,
                 LTUPLE, RTUPLE;
 
 non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, value, 
@@ -37,7 +37,7 @@ precedence left TIMES, DIVIDE;
 precedence right POWER;
 precedence left NOT;
 precedence left LPAREN, RPAREN;
-precedence left ELSE, COLON, DOT;
+precedence left ELSE, CONCAT, DOT;
 
 
 program             ::= declList mainDecl
@@ -177,7 +177,7 @@ expr				 ::= ID
                         | fcall
                         | expr DOT expr
                         | expr EQ expr 
-                        | expr COLON COLON expr
+                        | expr CONCAT expr
                         | LEN LPAREN expr RPAREN 
                         | expr LSQPAREN expr RSQPAREN
                         | expr LSQPAREN expr COLON expr RSQPAREN
