@@ -11,23 +11,22 @@ public void report_fatal_error(String message, Object info) {
 }
 
 public void syntax_error(Symbol cur_token) {
-	numOfErrors++;
-	report_error("Syntax error at line " + (cur_token.left+1) +
+    numOfErrors++;
+    report_error("Syntax error at line " + (cur_token.left+1) +
    ", column " + (cur_token.right+1) + " at section " + section , cur_token);
 }
 
 :} 
  
-terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
-				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE, LEN, DOT,
-				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL,
-				LTUPLE, RTUPLE;
+terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
+                NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
+                STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL,
+                LTUPLE, RTUPLE;
 
-non terminal	program, grammar, variableDecl, sequence,
-				fieldDecl, fieldDeclOptional, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
-				functionDecl, functionDeclVoid, functionDeclReturn, fbody, fbodyblock, mbodyblock, mainStatement,
-				statement, returnStatement, expr, mainDeclaration, mainStatementNoFollowingSubstatement, mbody,
-				statementNoFollowingSubstatement, blockStatement;
+non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, 
+                fieldDecl, fieldDeclOptional, variableDecl, typeDecl, returnStmt,
+                functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoFollowingSubstmt, funcBlockStmt,
+                mainDecl, mainStmtList, mainStmt,mainStmtNoFollowingSubstmt, mainBlockStmt;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -41,187 +40,170 @@ precedence left LPAREN, RPAREN;
 precedence left ELSE, COLON, DOT;
 
 
-program 			::= grammar mainDeclaration
-					{: 
-					parser.section = "Main Declaration"; 
-					if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
-					else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
-					else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
-					if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); :}
-					| grammar error {: System.err.println("No main declaration at the end of file"); :}
-					; 
+program             ::= declList mainDecl
+	                    {: 
+	                    parser.section = "Main Declaration"; 
+	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
+	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
+	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
+	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); :}
+	                    | declList error {: System.err.println("No main declaration at the end of file"); :}
+	                    ; 
 
-grammar				::= grammar mainDeclaration
-						| grammar typeDecl
-						{: parser.section = "Type Declaration"; :}
-						| grammar variableDecl
-						{: parser.section = "Variable Declaration"; :} 
-						| grammar functionDecl
-						{: parser.section = "Function Declaration"; :}
-						| 
-						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
-		 				;
-					
-typeDecl 			::= TDEF ID COLON fieldDecl SEMI
-						| TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
-						;
-					
-variableDecl  		::=	ID COLON TYPE SEMI
-						| ID COLON TYPE EQ expr SEMI 
-						| ID COLON ID EQ newDT SEMI
-						| ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
-						;
-
-
-functionDecl 		::= functionDeclVoid
-						| functionDeclReturn						
-						| FDEF error RBRACE {: System.err.println("Invalid function definition or missing return statement"); :}
-						;
-					
-
-functionDeclReturn  ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON type_specifier LBRACE fbody returnStatement RBRACE
-						;
-						
-
-functionDeclVoid	::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE fbody RBRACE
-						;
+declList             ::= declList mainDecl
+                        | declList typeDecl
+                        {: parser.section = "Type Declaration"; :}
+                        | declList variableDecl
+                        {: parser.section = "Variable Declaration"; :} 
+                        | declList functionDecl
+                        {: parser.section = "Function Declaration"; :}
+                        | 
+                        | declList error RBRACE {: System.err.println("Invalid function definition"); :}
+                        ;
+                    
+typeDecl            ::= TDEF ID COLON fieldDecl SEMI
+                        | TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
+                        ;
+                    
+variableDecl        ::= ID COLON typeSpecifier SEMI
+                        | ID COLON typeSpecifier EQ sequence SEMI 
+                        | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
+                        ;
 
 
-mainDeclaration	 	::= LBRACE mbody RBRACE 
-						{: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
-							else parser.numOfMains ++; :}
-						| LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
-						;
+functionDecl        ::= functionDeclVoid
+                        | functionDeclReturn                        
+                        | FDEF error RBRACE {: System.err.println("Invalid function definition or missing return statement"); :}
+                        ;
+                    
+
+functionDeclReturn  ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON typeSpecifier LBRACE funcStmtList returnStmt RBRACE
+                        ;
+                        
+
+functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE funcStmtList RBRACE
+                        ;
 
 
-fieldDeclOptional 	::= | fieldDecl
-						;
-								  
-
-fieldDecl			::= fieldDecl COMMA ID COLON TYPE 
-						| fieldDecl COMMA ID COLON ID 
-						| ID COLON TYPE
-						| ID COLON ID
-						;
-
-newDT				::= newDT COMMA expr
-						| expr
-						;
-					
-sequence			::= sequence COMMA expr
-						| expr
-						;
-		
-type_specifier  	::= TYPE
-						| ID
-						; 			
-	
-
-fbodyblock 			::= variableDecl 
-						| statement
-						;
+mainDecl     		::= LBRACE mainStmtList RBRACE 
+                        {: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
+                            else parser.numOfMains ++; :}
+                        | LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
+                        ;
 
 
-mbodyblock			::=  variableDecl 
-						| mainStatement
-						;
-						
-
-mbody				::= mbody mbodyblock
+fieldDeclOptional   ::= fieldDecl
 						|
-						;
-						
-						
-fbody 				::= fbody fbodyblock
-						| 	 			
-					    ;
+                        ;
+                                  
 
-parametersOptional 	::= | parameters
-					  	;
+fieldDecl           ::= fieldDecl COMMA ID COLON typeSpecifier 
+                        | ID COLON typeSpecifier
+                        ;
+                    
+sequence            ::= sequence COMMA expr
+                        | expr
+                        ;
+        
+typeSpecifier      ::= TYPE
+                        | ID
+                        ;           
 
+mainStmtList        ::= mainStmtList variableDecl
+						| mainStmtList mainStmt
+                        |
+                        ;
+                        
+                        
+funcStmtList		::= funcStmtList variableDecl
+                     	| funcStmtList funcStmt
+                    	|
+                     	;
 
-parameters 			::= expr
-						| parameters COMMA expr
-						;
-						
-						
-fcall  				::= ID LPAREN parametersOptional RPAREN
-						;
+sequenceOptional  	::= sequence
+                        |
+                        ;
+                        
+                        
+fcall               ::= ID LPAREN sequenceOptional RPAREN
+                        ;
 
-				
-mainStatement     		::= mainStatementNoFollowingSubstatement
-	                  	| IF LPAREN expr RPAREN blockStatement
-	                  	| IF error RBRACE {: System.err.println("Invalid if statement"); :}
-	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
-	                  	| WHILE LPAREN expr RPAREN DO blockStatement  
-	                  	| WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
-					  	;
-					  	
-				  
-statement     		::= statementNoFollowingSubstatement
-	                  	| IF LPAREN expr RPAREN blockStatement
-	                  	| IF error RBRACE {: System.err.println("Invalid if statement"); :}
-	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
-	                  	| WHILE LPAREN expr RPAREN DO blockStatement  
-	                  	| WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
-					  	;
-				  
-blockStatement		::= LBRACE fbody RBRACE
-                   		| fbodyblock
-                 		;
-				      
-statementNoFollowingSubstatement ::= SEMI
-                                    | returnStatement
-                                    | REPEAT blockStatement UNTIL LPAREN expr RPAREN
+                
+mainStmt           	::= mainStmtNoFollowingSubstmt
+                        | IF LPAREN expr RPAREN mainBlockStmt
+                        | IF error RBRACE {: System.err.println("Invalid if statement"); :}
+                        | IF LPAREN expr RPAREN mainBlockStmt ELSE mainBlockStmt
+                        | WHILE LPAREN expr RPAREN DO mainBlockStmt  
+                        | WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
+                        ;
+                        
+                  
+funcStmt          	::= funcStmtNoFollowingSubstmt
+                        | IF LPAREN expr RPAREN funcBlockStmt
+                        | IF error RBRACE {: System.err.println("Invalid if statement"); :}
+                        | IF LPAREN expr RPAREN funcBlockStmt ELSE funcBlockStmt
+                        | WHILE LPAREN expr RPAREN DO funcBlockStmt  
+                        | WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
+                        ;
+                  
+funcBlockStmt      	::= LBRACE funcStmtList RBRACE
+                        | error SEMI {: System.err.println("Braces are neccessary"); :} 
+                        ;
+                        
+mainBlockStmt     	 ::= LBRACE funcStmtList RBRACE
+                        | error SEMI {: System.err.println("Braces are neccessary"); :} 
+                        ;
+                      
+funcStmtNoFollowingSubstmt ::= SEMI
+                                    | returnStmt
+                                    | REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
                                     | expr SEMI
                                     | REPEAT error SEMI
                                     ; 
      
-mainStatementNoFollowingSubstatement ::= SEMI
-                                    | REPEAT blockStatement UNTIL LPAREN expr RPAREN
+mainStmtNoFollowingSubstmt ::= SEMI
+                                    | REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
                                     | expr SEMI
                                     | REPEAT error SEMI
                                     ;     
                                
-returnStatement 	::= RETURN SEMI 
-						| RETURN expr SEMI  
-						;
+returnStmt    		 ::= RETURN SEMI 
+                        | RETURN expr SEMI  
+                        ;
   
-expr          		::= ID
-	                 	| BOOL
-		                | INT
-		                | FLOAT
-		                | STRING_LITERAL
-		                | CHAR
-		                | fcall
-		                | expr DOT expr
-		                | expr EQ expr 
-		                | expr COLON COLON expr
-		                | LEN LPAREN expr RPAREN 
-		                | expr LSQPAREN expr RSQPAREN
-		                | expr LSQPAREN expr COLON expr RSQPAREN
-		                | expr LSQPAREN COLON expr RSQPAREN
-		                | expr LSQPAREN expr COLON RSQPAREN
-		                | expr PLUS expr
-		                | expr MINUS expr
-		                | expr TIMES expr
-		                | expr DIVIDE expr
-		                | expr POWER expr 
-		                | expr EQCOMP expr
-		                | expr NOTEQ expr
-		                | expr LESS expr
-		                | expr LESSOREQ expr
-		                | expr GREATER expr
-		                | expr GREATEROREQ expr
-		                | expr OR expr
-		                | expr AND expr
-		                | NOT expr
-		                | expr IN expr
-		                | LPAREN expr RPAREN
-		                | LTUPLE sequence RTUPLE
-						| LTUPLE RTUPLE
-						| LSQPAREN sequence RSQPAREN
-						| LSQPAREN RSQPAREN
-						| INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
-						| expr error SEMI {: System.err.println("Invalid expression"); :} 
-					    ;
+expr				 ::= ID
+                        | BOOL
+                        | INT
+                        | FLOAT
+                        | STRING_LITERAL
+                        | CHAR
+                        | fcall
+                        | expr DOT expr
+                        | expr EQ expr 
+                        | expr COLON COLON expr
+                        | LEN LPAREN expr RPAREN 
+                        | expr LSQPAREN expr RSQPAREN
+                        | expr LSQPAREN expr COLON expr RSQPAREN
+                        | expr LSQPAREN COLON expr RSQPAREN
+                        | expr LSQPAREN expr COLON RSQPAREN
+                        | expr PLUS expr
+                        | expr MINUS expr
+                        | expr TIMES expr
+                        | expr DIVIDE expr
+                        | expr POWER expr 
+                        | expr EQCOMP expr
+                        | expr NOTEQ expr
+                        | expr LESS expr
+                        | expr LESSOREQ expr
+                        | expr GREATER expr
+                        | expr GREATEROREQ expr
+                        | expr OR expr
+                        | expr AND expr
+                        | NOT expr
+                        | expr IN expr
+                        | LPAREN expr RPAREN
+                        | LTUPLE sequenceOptional RTUPLE
+                        | LSQPAREN sequenceOptional RSQPAREN
+                        | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
+                        | expr error SEMI {: System.err.println("Invalid expression"); :} 
+                        ;

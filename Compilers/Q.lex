@@ -64,7 +64,6 @@ char = \'[a-z0-9A-Z]\'
 	"{"				{	return symbol(sym.LBRACE);	}
 	"}"				{	return symbol(sym.RBRACE);	} 
 	","				{	return symbol(sym.COMMA);	}
-	"|"				{ 	return symbol(sym.PIPE);	}
 	\"		        { 	string.setLength(0); yybegin(STRING); }
 	\.              {   return symbol(sym.DOT);     }
 	"return"        {	return symbol(sym.RETURN);	}
