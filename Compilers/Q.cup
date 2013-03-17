@@ -52,7 +52,7 @@ program 			::= grammar mainDeclaration
 					; 
 
 grammar				::= grammar mainDeclaration
-						| typeDecl
+						| grammar typeDecl
 						{: parser.section = "Type Declaration"; :}
 						| grammar variableDecl
 						{: parser.section = "Variable Declaration"; :} 
