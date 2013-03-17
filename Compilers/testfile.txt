@@ -1,15 +1,3 @@
-fdef test() : int {
-	return;
-	return;
+{ 
+	a = 1+2+;
 }
-
-
-fdef test() : void {
-	
-}
-
- 
-{
-	a = 2+1;
-}
-
