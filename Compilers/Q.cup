@@ -25,8 +25,8 @@ terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER
 
 non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, value, 
                 fieldDecl, fieldDeclOptional, variableDecl, typeDecl, returnStmt,
-                functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoFollowingSubstmt, funcBlockStmt,
-                mainDecl, mainStmtList, mainStmt, mainStmtNoFollowingSubstmt, mainBlockStmt;
+                functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoSubstmt, funcBlockStmt,
+                mainDecl, mainStmtList, mainStmt, mainStmtNoSubstmt, mainBlockStmt;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -124,13 +124,8 @@ funcStmtList		::= funcStmtList variableDecl
 sequenceOptional  	::= sequence
                         |
                         ;
-                        
-                        
-fcall               ::= ID LPAREN sequenceOptional RPAREN
-                        ;
-
                 
-mainStmt           	::= mainStmtNoFollowingSubstmt
+mainStmt           	::= mainStmtNoSubstmt
                         | IF LPAREN expr RPAREN mainBlockStmt
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
                         | IF LPAREN expr RPAREN mainBlockStmt ELSE mainBlockStmt
@@ -139,7 +134,7 @@ mainStmt           	::= mainStmtNoFollowingSubstmt
                         ;
                         
                   
-funcStmt          	::= funcStmtNoFollowingSubstmt
+funcStmt          	::= funcStmtNoSubstmt
                         | IF LPAREN expr RPAREN funcBlockStmt
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
                         | IF LPAREN expr RPAREN funcBlockStmt ELSE funcBlockStmt
@@ -151,22 +146,22 @@ funcBlockStmt      	::= LBRACE funcStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                         
-mainBlockStmt     	::= LBRACE funcStmtList RBRACE
+mainBlockStmt    	::= LBRACE funcStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
-funcStmtNoFollowingSubstmt 		::= SEMI
-                                    | returnStmt
-                                    | REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
-                                    | expr SEMI
-                                    | REPEAT error SEMI
-                                    ; 
+funcStmtNoSubstmt 	::= SEMI
+                   		| returnStmt
+                   		| REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
+               			| expr SEMI
+                   		| REPEAT error SEMI
+                        ; 
      
-mainStmtNoFollowingSubstmt 		::= SEMI
-                                    | REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
-                                    | expr SEMI
-                                    | REPEAT error SEMI
-                                    ;     
+mainStmtNoSubstmt 	::= SEMI
+                  		| REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
+                   		| expr SEMI
+                   		| REPEAT error SEMI
+                        ;     
                                
 returnStmt    		 ::= RETURN SEMI 
                         | RETURN expr SEMI  
@@ -204,6 +199,11 @@ expr				 ::= ID
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
                         | ID error SEMI {: System.err.println("Invalid expression"); :} 
                         | value error SEMI {: System.err.println("Invalid expression"); :} 
+                        ;
+                        
+                        
+                        
+fcall               ::= ID LPAREN sequenceOptional RPAREN
                         ;
 
 value 				::= BOOL

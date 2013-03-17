@@ -1,6 +1,6 @@
 //Q.cup/cup-compact-red=true
 //Q.cup/cup-debug=true
-//Q.cup/cup-expected-conflicts=1
+//Q.cup/cup-expected-conflicts=0
 //Q.cup/cup-no-positions=false
 //Q.cup/cup-no-scanner=false
 //Q.cup/cup-non-terms=true
