@@ -1,0 +1,29 @@
+# Expects java-cup-11a.jar and java-cup-11a-runtime.jar
+# from http://www2.cs.tum.edu/projects/cup/ in the working directory, expects jflex in $PATH.
+#
+# Should work under Unix-like environments like Linux, Cygwin, Mac OS X.
+#
+# Compile the files by issuing the command:
+# "make all" (use "make verbose" for a non-quiet version)
+#
+# Call the resulting java program by typing:
+# "make run < testfile.txt"
+#
+# Clean directory to return to original state with:
+# "make clean"
+
+all:
+	jflex Q.lex
+	java -jar java-cup-11a.jar Q.cup
+	javac -cp java-cup-11a-runtime.jar *.java
+
+run:
+	java -cp .:java-cup-11a-runtime.jar TestScanner
+
+verbose:
+	jflex Q.lex
+	java -jar java-cup-11a.jar -dump_states Q.cup
+	javac -cp java-cup-11a-runtime.jar *.java
+
+clean:
+	rm -f *.class parser.java sym.java Yylex.java *~
