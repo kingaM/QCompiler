@@ -1,7 +1,7 @@
 import java_cup.runtime.*; 
 
 parser code {:
-public String section = "main";
+public static String section = "Main Body Declaration";
 public static int numOfErrors = 0;
 public static int numOfMains = 0;
 
@@ -13,7 +13,7 @@ public void report_fatal_error(String message, Object info) {
 public void syntax_error(Symbol cur_token) {
     numOfErrors++;
     report_error("Syntax error at line " + (cur_token.left+1) +
-   ", column " + (cur_token.right+1) + " at section " + section , cur_token);
+   ", column " + (cur_token.right+1) + " at section " + QCup.section , cur_token);
 }
 
 :} 
@@ -42,7 +42,7 @@ precedence left ELSE, COLON, DOT;
 
 program             ::= declList mainDecl
 	                    {: 
-	                    parser.section = "Main Declaration"; 
+	                    QCup.section = "Main Declaration"; 
 	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
 	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
 	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
@@ -51,12 +51,13 @@ program             ::= declList mainDecl
 	                    ; 
 
 declList             ::= declList mainDecl
+						{: QCup.section = "Main Body Declaration"; :}
                         | declList typeDecl
-                        {: parser.section = "Type Declaration"; :}
+                        {: QCup.section = "Type Declaration"; :}
                         | declList variableDecl
-                        {: parser.section = "Variable Declaration"; :} 
+                        {: QCup.section = "Variable Declaration"; :} 
                         | declList functionDecl
-                        {: parser.section = "Function Declaration"; :}
+                        {: QCup.section = "Function Declaration"; :}
                         | 
                         | declList error RBRACE {: System.err.println("Invalid function definition"); :}
                         ;
@@ -105,7 +106,7 @@ sequence            ::= sequence COMMA expr
                         | expr
                         ;
         
-typeSpecifier      ::= TYPE
+typeSpecifier      	::= TYPE
                         | ID
                         ;           
 
@@ -178,7 +179,7 @@ expr				 ::= ID
                         | STRING_LITERAL
                         | CHAR
                         | fcall
-                        | expr DOT expr
+                        | expr DOT expr 
                         | expr EQ expr 
                         | expr COLON COLON expr
                         | LEN LPAREN expr RPAREN 

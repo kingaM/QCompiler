@@ -85,7 +85,7 @@ char = \'[a-z0-9A-Z]\'
 	{float} 		{	return symbol(sym.FLOAT, new Float(yytext())); }
 	{whitespace} 	{} 
 	.				{ System.err.println("Illegal character <"+
-                                                    yytext()+">"); }
+                                                    yytext()+"> at line " + (yyline + 1) + "at section " + QCup.section); }
 
 }
 
