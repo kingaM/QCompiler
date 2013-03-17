@@ -58,7 +58,7 @@ typeDecl 			::= TDEF ID COLON fieldDecl SEMI
 variableDecl  		::=	ID COLON TYPE SEMI
 						| ID COLON TYPE EQ expr SEMI 
 						| ID COLON ID EQ newDT SEMI
-						| error SEMI {: System.err.println("Invalid variable declaration"); :}
+						| ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
 						;
 					
 functionDecl		::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON type_specifier LBRACE fbody RBRACE
@@ -114,10 +114,10 @@ fcall  				::= ID LPAREN parametersOptional RPAREN
 				  
 statement     		::= statementNoFollowingSubstatement
 	                  	| IF LPAREN expr RPAREN blockStatement
-	                  	| IF error SEMI {: System.err.println("Invalid if statement"); :}
+	                  	| IF error RBRACE {: System.err.println("Invalid if statement"); :}
 	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
 	                  	| WHILE LPAREN expr RPAREN DO blockStatement  
-	                  	| WHILE error SEMI {: System.err.println("Invalid while statement"); :} 
+	                  	| WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
 					  	;
 				  
 blockStatement		::= LBRACE fbody RBRACE
@@ -128,6 +128,7 @@ statementNoFollowingSubstatement ::= SEMI
                                     | returnStatement
                                     | REPEAT blockStatement UNTIL LPAREN expr RPAREN
                                     | expr SEMI
+                                    | REPEAT error SEMI
                                     ; 
 returnStatement 	::= RETURN SEMI 
 						| RETURN expr SEMI 
@@ -168,4 +169,5 @@ expr          		::= ID
 						| LTUPLE RTUPLE
 						| LSQPAREN sequence RSQPAREN
 						| LSQPAREN RSQPAREN
+						| expr error SEMI {: System.err.println("Invalid expression"); :} 
 					    ;
