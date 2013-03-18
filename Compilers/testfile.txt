@@ -1,8 +1,8 @@
 fdef test() : int {
 	return;
 }
-{
-	+a = 2+1;
+{ 
+	a::b;
 }
 
 

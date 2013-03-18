@@ -36,6 +36,7 @@ char = \'[a-z0-9A-Z]\'
 
 <YYINITIAL> {
 	{myType}		{	return symbol(sym.TYPE);	}
+	"::"			{	return symbol(sym.CONCAT);	}
 	";"				{	return symbol(sym.SEMI);	}
 	":"				{	return symbol(sym.COLON);	}
 	"="				{	return symbol(sym.EQ);	}
@@ -84,8 +85,8 @@ char = \'[a-z0-9A-Z]\'
 	{int}			{	return symbol(sym.INT, new Integer(yytext())); }
 	{float} 		{	return symbol(sym.FLOAT, new Float(yytext())); }
 	{whitespace} 	{} 
-	.				{ System.err.println("Illegal character <"+
-                                                    yytext()+"> at line " + (yyline + 1) + "at section " + QCup.section); }
+	.				{ QCup.numOfErrors++;  System.err.println("Illegal character <"+
+                                                    yytext()+"> at line " + (yyline + 1) + ", column " + (yycolumn + 1) + " at section " + QCup.section); }
 
 }
 
