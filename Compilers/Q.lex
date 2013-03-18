@@ -72,8 +72,10 @@ char = \'[a-z0-9A-Z]\'
 	"while"         {	return symbol(sym.WHILE);		}
 	"repeat"        {	return symbol(sym.REPEAT);		}
 	"until"         {	return symbol(sym.UNTIL);		}
-	"tdef"			{	return symbol(sym.TDEF);		}
-	"fdef"			{	return symbol(sym.FDEF);		}
+	"tdef"			{	QCup.section = "Type Declaration"; 
+						return symbol(sym.TDEF);		}
+	"fdef"			{	QCup.section = "Function Declaration"; 
+						return symbol(sym.FDEF);		}
 	"void"			{   return symbol(sym.VOID); 		}
 	"//"			{ 	yybegin(ENDOFLINECOMMENT); 		}
 	"/*"			{ 	yybegin(TRADITIONALCOMMENT);	}

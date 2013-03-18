@@ -51,13 +51,9 @@ program             ::= declList mainDecl
 	                    ; 
 
 declList             ::= declList mainDecl
-						{: QCup.section = "Main Body Declaration"; :}
                         | declList typeDecl
-                        {: QCup.section = "Type Declaration"; :}
                         | declList variableDecl
-                        {: QCup.section = "Variable Declaration"; :} 
                         | declList functionDecl
-                        {: QCup.section = "Function Declaration"; :}
                         | 
                         | declList error RBRACE {: System.err.println("Invalid function definition"); :}
                         ;
@@ -67,8 +63,10 @@ typeDecl            ::= TDEF ID COLON fieldDecl SEMI
                         ;
                     
 variableDecl        ::= ID COLON typeSpecifier SEMI
+						{: QCup.section = "Variable Declaration"; :} 
                         | ID COLON typeSpecifier EQ sequence SEMI 
-                        | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
+                        {: QCup.section = "Variable Declaration"; :} 
+                        | ID COLON error SEMI {: QCup.section = "Variable Declaration"; System.err.println("Invalid variable declaration"); :}
                         ;
 
 functionDecl        ::= functionDeclVoid
@@ -106,8 +104,10 @@ typeSpecifier      	::= TYPE
                         ;           
 
 mainStmtList        ::= mainStmtList variableDecl
+						{: QCup.section = "Main Body Declaration"; :}
 						| mainStmtList mainStmt
-                        |
+						{: QCup.section = "Main Body Declaration"; :}
+                        | {: QCup.section = "Main Body Declaration"; :}
                         ;
                                            
 funcStmtList		::= funcStmtList variableDecl

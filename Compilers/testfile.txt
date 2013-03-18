@@ -1,0 +1,5 @@
+fdef nothing():void {}
+
+{
+a = 0;
+B;}
