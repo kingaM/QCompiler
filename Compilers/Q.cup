@@ -147,17 +147,18 @@ funcStmtNoSubstmt 	::= SEMI
                    		| returnStmt
                    		| REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
                			| expr SEMI
-                   		| REPEAT error SEMI
+                   		| REPEAT error SEMI {: System.err.println("Invalid repeat statement"); :} 
                         ; 
      
 mainStmtNoSubstmt 	::= SEMI
                   		| REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
                    		| expr SEMI
-                   		| REPEAT error SEMI
+                   		| REPEAT error SEMI {: System.err.println("Invalid repeat statement"); :} 
                         ;     
                                
 returnStmt    		 ::= RETURN SEMI 
                         | RETURN expr SEMI  
+                        | RETURN error SEMI {: System.err.println("Invalid return statement"); :} 
                         ;
   
 expr				 ::= ID

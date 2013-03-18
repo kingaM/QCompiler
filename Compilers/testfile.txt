@@ -1,4 +1,4 @@
-fdef nothing():void {}
+fdef nothing():int {return +;}
 
 {
 a = 0;
