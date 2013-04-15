@@ -5,6 +5,3 @@ fdef test() : int {
 	a::b;
 }
 
-
-
-
