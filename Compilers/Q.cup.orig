@@ -1,0 +1,181 @@
+import java_cup.runtime.*; 
+
+parser code {:
+public String section = "main";
+public static int numOfErrors = 0;
+public void syntax_error(Symbol cur_token) {
+numOfErrors++;
+report_error("Syntax error at line " + (cur_token.left+1) +
+", column " + (cur_token.right+1) + " at section " + section, cur_token);
+}
+:} 
+ 
+terminal		ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
+				NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, PIPE, LEN, DOT,
+				STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL;
+
+non terminal	program, grammar, variableDecl, initalisation, list, tuple,
+				fieldDecl, fieldDeclOptional, typeDecl, fcall, parametersOptional, parameters, newDT, type_specifier, 
+				functionDecl, fbody, fbodyblock, 
+				statement, statementList, returnStatement, expr, mainFunction, 
+				exprOptional, statementNoFollowingSubstatement, blockStatement;
+
+
+precedence nonassoc EQ, NOTEQ;
+precedence left OR, AND;
+precedence left EQCOMP,LESS, LESSOREQ, GREATER, GREATEROREQ, IN;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence right POWER;
+precedence left NOT;
+precedence left LPAREN, RPAREN;
+precedence left ELSE, COLON, DOT;
+
+
+program 			::= grammar mainFunction
+					{: 
+					parser.section = "Variable Declaration"; 
+					if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
+					else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); :}
+					| grammar error {: System.err.println("No main declaration"); :}
+					; 
+
+grammar				::= grammar typeDecl
+						{: parser.section = "Type Declaration"; :}
+						| grammar variableDecl
+						{: parser.section = "Variable Declaration"; :} 
+						| grammar functionDecl
+						{: parser.section = "Function Declaration"; :}
+						| {: System.out.println("GRAMMAR"); :}
+						| grammar error RBRACE {: System.err.println("Invalid function definition"); :}
+		 				;
+					
+typeDecl 			::= TDEF ID COLON fieldDecl SEMI
+						| TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
+						;
+					
+variableDecl  		::=	ID COLON TYPE SEMI
+						| ID COLON TYPE EQ initalisation SEMI 
+						| ID COLON ID EQ newDT SEMI
+						| error SEMI {: System.err.println("Invalid variable declaration"); :}
+						;
+					
+functionDecl		::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON type_specifier LBRACE fbody RBRACE
+						| FDEF error RBRACE {: System.err.println("Invalid function definition"); :};
+
+mainFunction 	 	::= LBRACE fbody RBRACE
+						;
+
+fieldDeclOptional 	::= | fieldDecl
+						;		  
+
+fieldDecl			::= fieldDecl COMMA ID COLON TYPE 
+						| fieldDecl COMMA ID COLON ID 
+						| ID COLON TYPE
+						| ID COLON ID
+						;
+
+newDT				::= newDT COMMA initalisation
+						| initalisation
+						;
+
+initalisation		::= LSQPAREN PIPE tuple PIPE RSQPAREN 
+						| LSQPAREN PIPE PIPE RSQPAREN 
+						| LSQPAREN list RSQPAREN
+						| LSQPAREN RSQPAREN
+						| expr 
+						;
+					
+tuple				::= tuple COMMA initalisation
+						| initalisation
+						;
+				
+list 				::= list COMMA initalisation
+						| initalisation
+						;
+		
+type_specifier  	::= TYPE
+						| VOID
+						| ID
+						; 			
+	
+
+fbodyblock 			::= variableDecl 
+						| statement
+						;
+
+
+fbody 				::= fbody fbodyblock
+						| 	 			
+					    ;
+
+
+parametersOptional 	::= | parameters
+					  	;
+
+parameters 			::= expr
+						| expr COMMA parameters
+						;
+						
+						
+fcall  				::= ID LPAREN parametersOptional RPAREN SEMI
+						;
+
+				  
+statement     		::= statementNoFollowingSubstatement
+	                  	| IF LPAREN expr RPAREN blockStatement
+	                  	| IF error SEMI {: System.err.println("Invalid if statement"); :}
+	                  	| IF LPAREN expr RPAREN blockStatement ELSE blockStatement
+	                  	| WHILE LPAREN expr RPAREN DO blockStatement  
+	                  	| WHILE error SEMI {: System.err.println("Invalid while statement"); :} 
+					  	;
+				  
+blockStatement		::= LBRACE fbody RBRACE
+                   		| fbodyblock
+                 		;
+				      
+statementNoFollowingSubstatement ::= SEMI
+                                    | returnStatement
+                                    | REPEAT blockStatement UNTIL LPAREN expr RPAREN
+                                    | expr SEMI
+                                    ; 
+returnStatement 	::= RETURN SEMI 
+						| RETURN expr SEMI 
+						;
+  
+expr          		::= ID
+	                 	| BOOL
+		                | INT
+		                | FLOAT
+		                | STRING_LITERAL
+		                | CHAR
+		                | fcall
+		                | expr DOT expr
+		                | expr EQ expr 
+		                | expr COLON COLON expr
+		                | LEN LPAREN expr RPAREN 
+		                | expr LSQPAREN expr RSQPAREN
+		                | expr LSQPAREN expr COLON expr RSQPAREN
+		                | expr LSQPAREN COLON expr RSQPAREN
+		                | expr LSQPAREN expr COLON RSQPAREN
+		                | expr PLUS expr
+		                | expr MINUS expr
+		                | expr TIMES expr
+		                | expr DIVIDE expr
+		                | expr POWER expr
+		                | expr EQCOMP expr
+		                | expr NOTEQ expr
+		                | expr LESS expr
+		                | expr LESSOREQ expr
+		                | expr GREATER expr
+		                | expr GREATEROREQ expr
+		                | expr OR expr
+		                | expr AND expr
+		                | NOT expr
+		                | expr IN expr
+		                | LPAREN expr RPAREN  
+					    ;
+			   
+exprOptional		::= expr
+						|	
+                 		;
