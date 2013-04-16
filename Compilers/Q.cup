@@ -159,8 +159,17 @@ fieldDeclOptional   ::= fieldDecl
                         ;
                                   
 
-fieldDecl           ::= fieldDecl COMMA ID COLON typeSpecifier 
-                        | ID COLON typeSpecifier
+fieldDecl           ::= fieldDecl:f COMMA ID:id COLON typeSpecifier:type
+						{: 
+						f.add(new Field(id, type));
+						RESULT = f;
+						:} 
+                        | ID:id COLON typeSpecifier:type
+                        {:
+                        ArrayList<Field> a = new ArrayList<Field>();
+                        a.add(new Field(id, type));
+                        RESULT = a;
+                        :}
                         ;
                     
 sequence            ::= sequence COMMA expr
@@ -189,7 +198,8 @@ sequenceOptional  	::= sequence
                         ;
                         
                         
-fcall               ::= ID LPAREN sequenceOptional RPAREN
+fcall               ::= ID:id LPAREN sequenceOptional:seq RPAREN
+						{: RESULT = new FcallExpr(id, seq); :}
                         ;
 
                 
@@ -235,27 +245,47 @@ returnStmt    		 ::= RETURN SEMI
                         | RETURN expr SEMI  
                         ;
   
-expr				 ::= ID
+expr				 ::= ID: id
+						{: RESULT = new VarExpr(id); :}
                         | value
-                        | fcall
-                        | expr DOT expr 
-                        | expr EQ expr 
-                        | expr CONCAT expr
-                        | LEN LPAREN expr RPAREN 
-                        | expr LSQPAREN expr RSQPAREN
-                        | expr LSQPAREN expr COLON expr RSQPAREN
-                        | expr LSQPAREN COLON expr RSQPAREN
-                        | expr LSQPAREN expr COLON RSQPAREN
-                        | expr PLUS expr
-                        | expr MINUS expr
-                        | expr TIMES expr
-                        | expr DIVIDE expr
-                        | expr POWER expr 
-                        | expr EQCOMP expr
-                        | expr NOTEQ expr
-                        | expr LESS expr
-                        | expr LESSOREQ expr
-                        | expr GREATER expr
+                        | fcall:f
+                        {: RESULT = f; :}
+                        | expr:l DOT expr:r
+                        {: RESULT = new DotBinaryExpr(l, r); :}
+                        | expr:l EQ expr:r 
+                        {: RESULT = new EqBinaryExpr(l, r); :}
+                        | expr:l CONCAT expr:r
+                        {: RESULT = new ConcatBinaryExpr(l, r); :}
+                        | LEN LPAREN expr:seq RPAREN 
+                        {: RESULT = new FcallExpr("len", seq); :}
+                        | expr:l LSQPAREN expr:r RSQPAREN
+                        {: RESULT = new SeqExpr(l, r); :}
+                        | expr:seq LSQPAREN expr:s COLON expr:f RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, s, f); :}
+                        | expr:seq LSQPAREN COLON expr:f RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, null, f); :}
+                        | expr:seq LSQPAREN expr:s COLON RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, s, null); :}
+                        | expr:l PLUS expr:r
+                        {: RESULT = new PlusBinaryExpr(l, r); :}
+                        | expr:l MINUS expr:r
+                        {: RESULT = new MinusBinaryExpr(l, r); :}
+                        | expr:l TIMES expr:r
+                        {: RESULT = new TimesBinaryExpr(l, r); :}
+                        | expr:l DIVIDE expr:r
+                        {: RESULT = new DivideBinaryExpr(l, r); :}
+                        | expr:l POWER expr :r
+                        {: RESULT = new PowerBinaryExpr(l, r); :}
+                        | expr:l EQCOMP expr:r
+                        {: RESULT = new EqCompBinaryExpr(l, r); :}
+                        | expr:l NOTEQ expr:r
+                        {: RESULT = new NotEqCompBinaryExpr(l, r); :}
+                        | expr:l LESS expr:r
+                        {: RESULT = new LessCompBinaryExpr(l, r); :}
+                        | expr:l LESSOREQ expr:r
+                        {: RESULT = new LessEqCompBinaryExpr(l, r); :}
+                        | expr:l GREATER expr:r
+                        {: RESULT = new GreaterCompBinaryExpr(l, r); :}
                         | expr GREATEROREQ expr 
                         | expr OR expr
                         | expr AND expr

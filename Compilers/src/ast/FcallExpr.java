@@ -1,14 +1,11 @@
 package ast;
 
-import java.util.ArrayList;
-
 public class FcallExpr extends Expr {
 	
 	private String id;
-	private ArrayList<Expr> parameters;
+	private Expr parameters;
 	
-	public FcallExpr(String id, ArrayList<Expr> parameters) {
-		super();
+	public FcallExpr(String id, Expr parameters) {
 		this.id = id;
 		this.parameters = parameters;
 	}
@@ -17,7 +14,7 @@ public class FcallExpr extends Expr {
 		return id;
 	}
 
-	public ArrayList<Expr> getParameters() {
+	public Expr getParameters() {
 		return parameters;
 	}
 
