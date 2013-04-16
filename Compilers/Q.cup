@@ -103,7 +103,11 @@ declList             ::= declList:d mainDecl
                         | declList error RBRACE {: System.err.println("Invalid function definition"); :}
                         ;
                     
-typeDecl            ::= TDEF ID COLON fieldDecl SEMI
+typeDecl            ::= TDEF ID:id COLON fieldDecl:f SEMI
+						{:
+						//AST
+						RESULT = new TypeDecl(id, f);
+						:}
                         | TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
                         ;
                     
@@ -111,22 +115,30 @@ variableDecl        ::= ID:id COLON typeSpecifier:type SEMI
 						{:
 						RESULT = new VariableDecl(id, type, null);
 						:}
-                        | ID COLON typeSpecifier EQ sequence SEMI 
+                        | ID:id COLON typeSpecifier:type EQ sequence:seq SEMI 
+                        {:
+						RESULT = new VariableDecl(id, type, seq);
+						:}
                         | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
                         ;
 
 
-functionDecl        ::= functionDeclVoid
-                        | functionDeclReturn                        
+functionDecl        ::= functionDeclVoid:f
+						{: RESULT = f; :}
+                        | functionDeclReturn:f   
+                        {: RESULT = f; :}                     
                         | FDEF error RBRACE {: System.err.println("Invalid function definition or missing return statement"); :}
                         ;
                     
 
-functionDeclReturn  ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON typeSpecifier LBRACE funcStmtList returnStmt RBRACE
+functionDeclReturn  ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON typeSpecifier:type LBRACE funcStmtList:stmts returnStmt:r RBRACE
+						{: stmts.add(r);
+						RESULT = new FunctionDecl(id, type, fieldDecl, stmts); :}
                         ;
                         
 
-functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE funcStmtList RBRACE
+functionDeclVoid    ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON VOID LBRACE funcStmtList:stmts RBRACE
+						{: RESULT = new FunctionDecl(id, "void", fieldDecl, stmts); :}
                         ;
 
 

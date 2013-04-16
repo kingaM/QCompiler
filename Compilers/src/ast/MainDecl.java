@@ -11,5 +11,9 @@ public class MainDecl {
 		return "MainDecl [stmts=" + stmts.toString() + "]";
 	}
 
+	public ArrayList<Stmt> getStmts() {
+		return stmts;
+	}
+
 	
 }
