@@ -32,7 +32,7 @@ char = \'[a-z0-9A-Z]\'
 %%
 
 <YYINITIAL> {
-	{myType}		{	return symbol(sym.TYPE);		}
+	{myType}		{	return symbol(sym.TYPE, yytext());		}
 	"::"			{	return symbol(sym.CONCAT);		}
 	";"				{	return symbol(sym.SEMI);		}
 	":"				{	return symbol(sym.COLON);		}
@@ -80,7 +80,7 @@ char = \'[a-z0-9A-Z]\'
 	"/*"			{ 	yybegin(TRADITIONALCOMMENT);	}
 	{char}			{ 	return symbol(sym.CHAR, yytext());	}
 	{boolean}		{	return symbol(sym.BOOL, new Boolean(yytext()));}
-	{identifier}	{	return symbol(sym.ID);			}
+	{identifier}	{	return symbol(sym.ID, yytext());			}
 	{int}			{	return symbol(sym.INT, new Integer(yytext())); }
 	{float} 		{	return symbol(sym.FLOAT, new Float(yytext())); }
 	{whitespace} 	{									} 

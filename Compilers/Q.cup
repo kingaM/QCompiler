@@ -1,4 +1,6 @@
 import java_cup.runtime.*; 
+import ast.*;
+import java.util.ArrayList;
 
 parser code {:
 public static String section = "Main Body Declaration";
@@ -18,15 +20,27 @@ public void syntax_error(Symbol cur_token) {
 
 :} 
  
-terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
-                NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
-                STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, CONCAT,
-                LTUPLE, RTUPLE;
+terminal        String ID, TYPE, VOID;
+terminal		Boolean BOOL;
+terminal 		Float FLOAT;
+terminal 		Integer INT;
+terminal 		String STRING_LITERAL;
+terminal		Character CHAR;
 
-non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, value, 
-                fieldDecl, fieldDeclOptional, variableDecl, typeDecl, returnStmt,
-                functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoFollowingSubstmt, funcBlockStmt,
-                mainDecl, mainStmtList, mainStmt, mainStmtNoFollowingSubstmt, mainBlockStmt;
+terminal 		EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
+                NOT, OR, AND, SEMI, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
+                TDEF, FDEF, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, CONCAT, LTUPLE, RTUPLE;
+
+non terminal    Program program;
+non terminal 	ArrayList<Decl> declList;
+non terminal 	String typeSpecifier;
+non terminal 	Decl functionDecl, functionDeclVoid, functionDeclReturn, variableDecl, typeDecl;
+non terminal 	MainDecl mainDecl;
+non terminal 	ArrayList<Field> fieldDecl, fieldDeclOptional;
+non terminal 	ArrayList<Stmt> funcStmtList, funcBlockStmt,mainStmtList, mainBlockStmt;
+non terminal 	Stmt returnStmt, funcStmt, funcStmtNoFollowingSubstmt, mainStmt, mainStmtNoFollowingSubstmt;
+
+non terminal 	Expr expr, fcall, value, sequence, sequenceOptional;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -40,54 +54,101 @@ precedence left LPAREN, RPAREN;
 precedence left ELSE, CONCAT, DOT;
 
 
-program             ::= declList mainDecl
+program             ::= declList:l mainDecl:m
 	                    {: 
+	                    //AST
+	                    System.out.println(m);
+	                    RESULT = new Program(l, m);
+	                    
+	                    //Errors and info
 	                    QCup.section = "Main Declaration"; 
 	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
 	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
 	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
-	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); :}
+	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); 
+	                    
+	                    :}
 	                    | declList error {: System.err.println("No main declaration at the end of file"); :}
 	                    ; 
 
-declList             ::= declList mainDecl
-						{: QCup.section = "Main Body Declaration"; :}
-                        | declList typeDecl
-                        {: QCup.section = "Type Declaration"; :}
-                        | declList variableDecl
-                        {: QCup.section = "Variable Declaration"; :} 
-                        | declList functionDecl
-                        {: QCup.section = "Function Declaration"; :}
+declList             ::= declList:d mainDecl
+						{: 
+						//AST
+						RESULT = d;
+						//Error checking
+						QCup.section = "Main Body Declaration"; :}
+                        | declList:d typeDecl:t
+                        {: 
+                        //AST
+						d.add(t);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Type Declaration"; :}
+                        | declList:d variableDecl:v
+                        {: 
+                        //AST
+						d.add(v);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Variable Declaration"; :} 
+                        | declList:d functionDecl:f
+                        {: 
+                        //AST
+						d.add(f);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Function Declaration"; :}
                         | 
+                        {: RESULT = new ArrayList<Decl>(); :}
                         | declList error RBRACE {: System.err.println("Invalid function definition"); :}
                         ;
                     
-typeDecl            ::= TDEF ID COLON fieldDecl SEMI
+typeDecl            ::= TDEF ID:id COLON fieldDecl:f SEMI
+						{:
+						//AST
+						RESULT = new TypeDecl(id, f);
+						:}
                         | TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
                         ;
                     
-variableDecl        ::= ID COLON typeSpecifier SEMI
-                        | ID COLON typeSpecifier EQ sequence SEMI 
+variableDecl        ::= ID:id COLON typeSpecifier:type SEMI
+						{:
+						RESULT = new VariableDecl(id, type, null);
+						:}
+                        | ID:id COLON typeSpecifier:type EQ sequence:seq SEMI 
+                        {:
+						RESULT = new VariableDecl(id, type, seq);
+						:}
                         | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
                         ;
 
 
-functionDecl        ::= functionDeclVoid
-                        | functionDeclReturn                        
+functionDecl        ::= functionDeclVoid:f
+						{: RESULT = f; :}
+                        | functionDeclReturn:f   
+                        {: RESULT = f; :}                     
                         | FDEF error RBRACE {: System.err.println("Invalid function definition or missing return statement"); :}
                         ;
                     
 
-functionDeclReturn  ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON typeSpecifier LBRACE funcStmtList returnStmt RBRACE
+functionDeclReturn  ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON typeSpecifier:type LBRACE funcStmtList:stmts returnStmt:r RBRACE
+						{: stmts.add(r);
+						RESULT = new FunctionDecl(id, type, fieldDecl, stmts); :}
                         ;
                         
 
-functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRACE funcStmtList RBRACE
+functionDeclVoid    ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON VOID LBRACE funcStmtList:stmts RBRACE
+						{: RESULT = new FunctionDecl(id, "void", fieldDecl, stmts); :}
                         ;
 
 
 mainDecl     		::= LBRACE mainStmtList RBRACE 
-                        {: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
+                        {: 
+                        //AST
+                        RESULT = new MainDecl();
+                        
+                        //Error
+                        if(parser.numOfMains > 1){ parser.numOfErrors ++; }
                                else parser.numOfMains ++; :}
                         | LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
                         ;
@@ -98,16 +159,27 @@ fieldDeclOptional   ::= fieldDecl
                         ;
                                   
 
-fieldDecl           ::= fieldDecl COMMA ID COLON typeSpecifier 
-                        | ID COLON typeSpecifier
+fieldDecl           ::= fieldDecl:f COMMA ID:id COLON typeSpecifier:type
+						{: 
+						f.add(new Field(id, type));
+						RESULT = f;
+						:} 
+                        | ID:id COLON typeSpecifier:type
+                        {:
+                        ArrayList<Field> a = new ArrayList<Field>();
+                        a.add(new Field(id, type));
+                        RESULT = a;
+                        :}
                         ;
                     
 sequence            ::= sequence COMMA expr
                         | expr
                         ;
         
-typeSpecifier      	::= TYPE
-                        | ID
+typeSpecifier      	::= TYPE:t
+						{: RESULT = t; :}
+                        | ID:id
+                        {: RESULT = id; :}
                         ;           
 
 mainStmtList        ::= mainStmtList variableDecl
@@ -126,7 +198,8 @@ sequenceOptional  	::= sequence
                         ;
                         
                         
-fcall               ::= ID LPAREN sequenceOptional RPAREN
+fcall               ::= ID:id LPAREN sequenceOptional:seq RPAREN
+						{: RESULT = new FcallExpr(id, seq); :}
                         ;
 
                 
@@ -172,27 +245,47 @@ returnStmt    		 ::= RETURN SEMI
                         | RETURN expr SEMI  
                         ;
   
-expr				 ::= ID
+expr				 ::= ID: id
+						{: RESULT = new VarExpr(id); :}
                         | value
-                        | fcall
-                        | expr DOT expr 
-                        | expr EQ expr 
-                        | expr CONCAT expr
-                        | LEN LPAREN expr RPAREN 
-                        | expr LSQPAREN expr RSQPAREN
-                        | expr LSQPAREN expr COLON expr RSQPAREN
-                        | expr LSQPAREN COLON expr RSQPAREN
-                        | expr LSQPAREN expr COLON RSQPAREN
-                        | expr PLUS expr
-                        | expr MINUS expr
-                        | expr TIMES expr
-                        | expr DIVIDE expr
-                        | expr POWER expr 
-                        | expr EQCOMP expr
-                        | expr NOTEQ expr
-                        | expr LESS expr
-                        | expr LESSOREQ expr
-                        | expr GREATER expr
+                        | fcall:f
+                        {: RESULT = f; :}
+                        | expr:l DOT expr:r
+                        {: RESULT = new DotBinaryExpr(l, r); :}
+                        | expr:l EQ expr:r 
+                        {: RESULT = new EqBinaryExpr(l, r); :}
+                        | expr:l CONCAT expr:r
+                        {: RESULT = new ConcatBinaryExpr(l, r); :}
+                        | LEN LPAREN expr:seq RPAREN 
+                        {: RESULT = new FcallExpr("len", seq); :}
+                        | expr:l LSQPAREN expr:r RSQPAREN
+                        {: RESULT = new SeqExpr(l, r); :}
+                        | expr:seq LSQPAREN expr:s COLON expr:f RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, s, f); :}
+                        | expr:seq LSQPAREN COLON expr:f RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, null, f); :}
+                        | expr:seq LSQPAREN expr:s COLON RSQPAREN
+                        {: RESULT = new SeqSlicingExpr(seq, s, null); :}
+                        | expr:l PLUS expr:r
+                        {: RESULT = new PlusBinaryExpr(l, r); :}
+                        | expr:l MINUS expr:r
+                        {: RESULT = new MinusBinaryExpr(l, r); :}
+                        | expr:l TIMES expr:r
+                        {: RESULT = new TimesBinaryExpr(l, r); :}
+                        | expr:l DIVIDE expr:r
+                        {: RESULT = new DivideBinaryExpr(l, r); :}
+                        | expr:l POWER expr :r
+                        {: RESULT = new PowerBinaryExpr(l, r); :}
+                        | expr:l EQCOMP expr:r
+                        {: RESULT = new EqCompBinaryExpr(l, r); :}
+                        | expr:l NOTEQ expr:r
+                        {: RESULT = new NotEqCompBinaryExpr(l, r); :}
+                        | expr:l LESS expr:r
+                        {: RESULT = new LessCompBinaryExpr(l, r); :}
+                        | expr:l LESSOREQ expr:r
+                        {: RESULT = new LessEqCompBinaryExpr(l, r); :}
+                        | expr:l GREATER expr:r
+                        {: RESULT = new GreaterCompBinaryExpr(l, r); :}
                         | expr GREATEROREQ expr 
                         | expr OR expr
                         | expr AND expr

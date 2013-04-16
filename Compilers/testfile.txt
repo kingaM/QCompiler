@@ -1,7 +1,6 @@
-fdef test() : int {
-	return;
-}
+name:int;
+
 { 
-	a::b;
+
 }
 
