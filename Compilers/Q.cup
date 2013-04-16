@@ -155,8 +155,10 @@ sequence            ::= sequence COMMA expr
                         | expr
                         ;
         
-typeSpecifier      	::= TYPE
-                        | ID
+typeSpecifier      	::= TYPE:t
+						{: RESULT = t; :}
+                        | ID:id
+                        {: RESULT = id; :}
                         ;           
 
 mainStmtList        ::= mainStmtList variableDecl
