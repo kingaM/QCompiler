@@ -1,4 +1,6 @@
 import java_cup.runtime.*; 
+import ast.*;
+import java.util.ArrayList;
 
 parser code {:
 public static String section = "Main Body Declaration";
@@ -18,15 +20,27 @@ public void syntax_error(Symbol cur_token) {
 
 :} 
  
-terminal        ID, BOOL, FLOAT, INT, EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
-                NOT, OR, AND, SEMI, TYPE, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
-                STRING_LITERAL, CHAR, TDEF, FDEF, VOID, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, CONCAT,
-                LTUPLE, RTUPLE;
+terminal        String ID, TYPE, VOID;
+terminal		Boolean BOOL;
+terminal 		Float FLOAT;
+terminal 		Integer INT;
+terminal 		String STRING_LITERAL;
+terminal		Character CHAR;
 
-non terminal    program, declList, sequence, expr, fcall, sequenceOptional, typeSpecifier, value, 
-                fieldDecl, fieldDeclOptional, variableDecl, typeDecl, returnStmt,
-                functionDecl, functionDeclVoid, functionDeclReturn, funcStmtList, funcStmt, funcStmtNoFollowingSubstmt, funcBlockStmt,
-                mainDecl, mainStmtList, mainStmt, mainStmtNoFollowingSubstmt, mainBlockStmt;
+terminal 		EQ, NOTEQ, EQCOMP, LESS, LESSOREQ, GREATER, GREATEROREQ, PLUS, MINUS, TIMES, DIVIDE, POWER,
+                NOT, OR, AND, SEMI, COLON, LPAREN, RPAREN, LBRACE, RBRACE, LSQPAREN, RSQPAREN, COMMA, LEN, DOT,
+                TDEF, FDEF, RETURN, IN, IF, ELSE, DO, WHILE, REPEAT, UNTIL, CONCAT, LTUPLE, RTUPLE;
+
+non terminal    Program program;
+non terminal 	ArrayList<Decl> declList;
+non terminal 	String typeSpecifier;
+non terminal 	Decl functionDecl, functionDeclVoid, functionDeclReturn, variableDecl, typeDecl;
+non terminal 	MainDecl mainDecl;
+non terminal 	ArrayList<Field> fieldDecl, fieldDeclOptional;
+non terminal 	ArrayList<Stmt> funcStmtList, funcBlockStmt,mainStmtList, mainBlockStmt;
+non terminal 	Stmt returnStmt, funcStmt, funcStmtNoFollowingSubstmt, mainStmt, mainStmtNoFollowingSubstmt;
+
+non terminal 	Expr expr, fcall, value, sequence, sequenceOptional;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -40,25 +54,52 @@ precedence left LPAREN, RPAREN;
 precedence left ELSE, CONCAT, DOT;
 
 
-program             ::= declList mainDecl
+program             ::= declList:l mainDecl:m
 	                    {: 
+	                    //AST
+	                    System.out.println(m);
+	                    RESULT = new Program(l, m);
+	                    
+	                    //Errors and info
 	                    QCup.section = "Main Declaration"; 
 	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
 	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
 	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
-	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); :}
+	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); 
+	                    
+	                    :}
 	                    | declList error {: System.err.println("No main declaration at the end of file"); :}
 	                    ; 
 
-declList             ::= declList mainDecl
-						{: QCup.section = "Main Body Declaration"; :}
-                        | declList typeDecl
-                        {: QCup.section = "Type Declaration"; :}
-                        | declList variableDecl
-                        {: QCup.section = "Variable Declaration"; :} 
-                        | declList functionDecl
-                        {: QCup.section = "Function Declaration"; :}
+declList             ::= declList:d mainDecl
+						{: 
+						//AST
+						RESULT = d;
+						//Error checking
+						QCup.section = "Main Body Declaration"; :}
+                        | declList:d typeDecl:t
+                        {: 
+                        //AST
+						d.add(t);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Type Declaration"; :}
+                        | declList:d variableDecl:v
+                        {: 
+                        //AST
+						d.add(v);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Variable Declaration"; :} 
+                        | declList:d functionDecl:f
+                        {: 
+                        //AST
+						d.add(f);
+						RESULT = d;
+						//Error checking
+                        QCup.section = "Function Declaration"; :}
                         | 
+                        {: RESULT = new ArrayList<Decl>(); :}
                         | declList error RBRACE {: System.err.println("Invalid function definition"); :}
                         ;
                     
@@ -66,7 +107,10 @@ typeDecl            ::= TDEF ID COLON fieldDecl SEMI
                         | TDEF error SEMI {: System.err.println("Invalid type declaration"); :}
                         ;
                     
-variableDecl        ::= ID COLON typeSpecifier SEMI
+variableDecl        ::= ID:id COLON typeSpecifier:type SEMI
+						{:
+						RESULT = new VariableDecl(id, type, null);
+						:}
                         | ID COLON typeSpecifier EQ sequence SEMI 
                         | ID COLON error SEMI {: System.err.println("Invalid variable declaration"); :}
                         ;
@@ -87,7 +131,12 @@ functionDeclVoid    ::= FDEF ID LPAREN fieldDeclOptional RPAREN COLON VOID LBRAC
 
 
 mainDecl     		::= LBRACE mainStmtList RBRACE 
-                        {: if(parser.numOfMains > 1){ parser.numOfErrors ++; }
+                        {: 
+                        //AST
+                        RESULT = new MainDecl();
+                        
+                        //Error
+                        if(parser.numOfMains > 1){ parser.numOfErrors ++; }
                                else parser.numOfMains ++; :}
                         | LBRACE error RBRACE {: System.err.println("Invalid main body"); :}
                         ;
