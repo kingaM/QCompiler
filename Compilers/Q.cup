@@ -151,7 +151,7 @@ funcBlockStmt      	::= LBRACE funcStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                         
-mainBlockStmt     	::= LBRACE funcStmtList RBRACE
+mainBlockStmt     	::= LBRACE mainStmtList RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
