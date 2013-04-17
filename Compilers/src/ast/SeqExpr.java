@@ -1,28 +1,27 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class SeqExpr extends Expr {
 
-	private Expr sequence;
-	private Expr index;
-	
-	public SeqExpr(Expr sequence, Expr index) {
+	private ArrayList<Expr> sequence;
+
+	public SeqExpr(ArrayList<Expr> sequence) {
+		super();
 		this.sequence = sequence;
-		this.index = index;
 	}
 
-	public Expr getSequence() {
+	public ArrayList<Expr> getSequence() {
 		return sequence;
 	}
 
-	public Expr getIndex() {
-		return index;
+	public void setSequence(ArrayList<Expr> sequence) {
+		this.sequence = sequence;
 	}
 
 	@Override
 	public String toString() {
-		return "SeqExpr ["
-				+ (sequence != null ? "sequence=" + sequence + ", " : "")
-				+ (index != null ? "index=" + index : "") + "]";
+		return "SeqExpr [sequence=" + sequence + "]";
 	}
-	
+
 }

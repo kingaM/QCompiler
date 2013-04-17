@@ -172,8 +172,17 @@ fieldDecl           ::= fieldDecl:f COMMA ID:id COLON typeSpecifier:type
                         :}
                         ;
                     
-sequence            ::= sequence COMMA expr
-                        | expr
+sequence            ::= sequence:s COMMA expr:e
+						{
+						s.add(e));
+						RESULT = f;
+						:} 
+                        | expr:e
+						{: 
+						ArrayList<Expr> a = new ArrayList<Expr>();
+						a.add(e);
+                        RESULT = new Sequence(a);
+                        :}
                         ;
         
 typeSpecifier      	::= TYPE:t
@@ -182,18 +191,33 @@ typeSpecifier      	::= TYPE:t
                         {: RESULT = id; :}
                         ;           
 
-mainStmtList        ::= mainStmtList variableDecl
-						| mainStmtList mainStmt
+mainStmtList        ::= mainStmtList:msl variableDecl:vd
+						{: 
+						RESULT = new FunctionStmtList(msl, vd); 
+						:}
+						| mainStmtList:msl mainStmt:ms
+						{:
+						msl.getStmtList.add(ms);							 
+						RESULT = msl;
+						:}
                         |
                         ;
                         
                         
-funcStmtList		::= funcStmtList variableDecl
-                     	| funcStmtList funcStmt
+funcStmtList		::= funcStmtList:fsl variableDecl:vd
+						{: 
+						RESULT = new FunctionStmtList(fsl, vd); 
+						:}
+                     	| funcStmtList:fsl funcStmt:fs
+                     	{:
+						msl.getStmtList.add(fs);							 
+						RESULT = fsl;
+						:}
                     	|
                      	;
 
-sequenceOptional  	::= sequence
+sequenceOptional  	::= sequence:seq
+						{: RESULT = new SeqExpr(seq); :}
                         |
                         ;
                         
@@ -203,51 +227,74 @@ fcall               ::= ID:id LPAREN sequenceOptional:seq RPAREN
                         ;
 
                 
-mainStmt           	::= mainStmtNoFollowingSubstmt
-                        | IF LPAREN expr RPAREN mainBlockStmt
+mainStmt           	::= mainStmtNoFollowingSubstmt:s
+						{: RESULT = s :}
+                        | IF LPAREN expr:e RPAREN mainBlockStmt:b
+                        {: RESULT = new IfStmt(e, b); :}
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
-                        | IF LPAREN expr RPAREN mainBlockStmt ELSE mainBlockStmt
-                        | WHILE LPAREN expr RPAREN DO mainBlockStmt  
+                        | IF LPAREN expr:e RPAREN mainBlockStmt:ib ELSE mainBlockStmt:eb                        
+                        {: RESULT = new IfElseStmt(e, ib, eb); :}
+                        | WHILE LPAREN expr:e RPAREN DO mainBlockStmt:b                          
+                        {: RESULT = new WhileStmt(e, b); :}
                         | WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
                         ;
                         
                   
-funcStmt          	::= funcStmtNoFollowingSubstmt
-                        | IF LPAREN expr RPAREN funcBlockStmt
+funcStmt          	::= funcStmtNoFollowingSubstmt:s
+						{: RESULT = s :}
+                        | IF LPAREN expr:e RPAREN funcBlockStmt:b
+                        {: RESULT = new IfStmt(e, b); :}
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
-                        | IF LPAREN expr RPAREN funcBlockStmt ELSE funcBlockStmt
-                        | WHILE LPAREN expr RPAREN DO funcBlockStmt  
+                        | IF LPAREN expr RPAREN funcBlockStmt:ib ELSE funcBlockStmt:eb
+                        {: RESULT = new IfElseStmt(e, ib, eb); :}
+                        | WHILE LPAREN expr:e RPAREN DO funcBlockStmt:b 
+                        {: RESULT = new WhileStmt(e, b); :}
                         | WHILE error RBRACE {: System.err.println("Invalid while statement"); :} 
                         ;
                   
-funcBlockStmt      	::= LBRACE funcStmtList RBRACE
+funcBlockStmt      	::= LBRACE funcStmtList:fs RBRACE
+						{: ArrayList<Stmt> a = new ArrayList<Stmt>();
+						   a = fs;
+						   RESULT = a;
+					    :}
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                         
-mainBlockStmt     	::= LBRACE mainStmtList RBRACE
+mainBlockStmt     	::= LBRACE mainStmtList:ms RBRACE
+						{: ArrayList<Stmt> a = new ArrayList<Stmt>();
+						   a = ms;
+						   RESULT = a;
+					    :}
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
 funcStmtNoFollowingSubstmt 		::= SEMI
-                                    | returnStmt
-                                    | REPEAT funcBlockStmt UNTIL LPAREN expr RPAREN
-                                    | expr SEMI
+                                    | returnStmt:r 
+                                    {: RESULT = new ReturnStmt(r); :}
+                                    | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN
+                                    {: RESULT = new RepeatUntilStmt(e, fb); :}
+                                    | expr:e SEMI
+                                    {: RESULT = e; :}
                                     | REPEAT error SEMI
                                     ; 
      
 mainStmtNoFollowingSubstmt 		::= SEMI
-                                    | REPEAT mainBlockStmt UNTIL LPAREN expr RPAREN
+                                    | REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN
+                                    {: RESULT = new RepeatUntilStmt(e, mb); :}
                                     | expr SEMI
+                                    {: RESULT = e; :}
                                     | REPEAT error SEMI
                                     ;     
                                
 returnStmt    		 ::= RETURN SEMI 
-                        | RETURN expr SEMI  
+                        | RETURN expr:e SEMI
+                        {: RESULT = new ReturnStmt(e); :}  
                         ;
   
 expr				 ::= ID: id
 						{: RESULT = new VarExpr(id); :}
-                        | value
+                        | value:v
+                        {: RESULT = v; :}
                         | fcall:f
                         {: RESULT = f; :}
                         | expr:l DOT expr:r
@@ -286,14 +333,22 @@ expr				 ::= ID: id
                         {: RESULT = new LessEqCompBinaryExpr(l, r); :}
                         | expr:l GREATER expr:r
                         {: RESULT = new GreaterCompBinaryExpr(l, r); :}
-                        | expr GREATEROREQ expr 
-                        | expr OR expr
-                        | expr AND expr
-                        | NOT expr
-                        | expr IN expr
-                        | LPAREN expr RPAREN
-                        | LTUPLE sequenceOptional RTUPLE
-                        | LSQPAREN sequenceOptional RSQPAREN
+                        | expr:l GREATEROREQ expr:r 
+                        {: RESULT = new GreaterOrEqExpr(l, r); :}
+                        | expr:l OR expr:r
+                        {: RESULT = new OrExpr(l, r); :}
+                        | expr:l AND expr:l
+                        {: RESULT = new AndExpr(l, r); :}
+                        | NOT expr:e
+                        {: RESULT = NotUnaryExpr(e); :}
+                        | expr:l IN expr:r
+                        {: RESULT = new InExpr(l, r); :}
+                        | LPAREN expr:e RPAREN 
+                        {: RESULT = e; :}
+                        | LTUPLE sequenceOptional:s RTUPLE
+                        {: RESULT = s; :}
+                        | LSQPAREN sequenceOptional:s RSQPAREN
+                        {: RESULT = s; :}
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
                         | ID error SEMI {: System.err.println("Invalid expression"); :} 
                         | value error SEMI {: System.err.println("Invalid expression"); :} 
