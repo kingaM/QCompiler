@@ -1,6 +1,6 @@
 package ast;
 
-public class ReturnStmt extends Decl{
+public class ReturnStmt extends Stmt{
 	private Expr returnExpr;
 
 	public ReturnStmt(Expr returnExpr) {

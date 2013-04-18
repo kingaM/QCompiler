@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
   
 parser code {:
-public static String section = "Main Body Declaration";
+public static String section = "Main Body Declaration"; 
 public static int numOfErrors = 0;
 public static int numOfMains = 0;
 
@@ -41,7 +41,8 @@ non terminal 	ArrayList<Field> fieldDecl, fieldDeclOptional;
 non terminal 	ArrayList<Stmt> funcStmtList, funcBlockStmt,mainStmtList, mainBlockStmt;
 non terminal 	Stmt returnStmt, funcStmt, funcStmtNoFollowingSubstmt, mainStmt, mainStmtNoFollowingSubstmt;
 
-non terminal 	Expr expr, fcall, value, sequence, sequenceOptional;
+non terminal 	Expr expr, fcall, value;
+non terminal 	ArrayList<Expr> sequence, sequenceOptional;
 
 
 precedence nonassoc EQ, NOTEQ;
@@ -132,8 +133,8 @@ functionDecl        ::= functionDeclVoid:f
                         ;
                     
 
-functionDeclReturn  ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON typeSpecifier:type LBRACE funcStmtList:stmts returnStmt:r RBRACE
-						{: stmts.add(r);
+functionDeclReturn  ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COLON typeSpecifier:type LBRACE funcStmtList:stmts RBRACE
+						{: 
 						RESULT = new FunctionDecl(id, type, fieldDecl, stmts); :}
                         ;
                         
@@ -143,10 +144,10 @@ functionDeclVoid    ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COL
                         ;
 
 
-mainDecl     		::= LBRACE mainStmtList RBRACE 
+mainDecl     		::= LBRACE mainStmtList:s RBRACE 
                         {: 
                         //AST
-                        RESULT = new MainDecl();
+                        RESULT = new MainDecl(s);
                         
                         //Error
                         if(parser.numOfMains > 1){ parser.numOfErrors ++; }
@@ -174,15 +175,15 @@ fieldDecl           ::= fieldDecl:f COMMA ID:id COLON typeSpecifier:type
                         ;
                     
 sequence            ::= sequence:s COMMA expr:e
-						{
-						s.add(e));
-						RESULT = f;
+						{:
+						s.add(e);
+						RESULT = s;
 						:} 
                         | expr:e
 						{: 
 						ArrayList<Expr> a = new ArrayList<Expr>();
 						a.add(e);
-                        RESULT = new Sequence(a);
+                        RESULT = a;
                         :}
                         ; 
         
@@ -194,42 +195,50 @@ typeSpecifier      	::= TYPE:t
 
 mainStmtList        ::= mainStmtList:msl variableDecl:vd
 						{: 
-						RESULT = new FunctionStmtList(msl, vd); 
+						msl.add(new VarStmt(vd));
+						  RESULT = msl;
 						:}
 						| mainStmtList:msl mainStmt:ms
 						{:
-						msl.getStmtList.add(ms);							 
+						msl.add(ms);							 
 						RESULT = msl;
 						:}
                         |
+                        {:
+                    	RESULT = new ArrayList<Stmt>();
+                    	:}
                         ;
                         
                         
 funcStmtList		::= funcStmtList:fsl variableDecl:vd
 						{: 
-						RESULT = new FunctionStmtList(fsl, vd); 
+						  fsl.add(new VarStmt(vd));
+						  RESULT = fsl;
 						:}
                      	| funcStmtList:fsl funcStmt:fs
                      	{:
-						msl.getStmtList.add(fs);							 
+						fsl.add(fs);							 
 						RESULT = fsl;
 						:}
                     	|
+                    	{:
+                    	RESULT = new ArrayList<Stmt>();
+                    	:}
                      	;
 
 sequenceOptional  	::= sequence:seq
-						{: RESULT = new SeqExpr(seq); :}
+						{: RESULT = seq; :}
                         |
-                        ;
+                        ; 
                         
                         
 fcall               ::= ID:id LPAREN sequenceOptional:seq RPAREN
 						{: RESULT = new FcallExpr(id, seq); :}
                         ;
-
+ 
                 
 mainStmt           	::= mainStmtNoFollowingSubstmt:s
-						{: RESULT = s :}
+						{: RESULT = s; :}
                         | IF LPAREN expr:e RPAREN mainBlockStmt:b
                         {: RESULT = new IfStmt(e, b); :}
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
@@ -242,11 +251,11 @@ mainStmt           	::= mainStmtNoFollowingSubstmt:s
                         
                   
 funcStmt          	::= funcStmtNoFollowingSubstmt:s
-						{: RESULT = s :}
+						{: RESULT = s; :}
                         | IF LPAREN expr:e RPAREN funcBlockStmt:b
                         {: RESULT = new IfStmt(e, b); :}
                         | IF error RBRACE {: System.err.println("Invalid if statement"); :}
-                        | IF LPAREN expr RPAREN funcBlockStmt:ib ELSE funcBlockStmt:eb
+                        | IF LPAREN expr:e RPAREN funcBlockStmt:ib ELSE funcBlockStmt:eb
                         {: RESULT = new IfElseStmt(e, ib, eb); :}
                         | WHILE LPAREN expr:e RPAREN DO funcBlockStmt:b 
                         {: RESULT = new WhileStmt(e, b); :}
@@ -271,19 +280,19 @@ mainBlockStmt     	::= LBRACE mainStmtList:ms RBRACE
                       
 funcStmtNoFollowingSubstmt 		::= SEMI
                                     | returnStmt:r 
-                                    {: RESULT = new ReturnStmt(r); :}
+                                    {: RESULT = r; :}
                                     | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN
                                     {: RESULT = new RepeatUntilStmt(e, fb); :}
                                     | expr:e SEMI
-                                    {: RESULT = e; :}
+                                    {: RESULT = new ExprStmt(e); :}
                                     | REPEAT error SEMI
                                     ; 
      
 mainStmtNoFollowingSubstmt 		::= SEMI
                                     | REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN
                                     {: RESULT = new RepeatUntilStmt(e, mb); :}
-                                    | expr SEMI
-                                    {: RESULT = e; :}
+                                    | expr:e SEMI
+                                    {: RESULT = new ExprStmt(e); :}
                                     | REPEAT error SEMI
                                     ;     
                                
@@ -305,9 +314,11 @@ expr				 ::= ID: id
                         | expr:l CONCAT expr:r
                         {: RESULT = new ConcatBinaryExpr(l, r); :}
                         | LEN LPAREN expr:seq RPAREN 
-                        {: RESULT = new FcallExpr("len", seq); :}
+                        {: ArrayList<Expr> a = new ArrayList<Expr>();
+                        a.add(seq);
+                        RESULT = new FcallExpr("len", a); :}
                         | expr:l LSQPAREN expr:r RSQPAREN
-                        {: RESULT = new SeqExpr(l, r); :}
+                        {: RESULT = new SeqCallExpr(l, r); :}
                         | expr:seq LSQPAREN expr:s COLON expr:f RSQPAREN
                         {: RESULT = new SeqSlicingExpr(seq, s, f); :}
                         | expr:seq LSQPAREN COLON expr:f RSQPAREN
@@ -338,26 +349,31 @@ expr				 ::= ID: id
                         {: RESULT = new GreaterOrEqExpr(l, r); :}
                         | expr:l OR expr:r
                         {: RESULT = new OrExpr(l, r); :}
-                        | expr:l AND expr:l
+                        | expr:l AND expr:r
                         {: RESULT = new AndExpr(l, r); :}
                         | NOT expr:e
-                        {: RESULT = NotUnaryExpr(e); :}
+                        {: RESULT = new NotUnaryExpr(e); :}
                         | expr:l IN expr:r
                         {: RESULT = new InExpr(l, r); :}
                         | LPAREN expr:e RPAREN 
                         {: RESULT = e; :}
                         | LTUPLE sequenceOptional:s RTUPLE
-                        {: RESULT = s; :}
+                        {: RESULT = new SeqExpr(s); :}
                         | LSQPAREN sequenceOptional:s RSQPAREN
-                        {: RESULT = s; :}
+                        {: RESULT = new SeqExpr(s); :}
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
                         | ID error SEMI {: System.err.println("Invalid expression"); :} 
                         | value error SEMI {: System.err.println("Invalid expression"); :} 
                         ;
 
-value 				::= BOOL
-                        | INT
-                        | FLOAT
-                        | STRING_LITERAL
-                        | CHAR
+value 				::= BOOL:b
+						{: RESULT = new BoolValueExpr(b); :}
+                        | INT:i
+                        {: RESULT = new IntValueExpr(i); :}
+                        | FLOAT:f
+                        {: RESULT = new FloatValueExpr(f); :}
+                        | STRING_LITERAL:s
+                        {: RESULT = new StrValueExpr(s); :}
+                        | CHAR:c
+                        {: RESULT = new CharValueExpr(c); :}
                         ;

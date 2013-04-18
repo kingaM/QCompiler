@@ -1,12 +1,14 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class VariableDecl extends Decl {
 	
 	private String id;
 	private String type;
-	private Expr init;
+	private ArrayList<Expr> init;
 	
-	public VariableDecl(String id, String type, Expr seq) {
+	public VariableDecl(String id, String type, ArrayList<Expr> seq) {
 		super();
 		this.id = id;
 		this.type = type;
