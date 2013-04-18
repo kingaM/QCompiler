@@ -1,20 +1,22 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class FcallExpr extends Expr {
 	
 	private String id;
-	private Expr parameters;
+	private ArrayList<Expr> parameters;
 	
-	public FcallExpr(String id, Expr parameters) {
+	public FcallExpr(String id, ArrayList<Expr> seq) {
 		this.id = id;
-		this.parameters = parameters;
+		this.parameters = seq;
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public Expr getParameters() {
+	public ArrayList<Expr> getParameters() {
 		return parameters;
 	}
 
