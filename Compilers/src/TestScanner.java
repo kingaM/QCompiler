@@ -15,6 +15,6 @@ public class TestScanner {
 		Symbol result = myParser.parse();
 		Program p = (Program) result.value;
 		
-		System.out.println("My result: " + p.toString());
+		//System.out.println("My result: " + p.toString());
 	}
 }

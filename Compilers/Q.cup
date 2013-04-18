@@ -1,7 +1,8 @@
 import java_cup.runtime.*; 
 import ast.*;
 import java.util.ArrayList;
-
+import java.util.Hashtable;
+  
 parser code {:
 public static String section = "Main Body Declaration";
 public static int numOfErrors = 0;
@@ -183,13 +184,13 @@ sequence            ::= sequence:s COMMA expr:e
 						a.add(e);
                         RESULT = new Sequence(a);
                         :}
-                        ;
+                        ; 
         
 typeSpecifier      	::= TYPE:t
 						{: RESULT = t; :}
                         | ID:id
                         {: RESULT = id; :}
-                        ;           
+                        ;
 
 mainStmtList        ::= mainStmtList:msl variableDecl:vd
 						{: 
@@ -258,7 +259,7 @@ funcBlockStmt      	::= LBRACE funcStmtList:fs RBRACE
 						   RESULT = a;
 					    :}
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
-                        ;
+                        ; 
                         
 mainBlockStmt     	::= LBRACE mainStmtList:ms RBRACE
 						{: ArrayList<Stmt> a = new ArrayList<Stmt>();
