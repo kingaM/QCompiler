@@ -19,4 +19,10 @@ public class BinaryExpr extends Expr {
 		return rhs;
 	}
 
+	@Override
+	public String toString() {
+		return "BinaryExpr [" + (lhs != null ? "lhs=" + lhs + ", " : "")
+				+ (rhs != null ? "rhs=" + rhs : "") + "]";
+	}
+
 }

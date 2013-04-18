@@ -143,10 +143,10 @@ functionDeclVoid    ::= FDEF ID:id LPAREN fieldDeclOptional:fieldDecl RPAREN COL
                         ;
 
 
-mainDecl     		::= LBRACE mainStmtList RBRACE 
+mainDecl     		::= LBRACE mainStmtList:s RBRACE 
                         {: 
                         //AST
-                        RESULT = new MainDecl();
+                        RESULT = new MainDecl(s);
                         
                         //Error
                         if(parser.numOfMains > 1){ parser.numOfErrors ++; }
@@ -365,9 +365,14 @@ expr				 ::= ID: id
                         | value error SEMI {: System.err.println("Invalid expression"); :} 
                         ;
 
-value 				::= BOOL
-                        | INT
-                        | FLOAT
-                        | STRING_LITERAL
-                        | CHAR
+value 				::= BOOL:b
+						{: RESULT = new BoolValueExpr(b); :}
+                        | INT:i
+                        {: RESULT = new IntValueExpr(i); :}
+                        | FLOAT:f
+                        {: RESULT = new FloatValueExpr(f); :}
+                        | STRING_LITERAL:s
+                        {: RESULT = new StrValueExpr(s); :}
+                        | CHAR:c
+                        {: RESULT = new CharValueExpr(c); :}
                         ;

@@ -15,6 +15,6 @@ fdef sum(i:float, j:float) : float {
   if (s1 < s2 || s1 == s2) {
      b : bool =  s1 + s2 / (s1 + s2) >= 30;
   } else {
-     b;
+     0 + 1 - 1.2;
   }
 }

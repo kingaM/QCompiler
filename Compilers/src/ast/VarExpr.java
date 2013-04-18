@@ -12,6 +12,11 @@ public class VarExpr extends Expr {
 	public String getVar() {
 		return var;
 	}
+
+	@Override
+	public String toString() {
+		return "VarExpr [" + (var != null ? "var=" + var : "") + "]";
+	}
 	
 	
 }
