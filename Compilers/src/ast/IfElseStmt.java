@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class IfElseStmt extends Stmt{
 	private Expr condition;
 	private ArrayList<Stmt> ifBody;
@@ -36,6 +38,11 @@ public class IfElseStmt extends Stmt{
 	public void setElseBody(ArrayList<Stmt> elseBody) {
 		this.elseBody = elseBody;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

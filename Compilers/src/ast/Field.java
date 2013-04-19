@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class Field {
 	
 	private String id;
@@ -20,5 +22,10 @@ public class Field {
 	}
 	
 	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
+
 
 }

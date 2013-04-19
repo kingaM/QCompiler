@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 
 public class SeqCallExpr extends Expr {
 	
@@ -19,6 +21,11 @@ public class SeqCallExpr extends Expr {
 		return call;
 	}
 	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
+
 	@Override
 	public String toString() {
 		return "SeqCallExpr [" + (id != null ? "id=" + id + ", " : "")

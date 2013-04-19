@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class VarStmt extends Stmt {
 	
 	private VariableDecl varDecl;
@@ -10,6 +12,10 @@ public class VarStmt extends Stmt {
 
 	public VariableDecl getVarDecl() {
 		return varDecl;
+	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
 	}
 
 	@Override

@@ -1,6 +1,10 @@
-name:int;
+name:int = 2;
+
+fdef sum(i: int, j:int) : int {
+     return i + j;
+}
 
 { 
-
+	//c : int = sum(2, 3);
 }
 

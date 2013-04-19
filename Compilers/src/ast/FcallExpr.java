@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class FcallExpr extends Expr {
 	
 	private String id;
@@ -19,6 +21,11 @@ public class FcallExpr extends Expr {
 	public ArrayList<Expr> getParameters() {
 		return parameters;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

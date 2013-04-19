@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class ExprStmt extends Stmt {
 	
 	private Expr e;
@@ -11,6 +13,11 @@ public class ExprStmt extends Stmt {
 	public Expr getE() {
 		return e;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

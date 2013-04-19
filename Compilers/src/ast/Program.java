@@ -2,7 +2,9 @@ package ast;
 
 import java.util.ArrayList;
 
-public class Program {
+import visitor.Visitor;
+
+public class Program extends Node {
 	
 	private ArrayList<Decl> decllist;
 	private MainDecl main;
@@ -11,12 +13,21 @@ public class Program {
 		decllist = l;
 		main = m;
 	}
-
+	
+    public void accept(Visitor v){
+		v.visit(this);
+	}
+	
 	@Override
 	public String toString() {
 		return "Program [decllist=" + decllist.toString() + ", main=" + main.toString() + "]";
 	}
-	
-	
-	
+
+	public ArrayList<Decl> getDecllist() {
+		return decllist;
+	}
+
+	public MainDecl getMain() {
+		return main;
+	}	
 }

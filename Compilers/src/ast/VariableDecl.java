@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class VariableDecl extends Decl {
 	
 	private String id;
@@ -14,11 +16,27 @@ public class VariableDecl extends Decl {
 		this.type = type;
 		this.init = seq;
 	}
-
+	
+    public void accept(Visitor v){
+		v.visit(this);
+	}
+    
 	@Override
 	public String toString() {
 		return "VariableDecl [id=" + id + ", type=" + type + ", init=" + init
 				+ "]";
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public ArrayList<Expr> getInit() {
+		return init;
 	}
 
 }

@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class FunctionStmtList {
 	ArrayList<Stmt> stmtList;
 	VariableDecl vdecl;
@@ -34,5 +36,9 @@ public class FunctionStmtList {
 		this.vdecl = vdecl;
 	}
 	
+
+    public void accept(Visitor v){
+		v.visit(this);
+	}
 
 }

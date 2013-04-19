@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class FloatValueExpr extends ValueExpr {
 	
 	private float value;
@@ -11,6 +13,11 @@ public class FloatValueExpr extends ValueExpr {
 	public float getValue() {
 		return value;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

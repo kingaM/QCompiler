@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import visitor.Visitor;
 
 public class FunctionDecl extends Decl {
 	
@@ -28,6 +29,11 @@ public class FunctionDecl extends Decl {
 	public ArrayList<Stmt> getBody() {
 		return body;
 	}
+
+    public void accept(Visitor v){
+		v.visit(this);
+	}
+	
 	@Override
 	public String toString() {
 		return "FunctionDecl [" + (id != null ? "id=" + id + ", " : "")

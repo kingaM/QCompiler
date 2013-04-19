@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class CharValueExpr extends ValueExpr {
 
 	private char c;
@@ -10,6 +12,10 @@ public class CharValueExpr extends ValueExpr {
 
 	public char getC() {
 		return c;
+	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
 	}
 
 	@Override

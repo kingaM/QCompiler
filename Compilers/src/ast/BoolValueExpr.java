@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class BoolValueExpr extends ValueExpr {
 
 	private boolean b;
@@ -10,6 +12,10 @@ public class BoolValueExpr extends ValueExpr {
 
 	public boolean isB() {
 		return b;
+	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
 	}
 
 	@Override

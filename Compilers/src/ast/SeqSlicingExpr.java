@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.Visitor;
+
 public class SeqSlicingExpr extends Expr {
 	
 	private Expr sequence;
@@ -23,6 +25,11 @@ public class SeqSlicingExpr extends Expr {
 	public Expr getFinish() {
 		return finish;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

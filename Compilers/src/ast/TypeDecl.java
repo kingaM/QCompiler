@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class TypeDecl extends Decl {
 	
 	private String id;
@@ -19,7 +21,11 @@ public class TypeDecl extends Decl {
 	public ArrayList<Field> getFields() {
 		return fields;
 	}
-
+	
+    public void accept(Visitor v){
+		v.visit(this);
+	}
+    
 	@Override
 	public String toString() {
 		return "TypeDecl [" + (id != null ? "id=" + id + ", " : "")

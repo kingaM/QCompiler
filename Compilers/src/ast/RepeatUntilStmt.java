@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class RepeatUntilStmt extends Stmt{
 	private Expr condition;
 	private ArrayList<Stmt> body;
@@ -26,6 +28,11 @@ public class RepeatUntilStmt extends Stmt{
 	public void setBody(ArrayList<Stmt> body) {
 		this.body = body;
 	}
+
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {

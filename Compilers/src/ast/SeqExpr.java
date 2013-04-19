@@ -2,6 +2,8 @@ package ast;
 
 import java.util.ArrayList;
 
+import visitor.Visitor;
+
 public class SeqExpr extends Expr {
 
 	private ArrayList<Expr> sequence;
@@ -18,6 +20,11 @@ public class SeqExpr extends Expr {
 	public void setSequence(ArrayList<Expr> sequence) {
 		this.sequence = sequence;
 	}
+	
+	public void accept(Visitor v){
+		v.visit(this);
+	}
+
 
 	@Override
 	public String toString() {
