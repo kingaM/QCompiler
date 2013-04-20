@@ -1,18 +1,29 @@
 package visitor;
 
+import java.util.ArrayList;
+
 import ast.*;
 
 
 public class SymbolTableVisitor implements Visitor {
 	
+	private SymbolTable symTab; 
+	
+	public SymbolTableVisitor(SymbolTable st)
+	{
+		symTab = st; 		
+	}
+	
 	@Override
 	public void visit(Program p) {
 		System.out.println("Entering program");
-		p.getMain().accept(this);
 		
+		symTab = symTab.enterScope(); 
 		for ( int i = 0; i < p.getDecllist().size(); i++ ) {
 	        p.getDecllist().get(i).accept(this);
 	    }		
+		p.getMain().accept(this);
+		symTab = symTab.exitScope(); 
 	}
 	
 	@Override
@@ -22,15 +33,20 @@ public class SymbolTableVisitor implements Visitor {
 	@Override
 	public void visit(MainDecl d) {
 		System.out.println("Entering main decl");		
+		symTab = symTab.enterScope(); 
 		for ( int i = 0; i < d.getStmts().size(); i++ ) {
 	        d.getStmts().get(i).accept(this);
 	    }	
+		symTab = symTab.exitScope(); 
 	}
 	
 	@Override
 	public void visit(VariableDecl d) {
 		//has id type
 		System.out.println("Entering variable decl: " + d.toString());
+		String id = d.getId();
+		String type = d.getType();
+		symTab.put(id, SymbolType.TDEF, type);
 		for ( int i = 0; i < d.getInit().size(); i++ ) {
 	        d.getInit().get(i).accept(this);
 	    }	
@@ -39,6 +55,10 @@ public class SymbolTableVisitor implements Visitor {
 	@Override
 	public void visit(FunctionDecl d) {
 		System.out.println("Entering function decl: " + d.toString());
+		String id = d.getId();
+		String signature = d.getReturnType() + "->" + getSignature(d.getFieldDecl());
+		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
+		symTab = symTab.enterScope(); 
 		if(d.getFieldDecl() != null){
 			for ( int i = 0; i < d.getFieldDecl().size(); i++ ) {
 				d.getFieldDecl().get(i).accept(this);
@@ -47,11 +67,28 @@ public class SymbolTableVisitor implements Visitor {
 		for ( int i = 0; i < d.getBody().size(); i++ ) {
 			d.getBody().get(i).accept(this);
 		}		
+		symTab = symTab.exitScope(); 
+	}
+
+	private String getSignature(ArrayList<Field> fieldDecl) {
+		
+		if(fieldDecl != null){
+			String sig = "";
+			for ( int i = 0; i < fieldDecl.size(); i++ ) {
+				sig = sig + "x" + fieldDecl.get(i).getType();
+			}
+			return sig;
+		}
+		
+		return "void";
 	}
 
 	@Override
 	public void visit(TypeDecl d) {
 		System.out.println("Entering type decl: " + d.toString());	
+		String id = d.getId();
+		String signature = getSignature(d.getFields());
+		symTab.put(id, SymbolType.TDEF, signature);
 		for ( int i = 0; i < d.getFields().size(); i++ ) {
 			d.getFields().get(i).accept(this);
 		}		
@@ -239,31 +276,65 @@ public class SymbolTableVisitor implements Visitor {
 	@Override
 	public void visit(IfStmt s) {
 		System.out.println("If statement: " + s.toString());		
-		
+		symTab.enterScope();
+		for ( int i = 0; i < s.getBody().size(); i++ ) {
+			s.getBody().get(i).accept(this);
+		}	
+		symTab.exitScope();
 	}
 
 	@Override
 	public void visit(RepeatUntilStmt s) {
-		System.out.println("Repeat statement: " + s.toString());		
+		System.out.println("Repeat statement: " + s.toString());	
+		symTab.enterScope();
+		for ( int i = 0; i < s.getBody().size(); i++ ) {
+			s.getBody().get(i).accept(this);
+		}	
+		symTab.exitScope();
 		
 	}
 
 	@Override
 	public void visit(IfElseStmt s) {
-		System.out.println("If else statement: " + s.toString());		
+		System.out.println("If else statement: " + s.toString());	
+		symTab.enterScope();
+		for ( int i = 0; i < s.getIfBody().size(); i++ ) {
+			s.getIfBody().get(i).accept(this);
+		}	
+		symTab.exitScope();
+		symTab.enterScope();
+		for ( int i = 0; i < s.getElseBody().size(); i++ ) {
+			s.getElseBody().get(i).accept(this);
+		}	
+		symTab.exitScope();
 		
 	}
 
 	@Override
 	public void visit(VarStmt s) {
 		System.out.println("Var statement: " + s.toString());		
-		
+		s.getVarDecl().accept(this);
 	}
 
 	@Override
 	public void visit(WhileStmt s) {
 		System.out.println("While statement: " + s.toString());		
+		symTab.enterScope();
+		for ( int i = 0; i < s.getBody().size(); i++ ) {
+			s.getBody().get(i).accept(this);
+		}	
+		symTab.exitScope();
 		
+	}
+
+	public SymbolTable getSymTab() {
+		return symTab;
+	}
+
+	@Override
+	public String toString() {
+		return "SymbolTableVisitor ["
+				+ (symTab != null ? "symTab=" + symTab : "") + "]";
 	}
 
 }

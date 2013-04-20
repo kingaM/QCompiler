@@ -1,16 +1,16 @@
-import java.io.*;
-
-import ast.Program;
-import visitor.SymbolTableVisitor;
+import java.io.FileInputStream;
 
 import java_cup.runtime.Symbol;
+import visitor.SymbolTable;
+import visitor.SymbolTableVisitor;
+import ast.Program;
 
 public class TestScanner {
 
 	public static void main(String args[]) throws Exception {
 
-		System.setIn(new FileInputStream("testfile.txt"));
-		//System.setIn(new FileInputStream("test01"));
+		//System.setIn(new FileInputStream("testfile.txt"));
+		System.setIn(new FileInputStream("test01"));
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
 
@@ -18,6 +18,7 @@ public class TestScanner {
 		Program p = (Program) result.value;
 		
 		System.out.println("My result: " + p.toString());
-		p.accept(new SymbolTableVisitor());
+		SymbolTable st = new SymbolTable();
+		p.accept(new SymbolTableVisitor(st));
 	}
 }
