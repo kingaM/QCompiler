@@ -106,6 +106,7 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(TypeDecl d) {
 		// TODO Scope Check
+		
 		for (int i = 0; i < d.getFields().size(); i++) {
 			d.getFields().get(i).accept(this);
 		}
@@ -177,7 +178,7 @@ public class TypeScopeVisitor implements Visitor {
 			String sig = "";
 			for ( int i = 0; i < fieldDecl.size(); i++ ) {
 				if(i>0)sig = sig + ";" + fieldDecl.get(i).getId() + ":" + fieldDecl.get(i).getType();
-				else sig = sig + fieldDecl.get(i).getId() + ":" + fieldDecl.get(i).getType();
+				else sig = sig + fieldDecl.get(i).getType() + ":" + fieldDecl.get(i).getId();
 			}
 			return sig;
 		}
