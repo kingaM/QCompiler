@@ -182,7 +182,11 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(CompBinaryExpr e) {
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (isCompatible(typel, typer))
+			return "bool";
+		return printError("error");
 
 	}
 
@@ -420,6 +424,7 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(IfStmt s) {
+		
 		if (!s.getCondition().accept(this).equals("bool"))
 			return printError("error");
 		symTab = symTab.getNextScope();

@@ -1,8 +1,12 @@
 name:int = 2;
 
-fdef sum(i:int, j:int):int { return i+j; }
+fdef sum(i:int, j:int):int { 
+	if(name==0.9) {
+		name;
+	}
+return i+j; }
 
 { 
-	name + 2;
+	b:bool = name==2;
 }
 
