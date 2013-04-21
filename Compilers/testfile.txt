@@ -1,13 +1,5 @@
 
-
-fdef sum(i:float, j:float) : float {
-     return i + j;
-}
-
-
-
 {
 a:int = 0;
-a = a+1;
 }
 

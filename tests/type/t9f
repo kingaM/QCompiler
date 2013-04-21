@@ -1,4 +1,4 @@
 {
 	e:bool = 1.2 > true;
-	e:bool = 'a' > 123;
+	f:bool = 'a' > 123;
 }

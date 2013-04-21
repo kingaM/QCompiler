@@ -1,6 +1,6 @@
-tdef Person = age:int, name:string;
+tdef person: age:int, name:string;
 
 {
-	p:Person = 10, "name";
+	p:person = 10, "name";
 	p.age+1;
 }

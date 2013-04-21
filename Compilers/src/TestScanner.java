@@ -13,7 +13,7 @@ public class TestScanner {
 
 		System.setIn(new FileInputStream("testfile.txt"));
 		 //System.setIn(new FileInputStream("test05"));
-		//System.setIn(new FileInputStream("t3p"));
+		//System.setIn(new FileInputStream("t12f"));
 
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);

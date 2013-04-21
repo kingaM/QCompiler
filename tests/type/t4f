@@ -1,4 +1,4 @@
-fdef sum:int(a:float, b:float) {
+fdef sum(a:float, b:float):int {
 	return true;
 }
 

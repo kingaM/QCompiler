@@ -75,7 +75,7 @@ public class SymbolTableVisitor implements Visitor {
 				d.getFieldDecl().get(i).accept(this);
 			}
 		}
-
+		if(d.getBody()!=null)
 		for ( int i = 0; i < d.getBody().size(); i++ ) {
 			d.getBody().get(i).accept(this);
 		}		
@@ -424,7 +424,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarStmt s) {
-		s.getVarDecl().accept(this);
 		System.out.println("Var statement: " + s.toString());
 		s.getVarDecl().accept(this);
 		return null;
