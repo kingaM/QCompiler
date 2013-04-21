@@ -106,6 +106,12 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(TypeDecl d) {
 		// TODO Scope Check
+		String id = d.getId();
+		String structure = getStructure(d.getFields());
+		SymbolEntry entry = symTab.get(id);
+		if((entry == null) || !entry.getType().equals(structure) ){
+			return printError("error");
+		}
 		
 		for (int i = 0; i < d.getFields().size(); i++) {
 			d.getFields().get(i).accept(this);
