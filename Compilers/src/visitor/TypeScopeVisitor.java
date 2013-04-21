@@ -162,7 +162,7 @@ public class TypeScopeVisitor implements Visitor {
 		if (fields != null) {
 			String sig = "";
 			for (int i = 0; i < fields.size(); i++) {
-				sig = sig + "x" + fields.get(i);
+				sig = sig + ";" + fields.get(i);
 			}
 			return sig;
 		}

@@ -77,7 +77,7 @@ public class SymbolTableVisitor implements Visitor {
 		if(fieldDecl != null){
 			String sig = "";
 			for ( int i = 0; i < fieldDecl.size(); i++ ) {
-				sig = sig + "x" + fieldDecl.get(i).getType();
+				sig = sig + ";" + fieldDecl.get(i).getType();
 			}
 			return sig;
 		}
