@@ -8,7 +8,8 @@ fdef sum(i:float, j:float) : float {
      return i + j;
 }
 
+
 { 
-	name + 2;
+	b:bool = name==2;
 }
 

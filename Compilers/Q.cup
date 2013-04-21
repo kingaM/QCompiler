@@ -58,17 +58,17 @@ precedence left ELSE, CONCAT, DOT;
 
 program             ::= declList:l mainDecl:m
 	                    {: 
-	                    //AST
-	                    System.out.println(m);
-	                    RESULT = new Program(l, m);
+                 
 	                    
 	                    //Errors and info
 	                    QCup.section = "Main Declaration"; 
-	                    if(QCup.numOfErrors == 0) System.out.println("Parsing successful");
-	                    else if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
+	                    if(QCup.numOfErrors == 0 && QCup.numOfMains==1) {System.out.println("Parsing successful"); RESULT = new Program(l, m); }
+	                    else {
+	                    if(QCup.numOfErrors == 1) System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " error.");
 	                    else System.out.println("Parsing unsuccessful, you had " + QCup.numOfErrors + " errors."); 
 	                    if(parser.numOfMains > 1) System.err.println("You declared " + parser.numOfMains + " main programs. Only one main is accepted."); 
-	                    
+	                    RESULT = null;
+	                    }
 	                    :}
 	                    | declList error {: System.err.println("No main declaration at the end of file"); :}
 	                    ; 
