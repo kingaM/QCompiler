@@ -11,9 +11,9 @@ public class TestScanner {
 
 	public static void main(String args[]) throws Exception {
 
-		//System.setIn(new FileInputStream("testfile.txt"));
+		System.setIn(new FileInputStream("testfile.txt"));
 		 //System.setIn(new FileInputStream("test05"));
-		System.setIn(new FileInputStream("t3p"));
+		//System.setIn(new FileInputStream("t3p"));
 
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
