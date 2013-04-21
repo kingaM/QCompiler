@@ -1,0 +1,6 @@
+{
+	a:float = 1;
+	b:string = 'c';
+	c:int = true;
+	d:float = 0.33;
+}

@@ -44,6 +44,7 @@ public class SymbolTableVisitor implements Visitor {
 		String id = d.getId();
 		String type = d.getType();
 		symTab.put(id, SymbolType.VAR, type);
+		if(d.getInit()!=null)
 		for ( int i = 0; i < d.getInit().size(); i++ ) {
 	        d.getInit().get(i).accept(this);
 	    }	
@@ -64,6 +65,8 @@ public class SymbolTableVisitor implements Visitor {
 				d.getFieldDecl().get(i).accept(this);
 			}
 		}
+
+		if(d.getBody()!=null)
 		for ( int i = 0; i < d.getBody().size(); i++ ) {
 			d.getBody().get(i).accept(this);
 		}		
@@ -125,7 +128,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(Expr e) {
-		// TODO Auto-generated method stub
 		return null;
 
 	}
@@ -193,12 +195,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(FcallExpr e) {
-		String id = e.getId();
-		SymbolEntry entry = symTab.get(id);
-		if(entry == null){
-			eh.printErrorMessage(id, "undeclared function", ErrorHandler.ErrorType.TYPE);
-			return "error";
-		}
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			e.getParameters().get(i).accept(this);
 		}
@@ -382,7 +378,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarStmt s) {
-		s.getVarDecl().accept(this);
 		s.getVarDecl().accept(this);
 		return null;
 	}

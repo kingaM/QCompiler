@@ -88,11 +88,21 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(VariableDecl d) {
 		String id = d.getId();
 		String type = d.getType();
+		if(d.getInit()!=null)
 		for (int i = 0; i < d.getInit().size(); i++) {
-			d.getInit().get(i).accept(this);
+			String test = ( String) d.getInit().get(i).accept(this);
+			if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
+					&& !(type.equals("int") && test.equals("bool"))
+					&& !(type.equals("string") && test.equals("char"))
+					){
+				eh.printErrorMessage(test,
+						"incompatible types for assigment", ErrorHandler.ErrorType.TYPE);
+				return "error";
+			}
 		}
 		return d.getType();
 	}
+	
 
 	@Override
 	public Object visit(FunctionDecl d) {
@@ -355,8 +365,11 @@ public class TypeScopeVisitor implements Visitor {
 				return symTab.get(e.getId() + ">float;int").getRetType();
 			if (symTab.get(e.getId() + ">int;float") != null)
 				return symTab.get(e.getId() + ">int;float").getRetType();
-			if (symTab.get(e.getId() + ">float;float") != null)
+			if (symTab.get(e.getId() + ">float;float") != null) {
+				System.out.println("TEST:"
+						+ symTab.get(e.getId() + ">float;float").getRetType());
 				return symTab.get(e.getId() + ">float;float").getRetType();
+			}
 		}
 		if (fparameters.equals("float;int") || fparameters.equals("int;float")) {
 			if (symTab.get(e.getId() + ">float;float") != null) {
@@ -364,8 +377,8 @@ public class TypeScopeVisitor implements Visitor {
 
 			}
 		}
-		if(fparameters.equals("char;char"))
-			if(symTab.get(">string;string")!=null)
+		if (fparameters.equals("char;char"))
+			if (symTab.get(">string;string") != null)
 				return symTab.get(">string;string").getRetType();
 		eh.printErrorMessage(id, "function call", ErrorHandler.ErrorType.TYPE);
 		return "error";
@@ -582,14 +595,20 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(ReturnStmt s) {
 		SymbolEntry e = symTab.get("_FunctReturnType");
 		String type = (String) s.getReturnExpr().accept(this);
-		if(type.equals(e.getVarType())){
+		if (type.equals(e.getVarType())) {
 			return type;
 		}
-		eh.printErrorMessage(type, "return type mismatch", ErrorHandler.ErrorType.TYPE);
+		if (type.equals("int") && e.getVarType().equals("float"))
+			return "float";
+		if (type.equals("char") && e.getVarType().equals("string"))
+			return "string";
+		if (type.equals("bool") && e.getVarType().equals("int"))
+			return "int";
+		eh.printErrorMessage(type, "return statement",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 
 	}
-
 
 	@Override
 	public Object visit(IfStmt s) {

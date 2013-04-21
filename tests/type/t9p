@@ -1,0 +1,6 @@
+{
+	b:bool = 1 > 2;
+	c:bool = true == false;
+	d:bool = 1.2 != 3.3;
+	e:bool = 1.2 > 3;
+}

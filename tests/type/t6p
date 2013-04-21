@@ -1,0 +1,6 @@
+tdef person: age:int, name:string;
+
+{
+	p:person = 10, "name";
+	p.age+1;
+}

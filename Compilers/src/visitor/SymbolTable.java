@@ -53,8 +53,10 @@ public class SymbolTable {
 	}
 	
 	public int put(String key, SymbolType t, String type){
+		System.out.println("PUT ENTRY 1");
 		SymbolEntry e = new SymbolEntry(key, type, t);
 		if(!entries.containsKey(key)) {
+			
 			entries.put(key, e);
 			return 0;
 		}
@@ -63,8 +65,10 @@ public class SymbolTable {
 	}
 	
 	public int put(String key, SymbolType t, String type, String returnType){
+		System.out.println("PUT ENTRY 2");
 		SymbolEntry e = new SymbolEntry(key, type, t, returnType);
 		if(!entries.containsKey(key)) {
+			
 			entries.put(key, e);
 			return 0;
 		}

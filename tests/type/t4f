@@ -1,0 +1,7 @@
+fdef sum(a:float, b:float):int {
+	return true;
+}
+
+{
+
+}
