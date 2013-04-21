@@ -5,13 +5,14 @@ import visitor.SymbolTable;
 import visitor.SymbolTableVisitor;
 import visitor.TypeScopeVisitor;
 import ast.Program;
+import visitor.ErrorHandler;
 
 public class TestScanner {
 
 	public static void main(String args[]) throws Exception {
 
-		System.setIn(new FileInputStream("testfile.txt"));
-		// System.setIn(new FileInputStream("test05"));
+		//System.setIn(new FileInputStream("testfile.txt"));
+		 System.setIn(new FileInputStream("test05"));
 
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
@@ -20,10 +21,13 @@ public class TestScanner {
 		Program p = (Program) result.value;
 		if (p != null) {
 			System.out.println("My result: " + p.toString());
-			SymbolTable st = new SymbolTable();
-			p.accept(new SymbolTableVisitor(st));
-			p.accept(new TypeScopeVisitor(st));
+			ErrorHandler eh = new ErrorHandler(QCup.numOfErrors);
+			SymbolTable st = new SymbolTable(eh); 
+			
+			p.accept(new SymbolTableVisitor(st, eh));
+			p.accept(new TypeScopeVisitor(st, eh));
 			System.out.println("\nFinal " + st.toString());
+			System.out.println("\nFinal " + st.getChildren().get(0).toString());
 		}
 	}
 }

@@ -6,20 +6,22 @@ import java.util.Iterator;
 
 public class SymbolTable {
 	
-	private ArrayList<SymbolTable> children;
+	private ArrayList<SymbolTable> children = new ArrayList<SymbolTable>(); 
 	private SymbolTable parent; 
 	private Iterator<SymbolTable> it; 
 	private HashMap<String, SymbolEntry> entries = new HashMap<String, SymbolEntry>();
+	private ErrorHandler eh;
 
-	public SymbolTable() {
-		children = new ArrayList<SymbolTable>(); 
-	}
-	
-	public SymbolTable(SymbolTable symbolTable) {
-		this(); 
+	public SymbolTable(SymbolTable symbolTable, ErrorHandler eh) {
 		parent = symbolTable; 
+		this.eh = eh;
 	}
 	
+	public SymbolTable(ErrorHandler eh) {
+		this.eh = eh;
+		parent = null;
+	}
+
 	public SymbolTable getNextScope(){
 		if(it == null)
 			it = children.iterator(); 
@@ -56,7 +58,7 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
-		System.out.println("\nERROR: " + t + " " + key + " already declared\n");
+		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE);
 		return -1;
 	}
 	
@@ -66,13 +68,13 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
-		System.out.println("\nERROR: " + t + " " + key + " already declared\n");
+		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE);
 		return -1;
 	}
 	
 	public SymbolTable enterScope()
 	{
-		SymbolTable t = new SymbolTable(this);
+		SymbolTable t = new SymbolTable(this, eh);
 		children.add(t); 
 		return t; 
 	}

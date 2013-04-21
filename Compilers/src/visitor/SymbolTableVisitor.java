@@ -7,9 +7,11 @@ import ast.*;
 public class SymbolTableVisitor implements Visitor {
 
 	private SymbolTable symTab;
+	private ErrorHandler eh;
 
-	public SymbolTableVisitor(SymbolTable st) {
+	public SymbolTableVisitor(SymbolTable st, ErrorHandler eh) {
 		symTab = st;
+		this.eh = eh;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class SymbolTableVisitor implements Visitor {
 		System.out.println("\nVariable decl: " + d.toString());
 		String id = d.getId();
 		String type = d.getType();
-		symTab.put(id, SymbolType.TDEF, type);
+		symTab.put(id, SymbolType.VAR, type);
 		for ( int i = 0; i < d.getInit().size(); i++ ) {
 	        d.getInit().get(i).accept(this);
 	    }	

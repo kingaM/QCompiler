@@ -5,15 +5,15 @@ import visitor.Visitor;
 
 public class SeqCallExpr extends Expr {
 	
-	private Expr id;
+	private String id;
 	private Expr call;
 	
-	public SeqCallExpr(Expr id, Expr call) {
+	public SeqCallExpr(String id, Expr call) {
 		this.id = id;
 		this.call = call;
 	}
 	
-	public Expr getId() {
+	public String getId() {
 		return id;
 	}
 	

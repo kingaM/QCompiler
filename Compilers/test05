@@ -11,7 +11,7 @@ s3:string = "One Thousand and One Nights";
 
   while (i<len(books)) do {
      tmp : string = books[i];
-     if (key in tmp) { found = true; }
+     if (true) { found = true; }
      else {}
      i = i + 1;
   }
