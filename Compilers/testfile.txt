@@ -1,5 +1,7 @@
 name:int = 2;
 
+tdef student : surname:string, grade:int;
+
 fdef sum(i:int, j:int):int { 
 	if(name==0.9) {
 		name;
@@ -8,5 +10,6 @@ return i+j; }
 
 { 
 	b:bool = name==2;
+	student.grade = 4;
 }
 

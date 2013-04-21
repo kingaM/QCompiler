@@ -20,7 +20,7 @@ public void syntax_error(Symbol cur_token) {
 }
 
 :} 
- 
+  
 terminal        String ID, TYPE, VOID;
 terminal		Boolean BOOL;
 terminal 		Float FLOAT;
@@ -306,7 +306,7 @@ expr				 ::= ID: id
                         {: RESULT = v; :}
                         | fcall:f
                         {: RESULT = f; :}
-                        | expr:l DOT expr:r
+                        | ID:l DOT ID:r
                         {: RESULT = new DotBinaryExpr(l, r); :}
                         | expr:l EQ expr:r 
                         {: RESULT = new EqBinaryExpr(l, r); :}

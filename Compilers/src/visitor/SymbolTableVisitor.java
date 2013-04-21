@@ -92,13 +92,9 @@ public class SymbolTableVisitor implements Visitor {
 
 		if (fieldDecl != null) {
 			String sig = "";
-			for (int i = 0; i < fieldDecl.size(); i++) {
-				if (i > 0)
-					sig = sig + ";" + fieldDecl.get(i).getId() + ":"
-							+ fieldDecl.get(i).getType();
-				else
-					sig = sig + fieldDecl.get(i).getType() + ":"
-							+ fieldDecl.get(i).getId();
+			for ( int i = 0; i < fieldDecl.size(); i++ ) {
+				if(i>0)sig = sig + ";" + fieldDecl.get(i).getType() + ":" + fieldDecl.get(i).getId();
+				else sig = sig + fieldDecl.get(i).getType() + ":" + fieldDecl.get(i).getId();
 			}
 			return sig;
 		}

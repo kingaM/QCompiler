@@ -1,6 +1,7 @@
 package visitor;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import ast.AndExpr;
 import ast.BoolValueExpr;
@@ -107,7 +108,6 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(TypeDecl d) {
-		// TODO Scope Check
 		String id = d.getId();
 		String structure = getStructure(d.getFields());
 		SymbolEntry entry = symTab.get(id);
@@ -187,8 +187,8 @@ public class TypeScopeVisitor implements Visitor {
 			String sig = "";
 			for (int i = 0; i < fieldDecl.size(); i++) {
 				if (i > 0)
-					sig = sig + ";" + fieldDecl.get(i).getId() + ":"
-							+ fieldDecl.get(i).getType();
+					sig = sig + ";" + fieldDecl.get(i).getType() + ":" +
+					fieldDecl.get(i).getType() + ":" + fieldDecl.get(i).getId(); 
 				else
 					sig = sig + fieldDecl.get(i).getType() + ":"
 							+ fieldDecl.get(i).getId();
@@ -251,8 +251,21 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(DotBinaryExpr e) {
-		// TODO Scope and type check
-		return null;
+		String id = e.getLhs();
+		String field = e.getRhs();
+		SymbolEntry entry = symTab.get(id);
+ 				    if(entry != null) {
+ 				    	
+ 				       StringTokenizer st = new StringTokenizer(entry.getVarType(),";");
+ 					   while(st.hasMoreTokens()){
+ 						   String test = st.nextToken();
+ 						   if(test.contains(field)){
+ 							   StringTokenizer st1 = new StringTokenizer(test,":");
+ 							   return st1.nextToken();
+ 						   }
+ 					   }
+ 				    }
+ 					return printError("error");
 	}
 
 	@Override
@@ -536,3 +549,4 @@ public class TypeScopeVisitor implements Visitor {
 		return numOfErrors;
 	}
 }
+
