@@ -385,6 +385,9 @@ public class TypeScopeVisitor implements Visitor {
 		if (fparameters.equals("char;char"))
 			if (symTab.get(">string;string") != null)
 				return symTab.get(">string;string").getRetType();
+		if (fparameters.equals("bool;bool"))
+			if (symTab.get(">int;int") != null)
+				return symTab.get(">int;int").getRetType();
 		eh.printErrorMessage(id, "function call", ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}

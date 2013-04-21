@@ -1,0 +1,5 @@
+tdef person: age:int, name:string;
+
+{
+
+}

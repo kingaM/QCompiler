@@ -3,7 +3,7 @@ Scope rules:
 2. It is not possible to declare identifiers of the same name in an overlapping scope.
 3. If an identifier has the same name as another identifier in the parent scope, the identifier in the current scope is used. 
 4. A user can define a new data type using only defualt data types (bool, int, float, char, string, list, tuple) or a data type previously defined by the user. 
-5. A function can only be called by another function if it was previously defined in the program. 
+5. A function can be called by another function or main at any point in the program. Q allows forward referencing on functions. 
 6. Identifiers and data types declared outside a function body or main have global scope. That is they can be used in any place in the program after their definition. 
 7. A scope is defined between { and }. 
 

@@ -64,21 +64,24 @@ public class ErrorHandler {
 		System.err.println(s);
 	}
 
-	public void printSummary() {
-		if (syntaxErrors == 0 && typeErrors == 0 && scopeErrors == 0)
+	public boolean printSummary() {
+		if (syntaxErrors == 0 && typeErrors == 0 && scopeErrors == 0){
 			System.out
 					.println("\n\nProgram compiled successfully, no errors found.");
+			return true;
+		}
 		else {
 			System.out.println("\n\nYou had :");
 			System.out.println("\t" + syntaxErrors + " syntax"
 					+ (syntaxErrors == 1 ? " error" : " errors"));
 			System.out.println("\t" + typeErrors + " type"
-					+ (typeErrors == 1 ? " error" : "errors"));
+					+ (typeErrors == 1 ? " error" : " errors"));
 			System.out.println("\t" + scopeErrors + " scope"
 					+ (scopeErrors == 1 ? " error" : " errors"));
 			if(otherErrors > 0)
 			System.out.println("\t" + otherErrors + " other"
 					+ (otherErrors == 1 ? " error" : " errors"));
+			return false;
 		}
 	}
 
