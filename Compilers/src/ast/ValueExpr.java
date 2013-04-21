@@ -8,7 +8,4 @@ public class ValueExpr extends Expr {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Object accept(Visitor v){
-		return v.visit(this);
-	}
 }

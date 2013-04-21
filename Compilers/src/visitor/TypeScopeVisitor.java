@@ -85,7 +85,7 @@ public class TypeScopeVisitor implements Visitor {
 		for (int i = 0; i < d.getInit().size(); i++) {
 			d.getInit().get(i).accept(this);
 		}
-		return null;
+		return d.getType();
 	}
 
 	@Override
@@ -235,8 +235,8 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(ExprStmt e) {
-		e.getE().accept(this);
-		return null;
+		return e.getE().accept(this);
+		//return null;
 	}
 
 	@Override
@@ -252,6 +252,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (entry != null && entry.getType() == SymbolType.FDEF
 				&& entry.getVarType().equals(callType))
 			return entry.getRetType();
+		if (id.equals("len"))
+			return "int";
 		return printError("error");
 	}
 
@@ -357,8 +359,10 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(SeqExpr e) {
 
 		if (e.getType().equals("list")) {
+			//TODO type is null if it is a list of strings
 			String type = (String) e.getSequence().get(0).accept(this);
-			for (int i = 0; i < e.getSequence().size(); i++) {
+			System.out.println("TYPE: " + type);
+			for (int i = 1; i < e.getSequence().size(); i++) {
 				if (!type.equals((String) e.getSequence().get(i).accept(this)))
 					return printError("error");
 			}
