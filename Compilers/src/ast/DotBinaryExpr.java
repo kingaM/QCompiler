@@ -2,14 +2,31 @@ package ast;
 
 import visitor.Visitor;
 
-public class DotBinaryExpr extends BinaryExpr {
+public class DotBinaryExpr extends Expr {
+	
+	private String lhs;
+	private String rhs;
 
-	public DotBinaryExpr(Expr lhs, Expr rhs) {
-		super(lhs, rhs);
+	public DotBinaryExpr(String lhs, String rhs) {
+		super();
+		this.lhs = lhs;
+		this.rhs = rhs;
 	}
+	
+	
 	
 	public Object accept(Visitor v){
 		return v.visit(this);
+	}
+
+
+	public String getLhs() {
+		return lhs;
+	}
+
+
+	public String getRhs() {
+		return rhs;
 	}
 
 

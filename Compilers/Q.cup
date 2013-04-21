@@ -308,8 +308,8 @@ expr				 ::= ID: id
                         {: RESULT = v; :}
                         | fcall:f
                         {: RESULT = f; :}
-                        | expr:l DOT expr:r
-                        {: RESULT = new DotBinaryExpr(l, r); :}
+                        | ID:l DOT ID:r
+                        {: RESULT = new DotBinaryExpr( l, r ); :}
                         | expr:l EQ expr:r 
                         {: RESULT = new EqBinaryExpr(l, r); :}
                         | expr:l CONCAT expr:r

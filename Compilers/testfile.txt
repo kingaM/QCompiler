@@ -10,5 +10,6 @@ return i+j; }
 
 { 
 	b:bool = name==2;
+	student.grade=4;
 }
 

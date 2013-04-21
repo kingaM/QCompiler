@@ -1,6 +1,7 @@
 package visitor;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import ast.AndExpr;
 import ast.BoolValueExpr;
@@ -248,8 +249,21 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(DotBinaryExpr e) {
-		// TODO Scope and type check
-		return null;
+	    String id = e.getLhs();
+	    String field = e.getRhs();
+	    SymbolEntry entry = symTab.get(id);
+	    if(entry != null) {
+	    	
+	       StringTokenizer st = new StringTokenizer(entry.getVarType(),";");
+		   while(st.hasMoreTokens()){
+			   String test = st.nextToken();
+			   if(test.contains(field)){
+				   StringTokenizer st1 = new StringTokenizer(test,":");
+				   return st1.nextToken();
+			   }
+		   }
+	    }
+		return printError("error");
 	}
 
 	@Override
