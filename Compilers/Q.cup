@@ -279,18 +279,16 @@ mainBlockStmt     	::= LBRACE mainStmtList:ms RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
-funcStmtNoFollowingSubstmt 		::= SEMI
-                                    | returnStmt:r 
+funcStmtNoFollowingSubstmt 		::= returnStmt:r 
                                     {: RESULT = r; :}
-                                    | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN
+                                    | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN SEMI
                                     {: RESULT = new RepeatUntilStmt(e, fb); :}
                                     | expr:e SEMI
                                     {: RESULT = new ExprStmt(e); :}
                                     | REPEAT error SEMI
                                     ; 
      
-mainStmtNoFollowingSubstmt 		::= SEMI
-                                    | REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN
+mainStmtNoFollowingSubstmt 		::=  REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN SEMI
                                     {: RESULT = new RepeatUntilStmt(e, mb); :}
                                     | expr:e SEMI
                                     {: RESULT = new ExprStmt(e); :}
