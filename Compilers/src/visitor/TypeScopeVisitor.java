@@ -88,6 +88,7 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(VariableDecl d) {
 		String id = d.getId();
 		String type = d.getType();
+		if(d.getInit()!=null)
 		for (int i = 0; i < d.getInit().size(); i++) {
 			d.getInit().get(i).accept(this);
 		}
@@ -360,8 +361,10 @@ public class TypeScopeVisitor implements Visitor {
 				return symTab.get(e.getId() + ">float;int").getRetType();
 			if (symTab.get(e.getId() + ">int;float") != null)
 				return symTab.get(e.getId() + ">int;float").getRetType();
-			if (symTab.get(e.getId() + ">float;float") != null)
+			if (symTab.get(e.getId() + ">float;float") != null) {
+				System.out.println("TEST:" + symTab.get(e.getId() + ">float;float").getRetType());
 				return symTab.get(e.getId() + ">float;float").getRetType();
+			}
 		}
 		if (fparameters.equals("float;int") || fparameters.equals("int;float")) {
 			if (symTab.get(e.getId() + ">float;float") != null) {

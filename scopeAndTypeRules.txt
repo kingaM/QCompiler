@@ -11,7 +11,7 @@ Scope rules:
 Type rules:
 1. Assignments are legal only if the identifier on the left-hand side and the expression on the right-hand side have the same or compatible type. It is possible to assign an int to a float, but not vice-versa. It is possible to assign a char to a string. It is possible to assign a bool to an int. 
 2. The test expression of if, if-else and repeat statements must have type bool.
-3. The number and type of actual parameters of a function call must match the number and type of the function’s declared formal parameters.
+3. The number and type of actual parameters of a function call must match the number and type of the function’s declared formal parameters or be of compatible type.
 4. The return statement of a function has to have the same or compatible type as the type declared in the function definiton.
 5. For binary operations +, -, *, / and ^ the result of
 	int op int = int
@@ -26,5 +26,5 @@ Type rules:
 10. Method overloading is allowed and the rules for type compatibility for method overloading are the same as for assignments. Methods cannot have different return types and the same parameters. 
 11. Sequence operator "in" can be used with any type on the right hand side, and string, tuple or list on the left hand side. 
 12. Concatination operator (::) has to have the same type on the right and left hand side and they have to be tuple, list or string. 
-13. When initialising a user defined type the parameters must match the type (or be compatible type) and number and order to the type declaration. 
-14. All elements in a list have to be the same type. Elements in a tuple can vary in type. 
+13. When initialising a user defined type the parameters must match the type (or be compatible type), number and order of the type declaration. 
+14. Elements in a tuple can vary in type. 

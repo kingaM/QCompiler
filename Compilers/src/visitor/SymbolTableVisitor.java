@@ -50,6 +50,7 @@ public class SymbolTableVisitor implements Visitor {
 		String id = d.getId();
 		String type = d.getType();
 		symTab.put(id, SymbolType.VAR, type);
+		if(d.getInit()!=null)
 		for ( int i = 0; i < d.getInit().size(); i++ ) {
 	        d.getInit().get(i).accept(this);
 	    }	
@@ -219,14 +220,9 @@ public class SymbolTableVisitor implements Visitor {
 	public Object visit(FcallExpr e) {
 		String id = e.getId();
 		SymbolEntry entry = symTab.get(id);
-		if(entry == null){
-			eh.printErrorMessage(id, "undeclared function", ErrorHandler.ErrorType.TYPE);
-			return "error";
-		}
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			e.getParameters().get(i).accept(this);
 		}
-		System.out.println("Function call expression: " + e.toString());
 		return null;
 	}
 
