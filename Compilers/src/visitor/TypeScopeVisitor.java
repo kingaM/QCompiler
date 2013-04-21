@@ -330,7 +330,7 @@ public class TypeScopeVisitor implements Visitor {
 
 		String callType = getSignature(fields);
 		SymbolEntry entry = symTab.get(id);
-
+		
 		if (entry != null && entry.getType() == SymbolType.FDEF
 				&& entry.getVarType().equals(callType))
 			return entry.getRetType();

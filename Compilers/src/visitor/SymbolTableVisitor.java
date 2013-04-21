@@ -219,10 +219,11 @@ public class SymbolTableVisitor implements Visitor {
 	public Object visit(FcallExpr e) {
 		String id = e.getId();
 		SymbolEntry entry = symTab.get(id);
-		if(entry == null){
+		/*if(entry == null){
 			eh.printErrorMessage(id, "undeclared function", ErrorHandler.ErrorType.TYPE);
 			return "error";
 		}
+		*/
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			e.getParameters().get(i).accept(this);
 		}
