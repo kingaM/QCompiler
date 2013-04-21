@@ -185,8 +185,8 @@ public class TypeScopeVisitor implements Visitor {
 			String sig = "";
 			for (int i = 0; i < fieldDecl.size(); i++) {
 				if (i > 0)
-					sig = sig + ";" + fieldDecl.get(i).getId() + ":"
-							+ fieldDecl.get(i).getType();
+					sig = sig + ";" + fieldDecl.get(i).getType() + ":"
+							+ fieldDecl.get(i).getId();
 				else
 					sig = sig + fieldDecl.get(i).getType() + ":"
 							+ fieldDecl.get(i).getId();
