@@ -110,7 +110,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(Field f) {
-		// TODO Auto-generated method stub
+		symTab.put(f.getId(), SymbolType.ARG, f.getType());
 		return null;
 	}
 	

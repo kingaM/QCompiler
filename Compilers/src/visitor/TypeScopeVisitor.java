@@ -91,8 +91,10 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(FunctionDecl d) {
+		System.out.println("FIELD");
 		if (d.getFieldDecl() != null) {
 			for (int i = 0; i < d.getFieldDecl().size(); i++) {
+				System.out.println("FIELD: " + d.getFieldDecl().get(i).toString());
 				d.getFieldDecl().get(i).accept(this);
 			}
 		}
@@ -121,6 +123,7 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(Field f) {
+		System.out.println("IN FIELD VISIT");
 		String type = f.getType();
 		return type;
 	}
@@ -230,7 +233,7 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(ExprStmt e) {
-		e.accept(this);
+		e.getE().accept(this);
 		return null;
 	}
 
@@ -324,6 +327,7 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(PlusBinaryExpr e) {
 		String typel = (String) e.getLhs().accept(this);
 		String typer = (String) e.getRhs().accept(this);
+		System.out.println("L: " + typel + " R: " + typer );
 		return typeOperator(typel, typer);
 	}
 
@@ -341,7 +345,7 @@ public class TypeScopeVisitor implements Visitor {
 		String typer = (String) e.getCall().accept(this);
 		SymbolEntry entry = symTab.get(id);
 		if (entry != null
-				&& (entry.getType() == SymbolType.ARG || entry.getType() == SymbolType.VAR)
+				&& (entry.getType() == SymbolType.ARG || entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.TDEF)
 				&& typer.equals("int"))
 			return entry.getType();
 		return printError("error");
@@ -399,9 +403,10 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(VarExpr e) {
 		SymbolEntry entry = symTab.get(e.getVar());
+		System.out.println("Entry: " + entry);
 		if (entry != null
-				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG))
-			return entry.getType();
+				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG ||  entry.getType() == SymbolType.TDEF))
+			return entry.getVarType();
 		return printError("error");
 	}
 

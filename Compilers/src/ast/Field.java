@@ -26,6 +26,12 @@ public class Field {
 		return v.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		return "Field [" + (id != null ? "id=" + id + ", " : "")
+				+ (type != null ? "type=" + type : "") + "]";
+	}
+
 
 
 }

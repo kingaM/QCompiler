@@ -156,8 +156,9 @@ mainDecl     		::= LBRACE mainStmtList:s RBRACE
                         ;
 
  
-fieldDeclOptional   ::= fieldDecl
-						|
+fieldDeclOptional   ::= fieldDecl:f
+						{: RESULT = f; :}
+						| 
                         ;
                                   
 
