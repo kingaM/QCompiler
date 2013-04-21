@@ -78,7 +78,7 @@ char = \'[a-z0-9A-Z]\'
 	"void"			{   return symbol(sym.VOID); 		}
 	"//"			{ 	yybegin(ENDOFLINECOMMENT); 		}
 	"/*"			{ 	yybegin(TRADITIONALCOMMENT);	}
-	{char}			{ 	return symbol(sym.CHAR, yytext());	}
+	{char}			{ 	return symbol(sym.CHAR, yytext().charAt(1));	}
 	{boolean}		{	return symbol(sym.BOOL, new Boolean(yytext()));}
 	{identifier}	{	return symbol(sym.ID, yytext());			}
 	{int}			{	return symbol(sym.INT, new Integer(yytext())); }
