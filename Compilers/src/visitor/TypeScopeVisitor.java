@@ -255,6 +255,7 @@ public class TypeScopeVisitor implements Visitor {
 		String id = e.getLhs();
 		String field = e.getRhs();
 		SymbolEntry entry = symTab.get(id);
+
 		if (entry != null) {
 
 			StringTokenizer st = new StringTokenizer(entry.getVarType(), ";");
@@ -267,6 +268,7 @@ public class TypeScopeVisitor implements Visitor {
 			}
 		}
 		return printError("error in DotBinaryExpr");
+
 	}
 
 	@Override
@@ -285,6 +287,7 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(FcallExpr e) {
 		String id = e.getId();
+		System.out.println("ID: " + id);
 		ArrayList<String> fields = new ArrayList<String>();
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			fields.add((String) e.getParameters().get(i).accept(this));
