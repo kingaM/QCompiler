@@ -316,13 +316,13 @@ expr				 ::= ID: id
                         {: ArrayList<Expr> a = new ArrayList<Expr>();
                         a.add(seq);
                         RESULT = new FcallExpr("len", a); :}
-                        | expr:l LSQPAREN expr:r RSQPAREN
+                        | ID:l LSQPAREN expr:r RSQPAREN
                         {: RESULT = new SeqCallExpr(l, r); :}
-                        | expr:seq LSQPAREN expr:s COLON expr:f RSQPAREN
+                        | ID:seq LSQPAREN expr:s COLON expr:f RSQPAREN
                         {: RESULT = new SeqSlicingExpr(seq, s, f); :}
-                        | expr:seq LSQPAREN COLON expr:f RSQPAREN
+                        | ID:seq LSQPAREN COLON expr:f RSQPAREN
                         {: RESULT = new SeqSlicingExpr(seq, null, f); :}
-                        | expr:seq LSQPAREN expr:s COLON RSQPAREN
+                        | ID:seq LSQPAREN expr:s COLON RSQPAREN
                         {: RESULT = new SeqSlicingExpr(seq, s, null); :}
                         | expr:l PLUS expr:r
                         {: RESULT = new PlusBinaryExpr(l, r); :}

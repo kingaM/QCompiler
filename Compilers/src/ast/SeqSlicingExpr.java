@@ -4,17 +4,17 @@ import visitor.Visitor;
 
 public class SeqSlicingExpr extends Expr {
 	
-	private Expr sequence;
+	private String sequence;
 	private Expr start;
 	private Expr finish;
 	
-	public SeqSlicingExpr(Expr sequence, Expr start, Expr finish) {
+	public SeqSlicingExpr(String sequence, Expr start, Expr finish) {
 		this.sequence = sequence;
 		this.start = start;
 		this.finish = finish;
 	}
 
-	public Expr getSequence() {
+	public String getSequence() {
 		return sequence;
 	}
 
