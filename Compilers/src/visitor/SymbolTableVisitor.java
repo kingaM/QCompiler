@@ -393,4 +393,10 @@ public class SymbolTableVisitor implements Visitor {
 				+ (symTab != null ? "symTab=" + symTab : "") + "]";
 	}
 
+	@Override
+	public Object visit(NotUnaryExpr e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

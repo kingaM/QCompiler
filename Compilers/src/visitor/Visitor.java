@@ -45,6 +45,7 @@ public interface Visitor {
 	public Object visit(TimesBinaryExpr e);	
 	public Object visit(ValueExpr e);
 	public Object visit(VarExpr e);
+	public Object visit(NotUnaryExpr e);
 	
 	//statements
 	public Object visit(Stmt s);

@@ -29,6 +29,7 @@ import ast.LessCompBinaryExpr;
 import ast.LessEqCompBinaryExpr;
 import ast.MainDecl;
 import ast.MinusBinaryExpr;
+import ast.NotUnaryExpr;
 import ast.OrExpr;
 import ast.PlusBinaryExpr;
 import ast.PowerBinaryExpr;
@@ -187,8 +188,9 @@ public class TypeScopeVisitor implements Visitor {
 			String sig = "";
 			for (int i = 0; i < fieldDecl.size(); i++) {
 				if (i > 0)
-					sig = sig + ";" + fieldDecl.get(i).getType() + ":" +
-					fieldDecl.get(i).getType() + ":" + fieldDecl.get(i).getId(); 
+					sig = sig + ";" + fieldDecl.get(i).getType() + ":"
+							+ fieldDecl.get(i).getType() + ":"
+							+ fieldDecl.get(i).getId();
 				else
 					sig = sig + fieldDecl.get(i).getType() + ":"
 							+ fieldDecl.get(i).getId();
@@ -254,18 +256,18 @@ public class TypeScopeVisitor implements Visitor {
 		String id = e.getLhs();
 		String field = e.getRhs();
 		SymbolEntry entry = symTab.get(id);
- 				    if(entry != null) {
- 				    	
- 				       StringTokenizer st = new StringTokenizer(entry.getVarType(),";");
- 					   while(st.hasMoreTokens()){
- 						   String test = st.nextToken();
- 						   if(test.contains(field)){
- 							   StringTokenizer st1 = new StringTokenizer(test,":");
- 							   return st1.nextToken();
- 						   }
- 					   }
- 				    }
- 					return printError("error");
+		if (entry != null) {
+
+			StringTokenizer st = new StringTokenizer(entry.getVarType(), ";");
+			while (st.hasMoreTokens()) {
+				String test = st.nextToken();
+				if (test.contains(field)) {
+					StringTokenizer st1 = new StringTokenizer(test, ":");
+					return st1.nextToken();
+				}
+			}
+		}
+		return printError("error");
 	}
 
 	@Override
@@ -471,6 +473,7 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(ReturnStmt s) {
+		//TODO typecheck return statement
 		return s.getReturnExpr().accept(this);
 	}
 
@@ -548,5 +551,12 @@ public class TypeScopeVisitor implements Visitor {
 	public int getNumOfErrors() {
 		return numOfErrors;
 	}
-}
 
+	@Override
+	public Object visit(NotUnaryExpr e) {
+		String type = (String) e.getExpr().accept(this);
+		if (type.equals("bool"))
+			return "bool";
+		return printError("error");
+	}
+}

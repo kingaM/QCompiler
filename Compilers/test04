@@ -1,5 +1,6 @@
 fdef invert(t:tuple):tuple {
      t2:tuple=[||];
+
      if (len(t)>0) {
         i:int = 0;
 	if (len(t)>0) {
@@ -7,7 +8,7 @@ fdef invert(t:tuple):tuple {
 	
       } 
       } else {}
-      return t2;
+      return 0;
 }
 
 a:tuple = [|1,2,3,"aa","bb",""|];
