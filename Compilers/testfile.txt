@@ -1,5 +1,16 @@
 
+fdef sum(i:float, j:float) : float {
+     return i + j;
+     
+}
+
+b:float = 4.7;
+
 {
 a:int = 0;
+c:float = 5;
+d:string = 'f';
+a = a+1;
+
 }
 
