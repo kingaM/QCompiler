@@ -1,0 +1,11 @@
+fdef sum:int(a:int, b:int) {
+	return a + b;
+}
+
+fdef sum:float(a:float, b:float) {
+	return a + b;
+}
+
+{
+
+}

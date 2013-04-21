@@ -1,0 +1,7 @@
+tdef Person = age:int, name:string;
+tdef Car = age:int, name:string;
+
+{
+	p:Person = 10, "name";
+	c:Car = p;
+}
