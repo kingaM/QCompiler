@@ -227,7 +227,8 @@ public class TypeScopeVisitor implements Visitor {
 		String typer = (String) e.getRhs().accept(this);
 		if (isCompatible(typel, typer))
 			return "bool";
-		eh.printErrorMessage(typel + " " + typer, "comparable expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer, "comparable expression",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 
 	}
@@ -243,7 +244,8 @@ public class TypeScopeVisitor implements Visitor {
 		else if (typel.equals("string") && typer.equals("string"))
 			return "string";
 
-		eh.printErrorMessage(typel + " " + typer, "concatination", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer, "concatination",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -262,7 +264,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (l.equals("float") && r.equals("float"))
 			return "float";
 
-		eh.printErrorMessage(l + " " + r, "binary operator expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(l + " " + r, "binary operator expression",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -271,9 +274,10 @@ public class TypeScopeVisitor implements Visitor {
 		String id = e.getLhs();
 		String field = e.getRhs();
 		SymbolEntry entry = symTab.get(id);
-		
-		if(entry == null) {
-			eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE_NOTDECL);
+
+		if (entry == null) {
+			eh.printErrorMessage(id, "user defined type accessor",
+					ErrorHandler.ErrorType.SCOPE_NOTDECL);
 			return "error";
 		}
 
@@ -288,7 +292,8 @@ public class TypeScopeVisitor implements Visitor {
 				}
 			}
 		}
-		eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE_NOTDECL);
+		eh.printErrorMessage(id, "user defined type accessor",
+				ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 
 	}
@@ -298,11 +303,12 @@ public class TypeScopeVisitor implements Visitor {
 		String typel = (String) e.getLhs().accept(this);
 		String typer = (String) e.getRhs().accept(this);
 
-		if(typel.equals(typer))
+		if (typel.equals(typer))
 			return typel;
-		if(typel.equals("float") && typer.equals("int"))
+		if (typel.equals("float") && typer.equals("int"))
 			return "float";
-		eh.printErrorMessage(typel + " " + typer, "assingment", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer, "assingment",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -324,7 +330,7 @@ public class TypeScopeVisitor implements Visitor {
 
 		String callType = getSignature(fields);
 		SymbolEntry entry = symTab.get(id);
-		
+
 		if (entry != null && entry.getType() == SymbolType.FDEF
 				&& entry.getVarType().equals(callType))
 			return entry.getRetType();
@@ -334,35 +340,38 @@ public class TypeScopeVisitor implements Visitor {
 						|| fields.get(0).equals("tuple") || fields.get(0)
 						.equals("string")))
 			return "int";
-		
-		//use parameters type to detect upper function if any
-		
+
+		// use parameters type to detect upper function if any
+
 		String fparameters = "";
-		for(int j = 0; j < fields.size() - 1; j++){
+		for (int j = 0; j < fields.size() - 1; j++) {
 			fparameters = fields.get(j) + ";";
 		}
-		fparameters =  fparameters + fields.get(fields.size()-1);
+		fparameters = fparameters + fields.get(fields.size() - 1);
 		String fcallId = e.getId() + ">" + fparameters;
-		
+
 		System.out.println("TEST: " + fcallId);
-		if(symTab.getEntry(fcallId, symTab) != null){
+		if (symTab.get(fcallId) != null) {
 			System.out.println("function matched");
-			return 0;
-		} 
-		if(fparameters.equals("int;int")){
-			if(symTab.getEntry(e.getId() + ">float;int", symTab) != null
-					|| symTab.getEntry(e.getId() + ">int;float", symTab) != null
-					|| symTab.getEntry(e.getId() + ">float;float", symTab) != null){
-				return 0;
-				
+			return symTab.get(fcallId).getRetType();
+		}
+		if (fparameters.equals("int;int")) {
+			if (symTab.get(e.getId() + ">float;int") != null)
+				return symTab.get(e.getId() + ">float;int").getRetType();
+			if (symTab.get(e.getId() + ">int;float") != null)
+				return symTab.get(e.getId() + ">int;float").getRetType();
+			if (symTab.get(e.getId() + ">float;float") != null)
+				return symTab.get(e.getId() + ">float;float").getRetType();
+		}
+		if (fparameters.equals("float;int") || fparameters.equals("int;float")) {
+			if (symTab.get(e.getId() + ">float;float") != null) {
+				return symTab.get(e.getId() + ">float;float").getRetType();
+
 			}
 		}
-		if(fparameters.equals("float;int") || fparameters.equals("int;float")){
-			if(symTab.getEntry(e.getId() + ">float;float", symTab) != null){
-				return 0;
-				
-			}
-		}
+		if(fparameters.equals("char;char"))
+			if(symTab.get(">string;string")!=null)
+				return symTab.get(">string;string").getRetType();
 		eh.printErrorMessage(id, "function call", ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
@@ -379,7 +388,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (isCompatible(typel, typer))
 			return "bool";
 
-		eh.printErrorMessage(typel + " " + typer, "greater than expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer, "greater than expression",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -390,7 +400,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (isCompatible(typel, typer))
 			return "bool";
 
-		eh.printErrorMessage(typel + " " + typer, "greater or equal expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer,
+				"greater or equal expression", ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -418,7 +429,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (isCompatible(typel, typer))
 			return "bool";
 
-		eh.printErrorMessage(typel + " " + typer, "less than expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer, "less than expression",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -429,7 +441,8 @@ public class TypeScopeVisitor implements Visitor {
 		if (isCompatible(typel, typer))
 			return "bool";
 
-		eh.printErrorMessage(typel + " " + typer, "less than or equal expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typel + " " + typer,
+				"less than or equal expression", ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -468,8 +481,9 @@ public class TypeScopeVisitor implements Visitor {
 		String id = (String) e.getId();
 		String typer = (String) e.getCall().accept(this);
 		SymbolEntry entry = symTab.get(id);
-		if(entry == null) {
-			eh.printErrorMessage(id, "sequence call", ErrorHandler.ErrorType.SCOPE_NOTDECL);
+		if (entry == null) {
+			eh.printErrorMessage(id, "sequence call",
+					ErrorHandler.ErrorType.SCOPE_NOTDECL);
 			return "error";
 		}
 		if (entry != null
@@ -477,7 +491,8 @@ public class TypeScopeVisitor implements Visitor {
 				&& typer.equals("int"))
 			return entry.getType();
 
-		eh.printErrorMessage(typer, "sequence call", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(typer, "sequence call",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -493,8 +508,10 @@ public class TypeScopeVisitor implements Visitor {
 					String typeToCheck = (String) e.getSequence().get(i)
 							.accept(this);
 					if (!type.equals(typeToCheck))
-						eh.printErrorMessage(typeToCheck, "sequence defninition", ErrorHandler.ErrorType.TYPE);
-						return "error";
+						eh.printErrorMessage(typeToCheck,
+								"sequence defninition",
+								ErrorHandler.ErrorType.TYPE);
+					return "error";
 				}
 			}
 			return "list";
@@ -507,7 +524,8 @@ public class TypeScopeVisitor implements Visitor {
 			return "tuple";
 		}
 
-		eh.printErrorMessage(e.getType(), "sequence defninition", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(e.getType(), "sequence defninition",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -515,17 +533,19 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(SeqSlicingExpr e) {
 
 		String seqType = (String) e.getSequence();
-		if(seqType.equals("tuple") || seqType.equals("string") || seqType.equals("list")) {
+		if (seqType.equals("tuple") || seqType.equals("string")
+				|| seqType.equals("list")) {
 
-		Expr start = e.getStart();
-		Expr finish = e.getFinish();
-		if ((start != null && start.accept(this).equals("int"))
-				|| (finish != null && finish.accept(this).equals("int"))
-				|| (start == null && finish == null))
-			return seqType;
+			Expr start = e.getStart();
+			Expr finish = e.getFinish();
+			if ((start != null && start.accept(this).equals("int"))
+					|| (finish != null && finish.accept(this).equals("int"))
+					|| (start == null && finish == null))
+				return seqType;
 
 		}
-		eh.printErrorMessage(seqType, "sequence slicing", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(seqType, "sequence slicing",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -554,7 +574,8 @@ public class TypeScopeVisitor implements Visitor {
 				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG))
 			return entry.getVarType();
 
-		eh.printErrorMessage(e.getVar(), "variable referencing", ErrorHandler.ErrorType.SCOPE_NOTDECL);
+		eh.printErrorMessage(e.getVar(), "variable referencing",
+				ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 	}
 
@@ -574,7 +595,8 @@ public class TypeScopeVisitor implements Visitor {
 
 		String type = (String) s.getCondition().accept(this);
 		if (!type.equals("bool")) {
-			eh.printErrorMessage(type, "condition of a statement", ErrorHandler.ErrorType.TYPE);
+			eh.printErrorMessage(type, "condition of a statement",
+					ErrorHandler.ErrorType.TYPE);
 			return "error";
 		}
 		symTab = symTab.getNextScope();
@@ -590,7 +612,8 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(RepeatUntilStmt s) {
 		String type = (String) s.getCondition().accept(this);
 		if (!type.equals("bool")) {
-			eh.printErrorMessage(type, "condition of a statement", ErrorHandler.ErrorType.TYPE);
+			eh.printErrorMessage(type, "condition of a statement",
+					ErrorHandler.ErrorType.TYPE);
 			return "error";
 		}
 		symTab = symTab.getNextScope();
@@ -607,7 +630,8 @@ public class TypeScopeVisitor implements Visitor {
 
 		String type = (String) s.getCondition().accept(this);
 		if (!type.equals("bool")) {
-			eh.printErrorMessage(type, "condition of a statement", ErrorHandler.ErrorType.TYPE);
+			eh.printErrorMessage(type, "condition of a statement",
+					ErrorHandler.ErrorType.TYPE);
 			return "error";
 		}
 		symTab = symTab.getNextScope();
@@ -636,7 +660,8 @@ public class TypeScopeVisitor implements Visitor {
 
 		String type = (String) s.getCondition().accept(this);
 		if (!type.equals("bool")) {
-			eh.printErrorMessage(type, "condition of a statement", ErrorHandler.ErrorType.TYPE);
+			eh.printErrorMessage(type, "condition of a statement",
+					ErrorHandler.ErrorType.TYPE);
 			return "error";
 		}
 		symTab = symTab.getNextScope();
@@ -648,13 +673,13 @@ public class TypeScopeVisitor implements Visitor {
 		return null;
 	}
 
-
 	@Override
 	public Object visit(NotUnaryExpr e) {
 		String type = (String) e.getExpr().accept(this);
 		if (type.equals("bool"))
 			return "bool";
-		eh.printErrorMessage(type, "not expression", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage(type, "not expression",
+				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 }
