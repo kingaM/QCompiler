@@ -82,7 +82,6 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(VariableDecl d) {
 		String id = d.getId();
 		String type = d.getType();
-		symTab.put(id, SymbolType.TDEF, type);
 		for (int i = 0; i < d.getInit().size(); i++) {
 			d.getInit().get(i).accept(this);
 		}
@@ -91,16 +90,16 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(FunctionDecl d) {
-		System.out.println("FIELD");
+		symTab = symTab.getNextScope();
 		if (d.getFieldDecl() != null) {
 			for (int i = 0; i < d.getFieldDecl().size(); i++) {
-				System.out.println("FIELD: " + d.getFieldDecl().get(i).toString());
 				d.getFieldDecl().get(i).accept(this);
 			}
 		}
 		for (int i = 0; i < d.getBody().size(); i++) {
 			d.getBody().get(i).accept(this);
 		}
+		symTab.exitScope();
 		return null;
 	}
 
@@ -123,7 +122,6 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(Field f) {
-		System.out.println("IN FIELD VISIT");
 		String type = f.getType();
 		return type;
 	}
@@ -424,9 +422,11 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(IfStmt s) {
 		if (!s.getCondition().accept(this).equals("bool"))
 			return printError("error");
+		symTab = symTab.getNextScope();
 		for (int i = 0; i < s.getBody().size(); i++) {
 			s.getBody().get(i).accept(this);
 		}
+		symTab = symTab.exitScope();
 		return null;
 	}
 
@@ -434,9 +434,11 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(RepeatUntilStmt s) {
 		if (!s.getCondition().accept(this).equals("bool"))
 			return printError("error");
+		symTab = symTab.getNextScope();
 		for (int i = 0; i < s.getBody().size(); i++) {
 			s.getBody().get(i).accept(this);
 		}
+		symTab = symTab.exitScope();
 		return null;
 	}
 
@@ -444,12 +446,16 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(IfElseStmt s) {
 		if (!s.getCondition().accept(this).equals("bool"))
 			return printError("error");
+		symTab = symTab.getNextScope();
 		for (int i = 0; i < s.getIfBody().size(); i++) {
 			s.getIfBody().get(i).accept(this);
 		}
+		symTab = symTab.exitScope();
+		symTab = symTab.getNextScope();
 		for (int i = 0; i < s.getElseBody().size(); i++) {
 			s.getElseBody().get(i).accept(this);
 		}
+		symTab = symTab.exitScope();
 		return null;
 	}
 
@@ -463,9 +469,11 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(WhileStmt s) {
 		if (!s.getCondition().accept(this).equals("bool"))
 			return printError("error");
+		symTab = symTab.getNextScope();
 		for (int i = 0; i < s.getBody().size(); i++) {
 			s.getBody().get(i).accept(this);
 		}
+		symTab = symTab.exitScope();
 		return null;
 	}
 	

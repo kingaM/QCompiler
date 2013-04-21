@@ -17,13 +17,10 @@ public class SymbolTableVisitor implements Visitor {
 	@Override
 	public Object visit(Program p) {
 		System.out.println("Entering program");
-		
-		symTab = symTab.enterScope(); 
 		for ( int i = 0; i < p.getDecllist().size(); i++ ) {
 	        p.getDecllist().get(i).accept(this);
 	    }		
 		p.getMain().accept(this);
-		symTab = symTab.exitScope(); 
 		return null;
 	}
 	
