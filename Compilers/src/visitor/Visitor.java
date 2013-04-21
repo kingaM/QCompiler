@@ -2,56 +2,56 @@ package visitor;
 import ast.*;
 
 public interface Visitor {
-	public void visit(Program p);
+	public Object visit(Program p);
 	
 	//declarations	
-	public void visit(Decl d);
-	public void visit(MainDecl d);
-	public void visit(VariableDecl d);
-	public void visit(FunctionDecl d);
-	public void visit(TypeDecl d);
+	public Object visit(Decl d);
+	public Object visit(MainDecl d);
+	public Object visit(VariableDecl d);
+	public Object visit(FunctionDecl d);
+	public Object visit(TypeDecl d);
 	
-	public void visit(FunctionStmtList l);
+	public Object visit(FunctionStmtList l);
 	
-	public void visit(Field f);
+	public Object visit(Field f);
 	
 	//expressions
-	public void visit(Expr e);
-	public void visit(AndExpr e);
-	public void visit(BoolValueExpr e);
-	public void visit(CharValueExpr e);
-	public void visit(CompBinaryExpr e);
-	public void visit(ConcatBinaryExpr e);
-	public void visit(DivideBinaryExpr e);
-	public void visit(DotBinaryExpr e);
-	public void visit(EqBinaryExpr e);
-	public void visit(ExprStmt e);
-	public void visit(FcallExpr e);	
-	public void visit(FloatValueExpr e);
-	public void visit(GreaterCompBinaryExpr e);
-	public void visit(GreaterOrEqExpr e);	
-	public void visit(InExpr e);
-	public void visit(IntValueExpr e);
-	public void visit(LessCompBinaryExpr e);
-	public void visit(LessEqCompBinaryExpr e);
-	public void visit(MinusBinaryExpr e);
-	public void visit(OrExpr e);
-	public void visit(PlusBinaryExpr e);
-	public void visit(PowerBinaryExpr e);
-	public void visit(SeqCallExpr e);
-	public void visit(SeqExpr e);
-	public void visit(SeqSlicingExpr e);
-	public void visit(StrValueExpr e);
-	public void visit(TimesBinaryExpr e);	
-	public void visit(ValueExpr e);
-	public void visit(VarExpr e);
+	public Object visit(Expr e);
+	public Object visit(AndExpr e);
+	public Object visit(BoolValueExpr e);
+	public Object visit(CharValueExpr e);
+	public Object visit(CompBinaryExpr e);
+	public Object visit(ConcatBinaryExpr e);
+	public Object visit(DivideBinaryExpr e);
+	public Object visit(DotBinaryExpr e);
+	public Object visit(EqBinaryExpr e);
+	public Object visit(ExprStmt e);
+	public Object visit(FcallExpr e);	
+	public Object visit(FloatValueExpr e);
+	public Object visit(GreaterCompBinaryExpr e);
+	public Object visit(GreaterOrEqExpr e);	
+	public Object visit(InExpr e);
+	public Object visit(IntValueExpr e);
+	public Object visit(LessCompBinaryExpr e);
+	public Object visit(LessEqCompBinaryExpr e);
+	public Object visit(MinusBinaryExpr e);
+	public Object visit(OrExpr e);
+	public Object visit(PlusBinaryExpr e);
+	public Object visit(PowerBinaryExpr e);
+	public Object visit(SeqCallExpr e);
+	public Object visit(SeqExpr e);
+	public Object visit(SeqSlicingExpr e);
+	public Object visit(StrValueExpr e);
+	public Object visit(TimesBinaryExpr e);	
+	public Object visit(ValueExpr e);
+	public Object visit(VarExpr e);
 	
 	//statements
-	public void visit(Stmt s);
-	public void visit(ReturnStmt s);
-	public void visit(IfStmt s);
-	public void visit(RepeatUntilStmt s);
-	public void visit(IfElseStmt s);
-	public void visit(VarStmt s);
-	public void visit(WhileStmt s);
+	public Object visit(Stmt s);
+	public Object visit(ReturnStmt s);
+	public Object visit(IfStmt s);
+	public Object visit(RepeatUntilStmt s);
+	public Object visit(IfElseStmt s);
+	public Object visit(VarStmt s);
+	public Object visit(WhileStmt s);
 }

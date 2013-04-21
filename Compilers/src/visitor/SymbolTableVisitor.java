@@ -15,7 +15,7 @@ public class SymbolTableVisitor implements Visitor {
 	}
 	
 	@Override
-	public void visit(Program p) {
+	public Object visit(Program p) {
 		System.out.println("Entering program");
 		
 		symTab = symTab.enterScope(); 
@@ -24,24 +24,27 @@ public class SymbolTableVisitor implements Visitor {
 	    }		
 		p.getMain().accept(this);
 		symTab = symTab.exitScope(); 
+		return null;
 	}
 	
 	@Override
-	public void visit(Decl d) {	
+	public Object visit(Decl d) {
+		return null;
 	}
 	
 	@Override
-	public void visit(MainDecl d) {
+	public Object visit(MainDecl d) {
 		System.out.println("Entering main decl");		
 		symTab = symTab.enterScope(); 
 		for ( int i = 0; i < d.getStmts().size(); i++ ) {
 	        d.getStmts().get(i).accept(this);
 	    }	
 		symTab = symTab.exitScope(); 
+		return null;
 	}
 	
 	@Override
-	public void visit(VariableDecl d) {
+	public Object visit(VariableDecl d) {
 		//has id type
 		System.out.println("Entering variable decl: " + d.toString());
 		String id = d.getId();
@@ -50,10 +53,11 @@ public class SymbolTableVisitor implements Visitor {
 		for ( int i = 0; i < d.getInit().size(); i++ ) {
 	        d.getInit().get(i).accept(this);
 	    }	
+		return null;
 	}
 
 	@Override
-	public void visit(FunctionDecl d) {
+	public Object visit(FunctionDecl d) {
 		System.out.println("Entering function decl: " + d.toString());
 		String id = d.getId();
 		String signature = d.getReturnType() + "->" + getSignature(d.getFieldDecl());
@@ -68,6 +72,7 @@ public class SymbolTableVisitor implements Visitor {
 			d.getBody().get(i).accept(this);
 		}		
 		symTab = symTab.exitScope(); 
+		return null;
 	}
 
 	private String getSignature(ArrayList<Field> fieldDecl) {
@@ -80,11 +85,11 @@ public class SymbolTableVisitor implements Visitor {
 			return sig;
 		}
 		
-		return "void";
+		return "Object";
 	}
 
 	@Override
-	public void visit(TypeDecl d) {
+	public Object visit(TypeDecl d) {
 		System.out.println("Entering type decl: " + d.toString());	
 		String id = d.getId();
 		String signature = getSignature(d.getFields());
@@ -92,210 +97,243 @@ public class SymbolTableVisitor implements Visitor {
 		for ( int i = 0; i < d.getFields().size(); i++ ) {
 			d.getFields().get(i).accept(this);
 		}		
+		return null;
 	}
 
 	@Override
-	public void visit(FunctionStmtList l) {
+	public Object visit(FunctionStmtList l) {
 		for ( int i = 0; i < l.getStmtList().size(); i++ ) {
 			l.getStmtList().get(i).accept(this);
 		}	
-
+		return null;
 	}
 
 	@Override
-	public void visit(Field f) {
+	public Object visit(Field f) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 	
 	@Override
-	public void visit(Expr e) {
+	public Object visit(Expr e) {
 		// TODO Auto-generated method stub
+		return null;
 		
 	}
 
 	@Override
-	public void visit(AndExpr e) {
+	public Object visit(AndExpr e) {
 		System.out.println("Add expression: " + e.toString());
+		return null;
 		
 	}
 
 	@Override
-	public void visit(BoolValueExpr e) {
+	public Object visit(BoolValueExpr e) {
 		System.out.println("Bool expression: " + e.toString());
+		return null;
 		
 	}
 
 	@Override
-	public void visit(CharValueExpr e) {
+	public Object visit(CharValueExpr e) {
 		System.out.println("Char Value expression: " + e.toString());
+		return null;
 		
 	}
 
 	@Override
-	public void visit(CompBinaryExpr e) {
+	public Object visit(CompBinaryExpr e) {
 		System.out.println("Comp expression: " + e.toString());
+		return null;
 		
 	}
 
 	@Override
-	public void visit(ConcatBinaryExpr e) {
+	public Object visit(ConcatBinaryExpr e) {
 		System.out.println("Concat expression: " + e.toString());
+		return null;
 		
 	}
 
 	@Override
-	public void visit(DivideBinaryExpr e) {
-		System.out.println("Divide expression: " + e.toString());		
+	public Object visit(DivideBinaryExpr e) {
+		System.out.println("Divide expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(DotBinaryExpr e) {
+	public Object visit(DotBinaryExpr e) {
 		System.out.println("Dot expression: " + e.toString());		
+		return null;
 	}
 
 	@Override
-	public void visit(EqBinaryExpr e) {
-		System.out.println("Equal expression: " + e.toString());		
+	public Object visit(EqBinaryExpr e) {
+		System.out.println("Equal expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(ExprStmt e) {
-		System.out.println("Divide expression: " + e.toString());		
+	public Object visit(ExprStmt e) {
+		System.out.println("Divide expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(FcallExpr e) {
-		System.out.println("Function call expression: " + e.toString());		
+	public Object visit(FcallExpr e) {
+		System.out.println("Function call expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(FloatValueExpr e) {
-		System.out.println("Float value expression: " + e.toString());		
+	public Object visit(FloatValueExpr e) {
+		System.out.println("Float value expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(GreaterCompBinaryExpr e) {
-		System.out.println("Greater than expression: " + e.toString());		
+	public Object visit(GreaterCompBinaryExpr e) {
+		System.out.println("Greater than expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(GreaterOrEqExpr e) {
-		System.out.println("Greater or eq expression: " + e.toString());		
+	public Object visit(GreaterOrEqExpr e) {
+		System.out.println("Greater or eq expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(InExpr e) {
-		System.out.println("In expression: " + e.toString());		
+	public Object visit(InExpr e) {
+		System.out.println("In expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(IntValueExpr e) {
-		System.out.println("Int value expression: " + e.toString());		
+	public Object visit(IntValueExpr e) {
+		System.out.println("Int value expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(LessCompBinaryExpr e) {
-		System.out.println("Less than expression: " + e.toString());		
+	public Object visit(LessCompBinaryExpr e) {
+		System.out.println("Less than expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(LessEqCompBinaryExpr e) {
-		System.out.println("Less or eq expression: " + e.toString());		
+	public Object visit(LessEqCompBinaryExpr e) {
+		System.out.println("Less or eq expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(MinusBinaryExpr e) {
-		System.out.println("Minus expression: " + e.toString());		
+	public Object visit(MinusBinaryExpr e) {
+		System.out.println("Minus expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(OrExpr e) {
-		System.out.println("Or expression: " + e.toString());		
+	public Object visit(OrExpr e) {
+		System.out.println("Or expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(PlusBinaryExpr e) {
+	public Object visit(PlusBinaryExpr e) {
 		System.out.println("Plus expression: " + e.toString());		
+		return null;
 	}
 
 	@Override
-	public void visit(PowerBinaryExpr e) {
-		System.out.println("Power expression: " + e.toString());		
+	public Object visit(PowerBinaryExpr e) {
+		System.out.println("Power expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(SeqCallExpr e) {
-		System.out.println("Seq call expression: " + e.toString());		
+	public Object visit(SeqCallExpr e) {
+		System.out.println("Seq call expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(SeqExpr e) {
+	public Object visit(SeqExpr e) {
 		System.out.println("Seq expression: " + e.toString());	
 		for ( int i = 0; i < e.getSequence().size(); i++ ) {
 	        e.getSequence().get(i).accept(this);
 	    }
+		return null;
 	}
 
 	@Override
-	public void visit(SeqSlicingExpr e) {
-		System.out.println("Seq slicing expression: " + e.toString());		
+	public Object visit(SeqSlicingExpr e) {
+		System.out.println("Seq slicing expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(StrValueExpr e) {
-		System.out.println("Str value expression: " + e.toString());		
+	public Object visit(StrValueExpr e) {
+		System.out.println("Str value expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(TimesBinaryExpr e) {
-		System.out.println("Times expression: " + e.toString());		
+	public Object visit(TimesBinaryExpr e) {
+		System.out.println("Times expression: " + e.toString());
+		return null;
 	}
 
 	@Override
-	public void visit(ValueExpr e) {
-		System.out.println("Value expression: " + e.toString());		
+	public Object visit(ValueExpr e) {
+		System.out.println("Value expression: " + e.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(VarExpr e) {
-		System.out.println("Var expression: " + e.toString());		
+	public Object visit(VarExpr e) {
+		System.out.println("Var expression: " + e.toString());
+		return null;
 	}
 	
 	@Override
-	public void visit(Stmt s) {
+	public Object visit(Stmt s) {
 		System.out.println("Entering statement");
+		return null;
 		
 	}
 
 	@Override
-	public void visit(ReturnStmt s) {
-		System.out.println("Return statement: " + s.toString());		
+	public Object visit(ReturnStmt s) {
+		System.out.println("Return statement: " + s.toString());	
+		return null;
 	}
 
 	@Override
-	public void visit(IfStmt s) {
+	public Object visit(IfStmt s) {
 		System.out.println("If statement: " + s.toString());		
 		symTab.enterScope();
 		for ( int i = 0; i < s.getBody().size(); i++ ) {
 			s.getBody().get(i).accept(this);
 		}	
 		symTab.exitScope();
+		return null;
 	}
 
 	@Override
-	public void visit(RepeatUntilStmt s) {
+	public Object visit(RepeatUntilStmt s) {
 		System.out.println("Repeat statement: " + s.toString());	
 		symTab.enterScope();
 		for ( int i = 0; i < s.getBody().size(); i++ ) {
 			s.getBody().get(i).accept(this);
 		}	
 		symTab.exitScope();
-		
+		return null;
 	}
 
 	@Override
-	public void visit(IfElseStmt s) {
+	public Object visit(IfElseStmt s) {
 		System.out.println("If else statement: " + s.toString());	
 		symTab.enterScope();
 		for ( int i = 0; i < s.getIfBody().size(); i++ ) {
@@ -307,24 +345,25 @@ public class SymbolTableVisitor implements Visitor {
 			s.getElseBody().get(i).accept(this);
 		}	
 		symTab.exitScope();
-		
+		return null;
 	}
 
 	@Override
-	public void visit(VarStmt s) {
+	public Object visit(VarStmt s) {
 		System.out.println("Var statement: " + s.toString());		
 		s.getVarDecl().accept(this);
+		return null;
 	}
 
 	@Override
-	public void visit(WhileStmt s) {
+	public Object visit(WhileStmt s) {
 		System.out.println("While statement: " + s.toString());		
 		symTab.enterScope();
 		for ( int i = 0; i < s.getBody().size(); i++ ) {
 			s.getBody().get(i).accept(this);
 		}	
 		symTab.exitScope();
-		
+		return null;
 	}
 
 	public SymbolTable getSymTab() {
