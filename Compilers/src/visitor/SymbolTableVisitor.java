@@ -141,7 +141,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(Expr e) {
-		// TODO Auto-generated method stub
 		return null;
 
 	}
@@ -218,8 +217,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(FcallExpr e) {
-		String id = e.getId();
-		SymbolEntry entry = symTab.get(id);
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			e.getParameters().get(i).accept(this);
 		}
@@ -360,6 +357,7 @@ public class SymbolTableVisitor implements Visitor {
 			eh.printErrorMessage(e.getVar(), "variable undefined",
 					ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		}
+		
 		System.out.println("Var expression: " + e.toString());
 		return null;
 	}
@@ -424,7 +422,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarStmt s) {
-		s.getVarDecl().accept(this);
 		System.out.println("Var statement: " + s.toString());
 		s.getVarDecl().accept(this);
 		return null;
