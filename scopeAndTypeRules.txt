@@ -1,6 +1,6 @@
 Scope rules:
-1. Each identi?er must be declared in an enclosing scope prior to its use.
-2. It is not possible to declare identi?ers of the same name in an overlapping scope.
+1. Each identifier must be declared in an enclosing scope prior to its use.
+2. It is not possible to declare identifiers of the same name in an overlapping scope.
 3. If an identifier has the same name as another identifier in the parent scope, the identifier in the current scope is used. 
 4. A user can define a new data type using only defualt data types (bool, int, float, char, string, list, tuple) or a data type previously defined by the user. 
 5. A function can only be called by another function if it was previously defined in the program. 
@@ -9,8 +9,8 @@ Scope rules:
 
 
 Type rules:
-1. Assignments are legal only if the identifier on the left-hand side and the expression on the right-hand side have the same or compatible type. It is possible to assign an int to a float, but not vice-versa.
-2. The test expression of if and repeat statements must have type bool
+1. Assignments are legal only if the identifier on the left-hand side and the expression on the right-hand side have the same or compatible type. It is possible to assign an int to a float, but not vice-versa. It is possible to assign a char to a string. It is possible to assign a bool to an int. 
+2. The test expression of if, if-else and repeat statements must have type bool.
 3. The number and type of actual parameters of a function call must match the number and type of the function’s declared formal parameters.
 4. The return statement of a function has to have the same or compatible type as the type declared in the function definiton.
 5. For binary operations +, -, *, / and ^ the result of
@@ -19,11 +19,12 @@ Type rules:
 	float op int = int
 	int op float = int
    Any other combination is not allowed. 
-6. The "." operator only works on user defined types. The expression "id.field" only works when that type has a given id. 
+6. The "." operator only works on user defined types. The expression "id.field" only works when that type has a given field. 
 7. No user defined type can be assigned to a different user defined type. I.e. they are not compatible with each other. 
 8. Each element of a list has to be of the same type. 
-9. For comparison operator the types have to be the same, or compatible. 
-
-Compatible types:
-int compatible with float and bool
-bool compatible with int
+9. For comparison operator the types have to be the same, or compatible. An int can be compared to a float, in which case int will be treated as a float, or a bool, in which case bool will be treated as an int (i.e. false = 0, true = 1)
+10. Method overloading is allowed and the rules for type compatibility for method overloading are the same as for assignments. Methods cannot have different return types and the same parameters. 
+11. Sequence operator "in" can be used with any type on the right hand side, and string, tuple or list on the left hand side. 
+12. Concatination operator (::) has to have the same type on the right and left hand side and they have to be tuple, list or string. 
+13. When initialising a user defined type the parameters must match the type (or be compatible type) and number and order to the type declaration. 
+14. All elements in a list have to be the same type. Elements in a tuple can vary in type. 

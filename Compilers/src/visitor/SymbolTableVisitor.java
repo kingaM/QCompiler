@@ -67,6 +67,7 @@ public class SymbolTableVisitor implements Visitor {
 		//d.setId(id); //is this actually useful? if not delete setId in the ast class too
 		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
 		symTab = symTab.enterScope();
+		symTab.put("_FunctReturnType", SymbolType.FDEF, d.getReturnType()); 
 		if (d.getFieldDecl() != null) {
 			for (int i = 0; i < d.getFieldDecl().size(); i++) {
 				d.getFieldDecl().get(i).accept(this);
@@ -141,7 +142,9 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(AndExpr e) {
-		System.out.println("Add expression: " + e.toString());
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
+		System.out.println("And expression: " + e.toString());
 		return null;
 
 	}
@@ -162,6 +165,8 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(CompBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Comp expression: " + e.toString());
 		return null;
 
@@ -169,6 +174,8 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(ConcatBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Concat expression: " + e.toString());
 		return null;
 
@@ -176,6 +183,8 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(DivideBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Divide expression: " + e.toString());
 		return null;
 	}
@@ -188,18 +197,30 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(EqBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Equal expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(ExprStmt e) {
+		e.getE().accept(this);
 		System.out.println("Divide expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(FcallExpr e) {
+		String id = e.getId();
+		SymbolEntry entry = symTab.get(id);
+		if(entry == null){
+			eh.printErrorMessage(id, "undeclared function", ErrorHandler.ErrorType.TYPE);
+			return "error";
+		}
+		for (int i = 0; i < e.getParameters().size(); i++) {
+			e.getParameters().get(i).accept(this);
+		}
 		System.out.println("Function call expression: " + e.toString());
 		return null;
 	}
@@ -212,18 +233,24 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(GreaterCompBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Greater than expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(GreaterOrEqExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Greater or eq expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(InExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("In expression: " + e.toString());
 		return null;
 	}
@@ -236,42 +263,55 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(LessCompBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Less than expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(LessEqCompBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Less or eq expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(MinusBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Minus expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(OrExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Or expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(PlusBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Plus expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(PowerBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Power expression: " + e.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(SeqCallExpr e) {
+		e.getCall().accept(this);
 		System.out.println("Seq call expression: " + e.toString());
 		return null;
 	}
@@ -300,6 +340,8 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(TimesBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Times expression: " + e.toString());
 		return null;
 	}
@@ -312,6 +354,11 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarExpr e) {
+		SymbolEntry entry = symTab.get(e.getVar());
+		if( entry == null ){
+			eh.printErrorMessage(e.getVar(), "variable undefined",
+					ErrorHandler.ErrorType.SCOPE_NOTDECL);
+		}
 		System.out.println("Var expression: " + e.toString());
 		return null;
 	}
@@ -324,12 +371,14 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(ReturnStmt s) {
+		s.getReturnExpr().accept(this);
 		System.out.println("Return statement: " + s.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(IfStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("If statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -342,6 +391,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(RepeatUntilStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("Repeat statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -354,6 +404,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(IfElseStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("If else statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getIfBody() != null)
@@ -372,6 +423,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarStmt s) {
+		s.getVarDecl().accept(this);
 		System.out.println("Var statement: " + s.toString());
 		s.getVarDecl().accept(this);
 		return null;
@@ -379,6 +431,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(WhileStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("While statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -401,7 +454,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(NotUnaryExpr e) {
-		// TODO Auto-generated method stub
+		e.getExpr().accept(this);
 		return null;
 	}
 
