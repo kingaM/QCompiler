@@ -110,7 +110,9 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(Field f) {
+		System.out.println("FIELD SYM TAB");
 		symTab.put(f.getId(), SymbolType.ARG, f.getType());
+		System.out.println(symTab.get(f.getId()));
 		return null;
 	}
 	

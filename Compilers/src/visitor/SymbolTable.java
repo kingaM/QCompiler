@@ -2,11 +2,13 @@ package visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class SymbolTable {
 	
 	private ArrayList<SymbolTable> children;
 	private SymbolTable parent; 
+	private Iterator<SymbolTable> it; 
 	private HashMap<String, SymbolEntry> entries = new HashMap<String, SymbolEntry>();
 
 	public SymbolTable() {
@@ -16,6 +18,19 @@ public class SymbolTable {
 	public SymbolTable(SymbolTable symbolTable) {
 		this(); 
 		parent = symbolTable; 
+	}
+	
+	public SymbolTable getNextScope(){
+		if(it == null)
+			it = children.iterator(); 
+			
+		if(!it.hasNext())
+		{
+			System.out.println("A fatal error has occured, exiting..."); 
+			System.exit(1); 
+		}
+		
+		return (SymbolTable) it.next(); 
 	}
 
 	public SymbolEntry getEntry(String k, SymbolTable t) {
