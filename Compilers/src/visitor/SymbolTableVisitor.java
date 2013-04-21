@@ -62,6 +62,7 @@ public class SymbolTableVisitor implements Visitor {
 		//String id = d.getId();
 		String signature = getSignature(d.getFieldDecl());
 		String id = d.getId() + ">" + signature;
+		System.out.println(id);
 		//d.setId(id); //is this actually useful? if not delete setId in the ast class too
 		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
 		symTab = symTab.enterScope();

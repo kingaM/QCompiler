@@ -284,14 +284,14 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(FcallExpr e) {
 		String id = e.getId();
-		System.out.println("ID: " + id);
 		ArrayList<String> fields = new ArrayList<String>();
 		for (int i = 0; i < e.getParameters().size(); i++) {
-			fields.add((String) e.getParameters().get(i).accept(this));
+			fields.add((String) e.getParameters().get(i).accept(this));		
 		}
 
 		String callType = getSignature(fields);
 		SymbolEntry entry = symTab.get(id);
+
 		if (entry != null && entry.getType() == SymbolType.FDEF
 				&& entry.getVarType().equals(callType))
 			return entry.getRetType();
@@ -301,6 +301,34 @@ public class TypeScopeVisitor implements Visitor {
 						|| fields.get(0).equals("tuple") || fields.get(0)
 						.equals("string")))
 			return "int";
+		//use parameters type to detect upper function if any
+		
+		String fparameters = "";
+		for(int j = 0; j < fields.size() - 1; j++){
+			fparameters = fields.get(j) + ";";
+		}
+		fparameters =  fparameters + fields.get(fields.size()-1);
+		String fcallId = e.getId() + ">" + fparameters;
+		
+		System.out.println("TEST: " + fcallId);
+		if(symTab.getEntry(fcallId, symTab) != null){
+			System.out.println("function matched");
+			return 0;
+		} 
+		if(fparameters.equals("int;int")){
+			if(symTab.getEntry(e.getId() + ">float;int", symTab) != null
+					|| symTab.getEntry(e.getId() + ">int;float", symTab) != null
+					|| symTab.getEntry(e.getId() + ">float;float", symTab) != null){
+				return 0;
+				
+			}
+		}
+		if(fparameters.equals("float;int") || fparameters.equals("int;float")){
+			if(symTab.getEntry(e.getId() + ">float;float", symTab) != null){
+				return 0;
+				
+			}
+		}
 		return printError("error in FcallExpr");
 	}
 
