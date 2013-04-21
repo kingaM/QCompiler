@@ -29,34 +29,40 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(MainDecl d) {
-		System.out.println("Entering main decl");
-		symTab = symTab.enterScope();
-		if (d.getStmts() != null)
-			for (int i = 0; i < d.getStmts().size(); i++) {
-				d.getStmts().get(i).accept(this);
-			}
-		symTab = symTab.exitScope();
+
+		System.out.println("\nMain decl");		
+		symTab = symTab.enterScope(); 
+		for ( int i = 0; i < d.getStmts().size(); i++ ) {
+	        d.getStmts().get(i).accept(this);
+	    }	
+		symTab = symTab.exitScope(); 
+		System.out.println("Main decl end");	
+
 		return null;
 	}
 
 	@Override
 	public Object visit(VariableDecl d) {
-		// has id type
-		System.out.println("Entering variable decl: " + d.toString());
+		//has id type
+		System.out.println("\nVariable decl: " + d.toString());
 		String id = d.getId();
 		String type = d.getType();
-		symTab.put(id, SymbolType.VAR, type);
-		for (int i = 0; i < d.getInit().size(); i++) {
-			d.getInit().get(i).accept(this);
-		}
+		symTab.put(id, SymbolType.TDEF, type);
+		for ( int i = 0; i < d.getInit().size(); i++ ) {
+	        d.getInit().get(i).accept(this);
+	    }	
+		System.out.println("Variable decl end");
+
 		return null;
 	}
 
 	@Override
 	public Object visit(FunctionDecl d) {
-		System.out.println("Entering function decl: " + d.toString());
-		String id = d.getId();
+		System.out.println("\nFunction decl: " + d.toString());
+		//String id = d.getId();
 		String signature = getSignature(d.getFieldDecl());
+		String id = d.getId() + ">" + signature;
+		//d.setId(id); //is this actually useful? if not delete setId in the ast class too
 		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
 		symTab = symTab.enterScope();
 		if (d.getFieldDecl() != null) {
@@ -64,11 +70,13 @@ public class SymbolTableVisitor implements Visitor {
 				d.getFieldDecl().get(i).accept(this);
 			}
 		}
-		if (d.getBody() != null)
-			for (int i = 0; i < d.getBody().size(); i++) {
-				d.getBody().get(i).accept(this);
-			}
-		symTab = symTab.exitScope();
+
+		for ( int i = 0; i < d.getBody().size(); i++ ) {
+			d.getBody().get(i).accept(this);
+		}		
+		symTab = symTab.exitScope(); 
+		System.out.println("Function decl end");
+
 		return null;
 	}
 
@@ -104,10 +112,11 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(TypeDecl d) {
-		System.out.println("Entering type decl: " + d.toString());
+		System.out.println("Type decl: " + d.toString());	
 		String id = d.getId();
 		String structure = getStructure(d.getFields());
 		symTab.put(id, SymbolType.TDEF, structure);
+		System.out.println("Type decl end");
 		return null;
 	}
 
@@ -311,7 +320,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(Stmt s) {
-		System.out.println("Entering statement");
 		return null;
 
 	}

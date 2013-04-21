@@ -189,7 +189,6 @@ public class TypeScopeVisitor implements Visitor {
 			for (int i = 0; i < fieldDecl.size(); i++) {
 				if (i > 0)
 					sig = sig + ";" + fieldDecl.get(i).getType() + ":"
-							+ fieldDecl.get(i).getType() + ":"
 							+ fieldDecl.get(i).getId();
 				else
 					sig = sig + fieldDecl.get(i).getType() + ":"
@@ -217,7 +216,7 @@ public class TypeScopeVisitor implements Visitor {
 		String typer = (String) e.getRhs().accept(this);
 		if (isCompatible(typel, typer))
 			return "bool";
-		return printError("error");
+		return printError("error in CompBinaryExpr");
 
 	}
 
@@ -231,7 +230,7 @@ public class TypeScopeVisitor implements Visitor {
 			return "tuple";
 		else if (typel.equals("string") && typer.equals("string"))
 			return "string";
-		return printError("error");
+		return printError("error in ConcatBinaryExpr");
 	}
 
 	@Override
@@ -248,7 +247,7 @@ public class TypeScopeVisitor implements Visitor {
 			return "int";
 		if (l.equals("float") && r.equals("float"))
 			return "float";
-		return printError("error");
+		return printError("error in typeOperator");
 	}
 
 	@Override
@@ -267,7 +266,7 @@ public class TypeScopeVisitor implements Visitor {
 				}
 			}
 		}
-		return printError("error");
+		return printError("error in DotBinaryExpr");
 	}
 
 	@Override
@@ -302,7 +301,7 @@ public class TypeScopeVisitor implements Visitor {
 						|| fields.get(0).equals("tuple") || fields.get(0)
 						.equals("string")))
 			return "int";
-		return printError("error");
+		return printError("error in FcallExpr");
 	}
 
 	@Override

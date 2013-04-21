@@ -20,6 +20,11 @@ public class FunctionDecl extends Decl {
 	public String getId() {
 		return id;
 	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	public String getReturnType() {
 		return returnType;
 	}
@@ -41,5 +46,6 @@ public class FunctionDecl extends Decl {
 				+ (fieldDecl != null ? "fieldDecl=" + fieldDecl + ", " : "")
 				+ (body != null ? "body=" + body : "") + "]";
 	}
+	
 
 }
