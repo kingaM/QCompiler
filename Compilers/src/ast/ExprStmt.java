@@ -21,7 +21,7 @@ public class ExprStmt extends Stmt {
 
 	@Override
 	public String toString() {
-		return "ExprStmt [" + (e != null ? "e=" + e : "") + "]";
+		return e.toString();
 	}
 
 }

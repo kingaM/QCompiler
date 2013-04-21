@@ -15,13 +15,14 @@ public class TestScanner {
 		 //System.setIn(new FileInputStream("test05"));
 		System.setIn(new FileInputStream("t1p"));
 
+
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
 
 		Symbol result = myParser.parse();
 		Program p = (Program) result.value;
 		if (p != null) {
-			System.out.println("My result: " + p.toString());
+			System.out.println(p.toString());
 			ErrorHandler eh = new ErrorHandler(QCup.numOfErrors);
 			SymbolTable st = new SymbolTable(eh); 
 			

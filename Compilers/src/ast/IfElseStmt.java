@@ -46,8 +46,8 @@ public class IfElseStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "IfElseStmt [condition=" + condition + ", ifBody=" + ifBody
-				+ ", elseBody=" + elseBody + "]";
+		return "if(" + condition + ")" + "{\n" + ifBody + "\n} else {\n" + elseBody + "\n}\n"; 
+
 	}		
 
 }

@@ -332,7 +332,6 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(FcallExpr e) {
 		String id = e.getId();
 
-		System.out.println("ID: " + id);
 		ArrayList<String> fields = new ArrayList<String>();
 		for (int i = 0; i < e.getParameters().size(); i++) {
 			fields.add((String) e.getParameters().get(i).accept(this));
@@ -351,8 +350,6 @@ public class TypeScopeVisitor implements Visitor {
 						.equals("string")))
 			return "int";
 
-		// use parameters type to detect upper function if any
-
 		String fparameters = "";
 		for (int j = 0; j < fields.size() - 1; j++) {
 			fparameters = fields.get(j) + ";";
@@ -360,9 +357,7 @@ public class TypeScopeVisitor implements Visitor {
 		fparameters = fparameters + fields.get(fields.size() - 1);
 		String fcallId = e.getId() + ">" + fparameters;
 
-		System.out.println("TEST: " + fcallId);
 		if (symTab.get(fcallId) != null) {
-			System.out.println("function matched");
 			return symTab.get(fcallId).getRetType();
 		}
 		if (fparameters.equals("int;int")) {
@@ -585,7 +580,6 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(VarExpr e) {
 		SymbolEntry entry = symTab.get(e.getVar());
-		System.out.println("Entry: " + entry);
 		if (entry != null
 				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG))
 			return entry.getVarType();

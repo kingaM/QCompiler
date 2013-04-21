@@ -28,8 +28,9 @@ public class SeqCallExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return "SeqCallExpr [" + (id != null ? "id=" + id + ", " : "")
-				+ (call != null ? "call=" + call : "") + "]";
+		return id + "[" + call + "]";
+		/*return "SeqCallExpr [" + (id != null ? "id=" + id + ", " : "")
+				+ (call != null ? "call=" + call : "") + "]";*/
 	}
 
 }

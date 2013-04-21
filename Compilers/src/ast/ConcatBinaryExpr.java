@@ -12,5 +12,9 @@ public class ConcatBinaryExpr extends BinaryExpr {
 		return v.visit(this);
 	}
 
-
+	@Override
+	public String toString() {
+		
+		return super.lhs + " :: " + super.rhs + ";";
+	}
 }

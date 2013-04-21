@@ -28,7 +28,7 @@ public class RepeatUntilStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "RepeatUntilStmt [condition=" + condition + ", body=" + body
-				+ "]";
+		return "repeat {\n" + body + "\n} until (\n"  + condition + "\n)\n";
+
 	}
 }

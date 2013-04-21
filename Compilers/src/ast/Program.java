@@ -20,7 +20,14 @@ public class Program extends Node {
 	
 	@Override
 	public String toString() {
-		return "Program [decllist=" + decllist.toString() + ", main=" + main.toString() + "]";
+		String toprint = "\nProgram: \n\n";
+		for(Decl d : decllist){
+			toprint = toprint + d;
+		}
+		toprint = toprint + "\n{\n" + main.toString() + "\n}\n";
+		return toprint;
+		//return "Program: \n\n" + decllist.toString() + "\n{\n" + main.toString() + "\n}\n";
+		//return "Program [decllist=" + decllist.toString() + ", main=" + main.toString() + "]";
 	}
 
 	public ArrayList<Decl> getDecllist() {

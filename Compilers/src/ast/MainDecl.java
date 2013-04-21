@@ -14,7 +14,7 @@ public class MainDecl {
 
 	@Override
 	public String toString() {
-		return "MainDecl [stmts=" + stmts.toString() + "]";
+		return stmts.toString();
 	}
 
 	public ArrayList<Stmt> getStmts() {

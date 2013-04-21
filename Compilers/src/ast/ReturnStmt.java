@@ -24,6 +24,6 @@ public class ReturnStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "ReturnStmt [returnExpr=" + returnExpr + "]";
+		return "return " + returnExpr + ";";
 	}
 }

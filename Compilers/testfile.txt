@@ -4,6 +4,10 @@ fdef sum(i:float, j:float) : float {
      
 }
 
+<<<<<<< HEAD
+{ 
+	sum(3, 2);
+=======
 b:float = 4.7;
 
 {
@@ -12,5 +16,6 @@ c:float = 5;
 d:string = 'f';
 a = a+1;
 
+>>>>>>> a9a950508eb710f53a4c9e34c6a381c819a595c1
 }
 

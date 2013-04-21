@@ -20,8 +20,9 @@ public class VarStmt extends Stmt {
 
 	@Override
 	public String toString() {
-		return "VarStmt [" + (varDecl != null ? "varDecl=" + varDecl : "")
-				+ "]";
+		return varDecl.toString();
+		/*return "VarStmt [" + (varDecl != null ? "varDecl=" + varDecl : "")
+				+ "]";*/
 	}
 
 	

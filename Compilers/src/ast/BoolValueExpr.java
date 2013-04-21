@@ -20,7 +20,7 @@ public class BoolValueExpr extends ValueExpr {
 
 	@Override
 	public String toString() {
-		return "BoolValueExpr [b=" + b + "]";
+		return Boolean.toString(b);
 	}
 
 }
