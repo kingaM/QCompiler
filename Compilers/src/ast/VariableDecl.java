@@ -23,8 +23,9 @@ public class VariableDecl extends Decl {
     
 	@Override
 	public String toString() {
-		return "VariableDecl [id=" + id + ", type=" + type + ", init=" + init
-				+ "]";
+		return id + ":" + type + " = " + init.toString() + ";\n";
+		/*return "VariableDecl [id=" + id + ", type=" + type + ", init=" + init
+				+ "]";*/
 	}
 
 	public String getId() {

@@ -21,10 +21,6 @@ public class FunctionDecl extends Decl {
 		return id;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getReturnType() {
 		return returnType;
 	}

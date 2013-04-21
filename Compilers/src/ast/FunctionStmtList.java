@@ -14,11 +14,7 @@ public class FunctionStmtList {
 		this.stmtList = stmtList;
 		this.vdecl = vdecl;
 	}
-	
-	/*not sure about this
-	public FunctionStmtList(ArrayList<Stmt> stmtList){
-		this.stmtList = stmtList;
-	}*/
+
 
 	public ArrayList<Stmt> getStmtList() {
 		return stmtList;

@@ -4,8 +4,6 @@ fdef sum(i:float, j:float) : float {
      return i + j;
 }
 
-
-
 { 
 	sum(3, 2);
 }

@@ -33,10 +33,11 @@ public class SeqSlicingExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return "SeqSlicingExpr ["
+		return "[" + start + ":" + sequence + ":" + finish + "]";
+		/*return "SeqSlicingExpr ["
 				+ (sequence != null ? "sequence=" + sequence + ", " : "")
 				+ (start != null ? "start=" + start + ", " : "")
-				+ (finish != null ? "finish=" + finish : "") + "]";
+				+ (finish != null ? "finish=" + finish : "") + "]";*/
 	}
 
 	

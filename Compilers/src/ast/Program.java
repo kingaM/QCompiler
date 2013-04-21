@@ -20,11 +20,11 @@ public class Program extends Node {
 	
 	@Override
 	public String toString() {
-		String toprint = "Program: \n\n";
+		String toprint = "\nProgram: \n\n";
 		for(Decl d : decllist){
 			toprint = toprint + d;
 		}
-		toprint = toprint + main.toString() + "\n}\n";
+		toprint = toprint + "\n{\n" + main.toString() + "\n}\n";
 		return toprint;
 		//return "Program: \n\n" + decllist.toString() + "\n{\n" + main.toString() + "\n}\n";
 		//return "Program [decllist=" + decllist.toString() + ", main=" + main.toString() + "]";

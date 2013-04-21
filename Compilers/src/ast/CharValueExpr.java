@@ -20,7 +20,7 @@ public class CharValueExpr extends ValueExpr {
 
 	@Override
 	public String toString() {
-		return "CharValueExpr [c=" + c + "]";
+		return Character.toString(c);
 	}
 
 }
