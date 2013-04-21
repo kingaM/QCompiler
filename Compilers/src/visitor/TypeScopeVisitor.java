@@ -90,10 +90,19 @@ public class TypeScopeVisitor implements Visitor {
 		String type = d.getType();
 		if(d.getInit()!=null)
 		for (int i = 0; i < d.getInit().size(); i++) {
-			d.getInit().get(i).accept(this);
+			String test = ( String) d.getInit().get(i).accept(this);
+			if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
+					&& !(type.equals("int") && test.equals("bool"))
+					&& !(type.equals("string") && test.equals("char"))
+					){
+				eh.printErrorMessage(test,
+						"incompatible types for assigment", ErrorHandler.ErrorType.TYPE);
+				return "error";
+			}
 		}
 		return d.getType();
 	}
+	
 
 	@Override
 	public Object visit(FunctionDecl d) {

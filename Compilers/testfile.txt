@@ -9,6 +9,9 @@ b:float = 4.7;
 
 {
 a:int = 0;
+c:float = 5;
+d:string = 'f';
 a = a+1;
+
 }
 
