@@ -147,7 +147,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(AndExpr e) {
-		System.out.println("Add expression: " + e.toString());
+		System.out.println("And expression: " + e.toString());
 		return null;
 
 	}
@@ -206,6 +206,12 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(FcallExpr e) {
+		String id = e.getId();
+		SymbolEntry entry = symTab.get(id);
+		if(entry != null){
+			eh.printErrorMessage(id, "undeclared function", ErrorHandler.ErrorType.TYPE);
+			return "error";
+		}
 		System.out.println("Function call expression: " + e.toString());
 		return null;
 	}
