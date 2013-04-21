@@ -77,7 +77,22 @@ public class SymbolTableVisitor implements Visitor {
 		if(fieldDecl != null){
 			String sig = "";
 			for ( int i = 0; i < fieldDecl.size(); i++ ) {
-				sig = sig + "x" + fieldDecl.get(i).getType();
+				if(i>0)sig = sig + ";" + fieldDecl.get(i).getType();
+				else sig = sig + fieldDecl.get(i).getType();
+			}
+			return sig;
+		}
+		
+		return "void";
+	}
+	
+	private String getStructure(ArrayList<Field> fieldDecl){
+		
+		if(fieldDecl != null){
+			String sig = "";
+			for ( int i = 0; i < fieldDecl.size(); i++ ) {
+				if(i>0)sig = sig + ";" + fieldDecl.get(i).getId() + ":" + fieldDecl.get(i).getType();
+				else sig = sig + fieldDecl.get(i).getId() + ":" + fieldDecl.get(i).getType();
 			}
 			return sig;
 		}
@@ -89,11 +104,8 @@ public class SymbolTableVisitor implements Visitor {
 	public Object visit(TypeDecl d) {
 		System.out.println("Entering type decl: " + d.toString());	
 		String id = d.getId();
-		String signature = getSignature(d.getFields());
-		symTab.put(id, SymbolType.TDEF, signature);
-		for ( int i = 0; i < d.getFields().size(); i++ ) {
-			d.getFields().get(i).accept(this);
-		}		
+		String structure = getStructure(d.getFields());
+		symTab.put(id, SymbolType.TDEF, structure);
 		return null;
 	}
 
