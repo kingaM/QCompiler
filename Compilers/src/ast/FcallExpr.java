@@ -22,8 +22,8 @@ public class FcallExpr extends Expr {
 		return parameters;
 	}
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 

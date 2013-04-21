@@ -29,8 +29,8 @@ public class WhileStmt extends Stmt{
 		this.body = body;
 	}
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 

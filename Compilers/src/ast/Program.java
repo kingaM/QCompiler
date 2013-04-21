@@ -14,8 +14,8 @@ public class Program extends Node {
 		main = m;
 	}
 	
-    public void accept(Visitor v){
-		v.visit(this);
+    public Object accept(Visitor v){
+		return v.visit(this);
 	}
 	
 	@Override

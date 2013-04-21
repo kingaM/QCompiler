@@ -358,9 +358,9 @@ expr				 ::= ID: id
                         | LPAREN expr:e RPAREN 
                         {: RESULT = e; :}
                         | LTUPLE sequenceOptional:s RTUPLE
-                        {: RESULT = new SeqExpr(s); :}
+                        {: RESULT = new SeqExpr(s, "tuple"); :}
                         | LSQPAREN sequenceOptional:s RSQPAREN
-                        {: RESULT = new SeqExpr(s); :}
+                        {: RESULT = new SeqExpr(s, "list"); :}
                         | INT INT {: parser.numOfErrors++; System.err.println("Cannot have two adjacent numbers with no operator in between.\n"); :} 
                         | ID error SEMI {: System.err.println("Invalid expression"); :} 
                         | value error SEMI {: System.err.println("Invalid expression"); :} 

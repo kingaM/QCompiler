@@ -9,8 +9,8 @@ public class PowerBinaryExpr extends BinaryExpr {
 	}
 
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 

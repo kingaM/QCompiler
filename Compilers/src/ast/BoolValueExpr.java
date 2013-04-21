@@ -14,8 +14,8 @@ public class BoolValueExpr extends ValueExpr {
 		return b;
 	}
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ Scope rules:
 
 
 Type rules:
-1. Assignments are legal only if the identi?er on the left-hand side and the expression on the right-hand side have the same or compatible type. It is possible to assign an int to a float, but not vice-versa.
+1. Assignments are legal only if the identifier on the left-hand side and the expression on the right-hand side have the same or compatible type. It is possible to assign an int to a float, but not vice-versa.
 2. The test expression of if and repeat statements must have type bool
 3. The number and type of actual parameters of a function call must match the number and type of the function’s declared formal parameters.
 4. The return statement of a function has to have the same or compatible type as the type declared in the function definiton.
@@ -22,3 +22,8 @@ Type rules:
 6. The "." operator only works on user defined types. The expression "id.field" only works when that type has a given id. 
 7. No user defined type can be assigned to a different user defined type. I.e. they are not compatible with each other. 
 8. Each element of a list has to be of the same type. 
+9. For comparison operator the types have to be the same, or compatible. 
+
+Compatible types:
+int compatible with float and bool
+bool compatible with int

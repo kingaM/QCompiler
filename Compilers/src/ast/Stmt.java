@@ -3,7 +3,7 @@ package ast;
 import visitor.Visitor;
 
 public class Stmt {
-	 public void accept(Visitor v){
-			v.visit(this);
+	 public Object accept(Visitor v){
+			return v.visit(this);
 		}
 }

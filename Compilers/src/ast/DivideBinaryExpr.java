@@ -8,8 +8,8 @@ public class DivideBinaryExpr extends BinaryExpr {
 		super(lhs, rhs);
 	}
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 

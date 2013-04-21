@@ -18,8 +18,8 @@ public class ReturnStmt extends Stmt{
 		this.returnExpr = returnExpr;
 	}
 	
-	public void accept(Visitor v){
-		v.visit(this);
+	public Object accept(Visitor v){
+		return v.visit(this);
 	}
 
 	@Override

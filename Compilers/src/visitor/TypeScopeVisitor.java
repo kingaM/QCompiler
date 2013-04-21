@@ -1,5 +1,7 @@
 package visitor;
 
+import java.util.ArrayList;
+
 import ast.AndExpr;
 import ast.BoolValueExpr;
 import ast.CharValueExpr;
@@ -45,9 +47,10 @@ import ast.VarStmt;
 import ast.VariableDecl;
 import ast.WhileStmt;
 
-public class TypeScopeVisitor  implements Visitor {
-	
-	SymbolTable symTab;
+public class TypeScopeVisitor implements Visitor {
+
+	private SymbolTable symTab;
+	private int numOfErrors = 0; 
 
 	public TypeScopeVisitor(SymbolTable st) {
 		symTab = st;
@@ -55,268 +58,419 @@ public class TypeScopeVisitor  implements Visitor {
 
 	@Override
 	public Object visit(Program p) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < p.getDecllist().size(); i++) {
+			p.getDecllist().get(i).accept(this);
+		}
+		p.getMain().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(Decl d) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(MainDecl d) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < d.getStmts().size(); i++) {
+			d.getStmts().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(VariableDecl d) {
-		// TODO Auto-generated method stub
+		String id = d.getId();
+		String type = d.getType();
+		symTab.put(id, SymbolType.TDEF, type);
+		for (int i = 0; i < d.getInit().size(); i++) {
+			d.getInit().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(FunctionDecl d) {
-		// TODO Auto-generated method stub
+		if (d.getFieldDecl() != null) {
+			for (int i = 0; i < d.getFieldDecl().size(); i++) {
+				d.getFieldDecl().get(i).accept(this);
+			}
+		}
+		for (int i = 0; i < d.getBody().size(); i++) {
+			d.getBody().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(TypeDecl d) {
-		// TODO Auto-generated method stub
+		// TODO Scope Check
+		for (int i = 0; i < d.getFields().size(); i++) {
+			d.getFields().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(FunctionStmtList l) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < l.getStmtList().size(); i++) {
+			l.getStmtList().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Field f) {
-		// TODO Auto-generated method stub
-		return null;
+		String type = f.getType();
+		return type;
 	}
 
 	@Override
 	public Object visit(Expr e) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(AndExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return checkBool(typel, typer);
+	}
+
+	private String checkBool(String l, String r) {
+		if (l == "bool" && r == "bool")
+			return "bool";
+		else
+			return printError("error");
+	}
+
+	private boolean isCompatible(String l, String r) {
+		if ((l.equals("int") && r.equals("float"))
+				|| (l.equals("int") && r.equals("int"))
+				|| (l.equals("float") && r.equals("float"))
+				|| (l.equals("float") && r.equals("int"))
+				|| (l.equals("bool") && r.equals("bool"))
+				|| (l.equals("int") && r.equals("bool"))
+				|| (l.equals("bool") && r.equals("int")))
+			return true;
+		return false;
+	}
+
+	private String getSignature(ArrayList<String> fields) {
+
+		if (fields != null) {
+			String sig = "";
+			for (int i = 0; i < fields.size(); i++) {
+				sig = sig + "x" + fields.get(i);
+			}
+			return sig;
+		}
+
+		return "void";
 	}
 
 	@Override
 	public Object visit(BoolValueExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return "bool";
 	}
 
 	@Override
 	public Object visit(CharValueExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return "char";
 	}
 
 	@Override
 	public Object visit(CompBinaryExpr e) {
-		// TODO Auto-generated method stub
 		return null;
+
 	}
 
 	@Override
 	public Object visit(ConcatBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (typel.equals("list") && typer.equals("list"))
+			return "list";
+		else if (typel.equals("tuple") && typer.equals("tuple"))
+			return "tuple";
+		else if (typel.equals("string") && typer.equals("string"))
+			return "string";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(DivideBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return typeOperator(typel, typer);
+	}
+
+	private String typeOperator(String l, String r) {
+		if ((l.equals("int") && r.equals("int"))
+				|| (l.equals("int") && r.equals("float"))
+				|| (l.equals("float") && r.equals("int")))
+			return "int";
+		if (l.equals("float") && r.equals("float"))
+			return "float";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(DotBinaryExpr e) {
-		// TODO Auto-generated method stub
+		// TODO Scope and type check
 		return null;
 	}
 
 	@Override
 	public Object visit(EqBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return checkBool(typel, typer);
 	}
 
 	@Override
 	public Object visit(ExprStmt e) {
-		// TODO Auto-generated method stub
+		e.accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(FcallExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String id = e.getId();
+		ArrayList<String> fields = new ArrayList<String>();
+		for (int i = 0; i < e.getParameters().size(); i++) {
+			fields.add((String) e.getParameters().get(i).accept(this));
+		}
+
+		String callType = getSignature(fields);
+		SymbolEntry entry = symTab.get(id);
+		if (entry != null && entry.getType() == SymbolType.FDEF
+				&& entry.getVarType().equals(callType))
+			return entry.getRetType();
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(FloatValueExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return "float";
 	}
 
 	@Override
 	public Object visit(GreaterCompBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (isCompatible(typel, typer))
+			return "bool";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(GreaterOrEqExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (isCompatible(typel, typer))
+			return "bool";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(InExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		e.getLhs().accept(this);
+		String type = (String) e.getRhs().accept(this);
+		if (type.equals("list") || type.equals("tuple")
+				|| type.equals("string"))
+			return "bool";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(IntValueExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return "int";
 	}
 
 	@Override
 	public Object visit(LessCompBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (isCompatible(typel, typer))
+			return "bool";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(LessEqCompBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		if (isCompatible(typel, typer))
+			return "bool";
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(MinusBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return typeOperator(typel, typer);
 	}
 
 	@Override
 	public Object visit(OrExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return checkBool(typel, typer);
 	}
 
 	@Override
 	public Object visit(PlusBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return typeOperator(typel, typer);
 	}
 
 	@Override
 	public Object visit(PowerBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return typeOperator(typel, typer);
 	}
 
 	@Override
 	public Object visit(SeqCallExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO sth is wrong here with the tuple type...
+		String id = (String) e.getId().accept(this);
+		String typer = (String) e.getCall().accept(this);
+		SymbolEntry entry = symTab.get(id);
+		if (entry != null
+				&& (entry.getType() == SymbolType.ARG || entry.getType() == SymbolType.VAR)
+				&& typer.equals("int"))
+			return entry.getType();
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(SeqExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (e.getType().equals("list")) {
+			String type = (String) e.getSequence().get(0).accept(this);
+			for (int i = 0; i < e.getSequence().size(); i++) {
+				if (!type.equals((String) e.getSequence().get(i).accept(this)))
+					return printError("error");
+			}
+			return "list";
+		}
+		if (e.getType().equals("tuple")) {
+			for (int i = 0; i < e.getSequence().size(); i++) {
+				e.getSequence().get(i).accept(this);
+			}
+			return "tuple";
+		}
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(SeqSlicingExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String seqType = (String) e.getSequence().accept(this);
+		Expr start = e.getStart();
+		Expr finish = e.getFinish();
+		if ((start != null && start.accept(this).equals("int"))
+				|| (finish != null && finish.accept(this).equals("int"))
+				|| (start == null && finish == null))
+			return seqType;
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(StrValueExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return "string";
 	}
 
 	@Override
 	public Object visit(TimesBinaryExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		String typel = (String) e.getLhs().accept(this);
+		String typer = (String) e.getRhs().accept(this);
+		return typeOperator(typel, typer);
 	}
 
 	@Override
 	public Object visit(ValueExpr e) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(VarExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolEntry entry = symTab.get(e.getVar());
+		if (entry != null
+				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG))
+			return entry.getType();
+		return printError("error");
 	}
 
 	@Override
 	public Object visit(Stmt s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(ReturnStmt s) {
-		// TODO Auto-generated method stub
-		return null;
+		return s.getReturnExpr().accept(this);
 	}
 
 	@Override
 	public Object visit(IfStmt s) {
-		// TODO Auto-generated method stub
+		if (!s.getCondition().accept(this).equals("bool"))
+			return printError("error");
+		for (int i = 0; i < s.getBody().size(); i++) {
+			s.getBody().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(RepeatUntilStmt s) {
-		// TODO Auto-generated method stub
+		if (!s.getCondition().accept(this).equals("bool"))
+			return printError("error");
+		for (int i = 0; i < s.getBody().size(); i++) {
+			s.getBody().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(IfElseStmt s) {
-		// TODO Auto-generated method stub
+		if (!s.getCondition().accept(this).equals("bool"))
+			return printError("error");
+		for (int i = 0; i < s.getIfBody().size(); i++) {
+			s.getIfBody().get(i).accept(this);
+		}
+		for (int i = 0; i < s.getElseBody().size(); i++) {
+			s.getElseBody().get(i).accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(VarStmt s) {
-		// TODO Auto-generated method stub
+		s.getVarDecl().accept(this);
 		return null;
 	}
 
 	@Override
 	public Object visit(WhileStmt s) {
-		// TODO Auto-generated method stub
+		if (!s.getCondition().accept(this).equals("bool"))
+			return printError("error");
+		for (int i = 0; i < s.getBody().size(); i++) {
+			s.getBody().get(i).accept(this);
+		}
 		return null;
 	}
-
 	
+	private String printError(String error){
+		System.err.println(error);
+		numOfErrors++;
+		return "error";
+	}
 
+	public int getNumOfErrors() {
+		return numOfErrors;
+	}
 }

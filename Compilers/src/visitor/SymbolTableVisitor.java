@@ -60,7 +60,7 @@ public class SymbolTableVisitor implements Visitor {
 	public Object visit(FunctionDecl d) {
 		System.out.println("Entering function decl: " + d.toString());
 		String id = d.getId();
-		String signature = d.getReturnType() + "->" + getSignature(d.getFieldDecl());
+		String signature = getSignature(d.getFieldDecl());
 		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
 		symTab = symTab.enterScope(); 
 		if(d.getFieldDecl() != null){
@@ -85,7 +85,7 @@ public class SymbolTableVisitor implements Visitor {
 			return sig;
 		}
 		
-		return "Object";
+		return "void";
 	}
 
 	@Override
