@@ -586,7 +586,7 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(ReturnStmt s) {
-		SymbolEntry e = symTab.get("FunctReturnType");
+		SymbolEntry e = symTab.get("_FunctReturnType");
 		String type = (String) s.getReturnExpr().accept(this);
 		if(type.equals(e.getVarType())){
 			return type;

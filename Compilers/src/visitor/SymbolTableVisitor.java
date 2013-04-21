@@ -68,7 +68,7 @@ public class SymbolTableVisitor implements Visitor {
 		//d.setId(id); //is this actually useful? if not delete setId in the ast class too
 		symTab.put(id, SymbolType.FDEF, signature, d.getReturnType());
 		symTab = symTab.enterScope();
-		symTab.put("FunctReturnType", SymbolType.FDEF, d.getReturnType()); 
+		symTab.put("_FunctReturnType", SymbolType.FDEF, d.getReturnType()); 
 		if (d.getFieldDecl() != null) {
 			for (int i = 0; i < d.getFieldDecl().size(); i++) {
 				d.getFieldDecl().get(i).accept(this);
