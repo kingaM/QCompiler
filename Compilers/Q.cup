@@ -20,7 +20,7 @@ public void syntax_error(Symbol cur_token) {
 }
 
 :} 
- 
+  
 terminal        String ID, TYPE, VOID;
 terminal		Boolean BOOL;
 terminal 		Float FLOAT;
@@ -279,18 +279,16 @@ mainBlockStmt     	::= LBRACE mainStmtList:ms RBRACE
                         | error SEMI {: System.err.println("Braces are neccessary"); :} 
                         ;
                       
-funcStmtNoFollowingSubstmt 		::= SEMI
-                                    | returnStmt:r 
+funcStmtNoFollowingSubstmt 		::= returnStmt:r 
                                     {: RESULT = r; :}
-                                    | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN
+                                    | REPEAT funcBlockStmt:fb UNTIL LPAREN expr:e RPAREN SEMI
                                     {: RESULT = new RepeatUntilStmt(e, fb); :}
                                     | expr:e SEMI
                                     {: RESULT = new ExprStmt(e); :}
                                     | REPEAT error SEMI
                                     ; 
      
-mainStmtNoFollowingSubstmt 		::= SEMI
-                                    | REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN
+mainStmtNoFollowingSubstmt 		::=  REPEAT mainBlockStmt:mb UNTIL LPAREN expr:e RPAREN SEMI
                                     {: RESULT = new RepeatUntilStmt(e, mb); :}
                                     | expr:e SEMI
                                     {: RESULT = new ExprStmt(e); :}
@@ -308,7 +306,7 @@ expr				 ::= ID: id
                         {: RESULT = v; :}
                         | fcall:f
                         {: RESULT = f; :}
-                        | expr:l DOT expr:r
+                        | ID:l DOT ID:r
                         {: RESULT = new DotBinaryExpr(l, r); :}
                         | expr:l EQ expr:r 
                         {: RESULT = new EqBinaryExpr(l, r); :}

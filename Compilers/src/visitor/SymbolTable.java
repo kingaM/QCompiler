@@ -56,6 +56,7 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
+		System.out.println("\nERROR: " + t + " " + key + " already declared\n");
 		return -1;
 	}
 	
@@ -65,6 +66,7 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
+		System.out.println("\nERROR: " + t + " " + key + " already declared\n");
 		return -1;
 	}
 	
