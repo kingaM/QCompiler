@@ -316,6 +316,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(SeqCallExpr e) {
+		e.getCall().accept(this);
 		System.out.println("Seq call expression: " + e.toString());
 		return null;
 	}
@@ -344,6 +345,8 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(TimesBinaryExpr e) {
+		e.getLhs().accept(this);
+		e.getRhs().accept(this);
 		System.out.println("Times expression: " + e.toString());
 		return null;
 	}
@@ -356,6 +359,11 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarExpr e) {
+		SymbolEntry entry = symTab.get(e.getVar());
+		if( entry == null ){
+			eh.printErrorMessage(e.getVar(), "variable undefined",
+					ErrorHandler.ErrorType.SCOPE_NOTDECL);
+		}
 		System.out.println("Var expression: " + e.toString());
 		return null;
 	}
@@ -368,12 +376,14 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(ReturnStmt s) {
+		s.getReturnExpr().accept(this);
 		System.out.println("Return statement: " + s.toString());
 		return null;
 	}
 
 	@Override
 	public Object visit(IfStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("If statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -386,6 +396,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(RepeatUntilStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("Repeat statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -398,6 +409,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(IfElseStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("If else statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getIfBody() != null)
@@ -416,6 +428,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(VarStmt s) {
+		s.getVarDecl().accept(this);
 		System.out.println("Var statement: " + s.toString());
 		s.getVarDecl().accept(this);
 		return null;
@@ -423,6 +436,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(WhileStmt s) {
+		s.getCondition().accept(this);
 		System.out.println("While statement: " + s.toString());
 		symTab = symTab.enterScope();
 		if (s.getBody() != null)
@@ -445,7 +459,7 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(NotUnaryExpr e) {
-		// TODO Auto-generated method stub
+		e.getExpr().accept(this);
 		return null;
 	}
 
