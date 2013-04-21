@@ -26,8 +26,7 @@ public class TestScanner {
 			
 			p.accept(new SymbolTableVisitor(st, eh));
 			p.accept(new TypeScopeVisitor(st, eh));
-			System.out.println("\nFinal " + st.toString());
-			System.out.println("\nFinal " + st.getChildren().get(0).toString());
+			eh.printSummary();
 		}
 	}
 }

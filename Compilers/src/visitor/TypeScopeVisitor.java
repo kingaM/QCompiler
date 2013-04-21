@@ -115,7 +115,7 @@ public class TypeScopeVisitor implements Visitor {
 		SymbolEntry entry = symTab.get(id);
 		if (entry == null) {
 			eh.printErrorMessage(id, "type declaration",
-					ErrorHandler.ErrorType.SCOPE);
+					ErrorHandler.ErrorType.SCOPE_NOTDECL);
 			return "error";
 		}
 		if (!entry.getVarType().equals(structure)) {
@@ -269,7 +269,7 @@ public class TypeScopeVisitor implements Visitor {
 		SymbolEntry entry = symTab.get(id);
 		
 		if(entry == null) {
-			eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE);
+			eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE_NOTDECL);
 			return "error";
 		}
 
@@ -284,7 +284,7 @@ public class TypeScopeVisitor implements Visitor {
 				}
 			}
 		}
-		eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE);
+		eh.printErrorMessage(id, "user defined type accessor", ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 
 	}
@@ -427,7 +427,7 @@ public class TypeScopeVisitor implements Visitor {
 		String typer = (String) e.getCall().accept(this);
 		SymbolEntry entry = symTab.get(id);
 		if(entry == null) {
-			eh.printErrorMessage(id, "sequence call", ErrorHandler.ErrorType.SCOPE);
+			eh.printErrorMessage(id, "sequence call", ErrorHandler.ErrorType.SCOPE_NOTDECL);
 			return "error";
 		}
 		if (entry != null
@@ -505,7 +505,7 @@ public class TypeScopeVisitor implements Visitor {
 		if (entry != null
 				&& (entry.getType() == SymbolType.VAR || entry.getType() == SymbolType.ARG))
 			return entry.getVarType();
-		eh.printErrorMessage(e.getVar(), "variable referencing", ErrorHandler.ErrorType.SCOPE);
+		eh.printErrorMessage(e.getVar(), "variable referencing", ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 	}
 

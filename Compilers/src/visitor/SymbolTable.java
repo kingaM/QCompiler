@@ -58,7 +58,7 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
-		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE);
+		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE_DECL);
 		return -1;
 	}
 	
@@ -68,7 +68,7 @@ public class SymbolTable {
 			entries.put(key, e);
 			return 0;
 		}
-		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE);
+		eh.printErrorMessage(key, ErrorHandler.ErrorType.SCOPE_DECL);
 		return -1;
 	}
 	
