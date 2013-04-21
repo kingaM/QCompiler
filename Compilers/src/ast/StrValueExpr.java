@@ -14,7 +14,7 @@ public class StrValueExpr extends ValueExpr {
 
 	@Override
 	public String toString() {
-		return "StrValueExpr [" + (value != null ? "value=" + value : "") + "]";
+		return value;
 	}
 
 }

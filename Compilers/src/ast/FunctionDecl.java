@@ -41,10 +41,11 @@ public class FunctionDecl extends Decl {
 	
 	@Override
 	public String toString() {
-		return "FunctionDecl [" + (id != null ? "id=" + id + ", " : "")
+		return "fdef " + id + "(" + fieldDecl + ") : " + returnType + " {\n" + body + "\n}\n";
+		/*return "FunctionDecl [" + (id != null ? "id=" + id + ", " : "")
 				+ (returnType != null ? "returnType=" + returnType + ", " : "")
 				+ (fieldDecl != null ? "fieldDecl=" + fieldDecl + ", " : "")
-				+ (body != null ? "body=" + body : "") + "]";
+				+ (body != null ? "body=" + body : "") + "]";*/
 	}
 	
 

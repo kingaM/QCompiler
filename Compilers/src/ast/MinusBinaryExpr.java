@@ -13,4 +13,10 @@ public class MinusBinaryExpr extends BinaryExpr {
 	}
 
 
+	@Override
+	public String toString() {
+		
+		return super.lhs + " - " + super.rhs + ";";
+	}
+
 }

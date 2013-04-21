@@ -36,7 +36,7 @@ public class WhileStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "WhileStmt [condition=" + condition + ", body=" + body + "]";
+		return "while (" + condition + ") {\n" + body + "\n}\n";
 	}
 	
 }

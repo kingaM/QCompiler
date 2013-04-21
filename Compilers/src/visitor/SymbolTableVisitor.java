@@ -60,7 +60,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(FunctionDecl d) {
-		System.out.println("\nFunction decl: " + d.toString());
 		//String id = d.getId();
 		String signature = getSignature(d.getFieldDecl());
 		String id = d.getId() + ">" + signature;
@@ -78,8 +77,6 @@ public class SymbolTableVisitor implements Visitor {
 			d.getBody().get(i).accept(this);
 		}		
 		symTab = symTab.exitScope(); 
-		System.out.println("Function decl end");
-
 		return null;
 	}
 
@@ -114,12 +111,10 @@ public class SymbolTableVisitor implements Visitor {
 	}
 
 	@Override
-	public Object visit(TypeDecl d) {
-		System.out.println("Type decl: " + d.toString());	
+	public Object visit(TypeDecl d) {	
 		String id = d.getId();
 		String structure = getStructure(d.getFields());
 		symTab.put(id, SymbolType.TDEF, structure);
-		System.out.println("Type decl end");
 		return null;
 	}
 

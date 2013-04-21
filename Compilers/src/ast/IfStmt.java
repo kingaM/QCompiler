@@ -36,7 +36,7 @@ public class IfStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "IfStmt [condition=" + condition + ", body=" + body + "]";
+		return "if(" + condition + ")" + "{\n" + body + "\n}";
 	}
 	
 }

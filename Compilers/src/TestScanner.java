@@ -11,8 +11,8 @@ public class TestScanner {
 
 	public static void main(String args[]) throws Exception {
 
-		//System.setIn(new FileInputStream("testfile.txt"));
-		 System.setIn(new FileInputStream("test05"));
+		System.setIn(new FileInputStream("testfile.txt"));
+		 //System.setIn(new FileInputStream("test05"));
 
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
@@ -20,7 +20,7 @@ public class TestScanner {
 		Symbol result = myParser.parse();
 		Program p = (Program) result.value;
 		if (p != null) {
-			System.out.println("My result: " + p.toString());
+			System.out.println(p.toString());
 			ErrorHandler eh = new ErrorHandler(QCup.numOfErrors);
 			SymbolTable st = new SymbolTable(eh); 
 			

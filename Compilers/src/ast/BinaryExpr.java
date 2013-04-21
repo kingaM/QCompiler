@@ -4,8 +4,8 @@ import visitor.Visitor;
 
 public class BinaryExpr extends Expr {
 	
-	private Expr lhs;
-	private Expr rhs;
+	protected Expr lhs;
+	protected Expr rhs;
 	
 	public BinaryExpr(Expr lhs, Expr rhs) {
 		super();
@@ -25,10 +25,5 @@ public class BinaryExpr extends Expr {
 		return v.visit(this);
 	}
 
-	@Override
-	public String toString() {
-		return "BinaryExpr [" + (lhs != null ? "lhs=" + lhs + ", " : "")
-				+ (rhs != null ? "rhs=" + rhs : "") + "]";
-	}
 
 }

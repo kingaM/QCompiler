@@ -7,4 +7,10 @@ public class TimesBinaryExpr extends BinaryExpr {
 		super(lhs, rhs);
 	}
 
+	@Override
+	public String toString() {
+		
+		return super.lhs + " * " + super.rhs + ";";
+	}
+	
 }

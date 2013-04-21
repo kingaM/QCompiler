@@ -21,7 +21,7 @@ public class FloatValueExpr extends ValueExpr {
 
 	@Override
 	public String toString() {
-		return "FloatValueExpr [value=" + value + "]";
+		return Float.toString(value);
 	}
 
 }

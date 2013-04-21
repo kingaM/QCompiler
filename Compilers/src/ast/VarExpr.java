@@ -22,7 +22,7 @@ public class VarExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return "VarExpr [" + (var != null ? "var=" + var : "") + "]";
+		return var;
 	}
 	
 	

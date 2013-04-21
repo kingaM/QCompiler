@@ -18,7 +18,7 @@ public class IntValueExpr extends ValueExpr {
 	}
 	@Override
 	public String toString() {
-		return "IntValueExpr [value=" + value + "]";
+		return Integer.toString(value);
 	}
 
 }

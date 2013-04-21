@@ -29,9 +29,14 @@ public class SeqExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return "SeqExpr ["
+		String toprint = "";
+		for(Expr e : sequence){
+			toprint = toprint + e;
+		}
+		return toprint + " : " + type;
+		/*return "SeqExpr ["
 				+ (sequence != null ? "sequence=" + sequence + ", " : "")
-				+ (type != null ? "type=" + type : "") + "]";
+				+ (type != null ? "type=" + type : "") + "]";*/
 	}
 
 }
