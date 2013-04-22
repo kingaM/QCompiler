@@ -29,5 +29,9 @@ public class DotBinaryExpr extends Expr {
 		return rhs;
 	}
 
-
+	@Override
+	public String toString() {
+		
+		return lhs + "." + rhs + ";";
+	}
 }

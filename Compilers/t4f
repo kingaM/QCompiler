@@ -1,6 +1,6 @@
 //Checks scope rule 4, expected result: fail
 
-tdef person : age:int, name:string, address:Address;
+tdef person : age:int, name:string, a:address;
 
 {
 

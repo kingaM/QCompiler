@@ -1,3 +1,4 @@
+//Checks type rule 1, expected result: pass
 {
 	a:float = 1;
 	b:string = 'c';

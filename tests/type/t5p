@@ -1,6 +1,6 @@
+//Checks type rule 5, expected result: pass
 {
 	a:int = 1.2 + 1;
 	b:int = 3 + 1;
 	c:float = 3.3 + 4.3;
-
 }

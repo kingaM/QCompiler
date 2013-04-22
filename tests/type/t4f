@@ -1,5 +1,6 @@
+//Checks type rule 4, expected result: fail
 fdef sum(a:float, b:float):int {
-	return true;
+	return "aab";
 }
 
 {

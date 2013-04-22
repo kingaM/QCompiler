@@ -101,7 +101,7 @@ public class TypeScopeVisitor implements Visitor {
 						&& !(type.equals("string") && test.equals("char"))
 						){
 					eh.printErrorMessage(test,
-							"incompatible types for assigment", ErrorHandler.ErrorType.TYPE);
+							"incompatible types for assignment", ErrorHandler.ErrorType.TYPE);
 					return "error";
 				}
 			}
@@ -290,7 +290,7 @@ public class TypeScopeVisitor implements Visitor {
 		else if (typel.equals("string") && typer.equals("string"))
 			return "string";
 
-		eh.printErrorMessage(typel + " " + typer, "concatination",
+		eh.printErrorMessage(typel + " " + typer, "concatenation",
 				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
@@ -421,7 +421,7 @@ public class TypeScopeVisitor implements Visitor {
 		if (fparameters.equals("bool;bool"))
 			if (symTab.get(">int;int") != null)
 				return symTab.get(">int;int").getRetType();
-		eh.printErrorMessage(id, "function call", ErrorHandler.ErrorType.TYPE);
+		eh.printErrorMessage("", "function call", ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
 
@@ -555,11 +555,12 @@ public class TypeScopeVisitor implements Visitor {
 
 					String typeToCheck = (String) e.getSequence().get(i)
 							.accept(this);
-					if (!type.equals(typeToCheck))
+					if (!type.equals(typeToCheck)) {
 						eh.printErrorMessage(typeToCheck,
-								"sequence defninition",
+								"sequence definition",
 								ErrorHandler.ErrorType.TYPE);
-					return "error";
+					return "list";
+					}
 				}
 			}
 			return "list";
@@ -572,7 +573,7 @@ public class TypeScopeVisitor implements Visitor {
 			return "tuple";
 		}
 
-		eh.printErrorMessage(e.getType(), "sequence defninition",
+		eh.printErrorMessage(e.getType(), "sequence definition",
 				ErrorHandler.ErrorType.TYPE);
 		return "error";
 	}
@@ -635,6 +636,7 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(ReturnStmt s) {
 		SymbolEntry e = symTab.get("_FunctReturnType");
 		String type = (String) s.getReturnExpr().accept(this);
+		if(type == null) type = "string";
 		if (type.equals(e.getVarType())) {
 			return type;
 		}

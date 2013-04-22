@@ -1,3 +1,4 @@
+//Checks type rule 2, expected result: fail
 {
 	a:int = 0;
 	while([||]) do {

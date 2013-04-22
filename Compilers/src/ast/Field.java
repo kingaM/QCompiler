@@ -28,10 +28,7 @@ public class Field {
 
 	@Override
 	public String toString() {
-		return id + " : " + type;
-		
-		/*return "Field [" + (id != null ? "id=" + id + ", " : "")
-				+ (type != null ? "type=" + type : "") + "]";*/
+		return id + ":" + type;
 	}
 
 

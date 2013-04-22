@@ -1,5 +1,0 @@
-//Checks scope rule 1, expected result: pass
-{
-	a:int = 0;
-	a = a + 1;
-}

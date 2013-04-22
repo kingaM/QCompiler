@@ -1,3 +1,4 @@
+//Checks type rule 6, expected result: fail
 tdef person: age:int, name:string;
 
 {

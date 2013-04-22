@@ -1,3 +1,4 @@
+//Checks type rule 3, expected result: fail
 fdef sum(a:float, b:float) :float {
 	return a + b;
 }

@@ -1,3 +1,4 @@
+//Checks type rule 12, expected result: pass
 {
 	t1:tuple = [|1, "a"|];
 	t2:tuple = [|"c", 4.3|];

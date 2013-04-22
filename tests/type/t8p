@@ -1,3 +1,4 @@
+//Checks type rule 8, expected result: pass
 a:list = [1,2,3];
 
 {

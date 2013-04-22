@@ -1,3 +1,4 @@
+//Checks type rule 10, expected result: fail
 fdef sum(a:int, b:int):int {
 	return a + b;
 }

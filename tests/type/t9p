@@ -1,3 +1,4 @@
+//Checks type rule 9, expected result: pass
 {
 	b:bool = 1 > 2;
 	c:bool = true == false;

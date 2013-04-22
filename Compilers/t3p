@@ -1,6 +1,0 @@
-//Checks scope rule 3, expected result: pass
-a:int = 0;
-
-{
-	a:int = 0;
-}

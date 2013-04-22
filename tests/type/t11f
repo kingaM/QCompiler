@@ -1,3 +1,4 @@
+//Checks type rule 11, expected result: fail
 {
 	1 in 1;
 }

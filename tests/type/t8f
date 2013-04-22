@@ -1,3 +1,4 @@
+//Checks type rule 8, expected result: fail
 a:list = [1,2,true];
 
 {

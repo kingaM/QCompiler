@@ -28,11 +28,12 @@ public class TypeDecl extends Decl {
     
 	@Override
 	public String toString() {
-		
-		return id + " : " + fields.toString();
-				
-		/*return "TypeDecl [" + (id != null ? "id=" + id + ", " : "")
-				+ (fields != null ? "fields=" + fields : "") + "]";*/
+		String s = "";
+		for(int i = 0; i < fields.size() - 1; i++){
+			s = s + fields.get(i).toString() + ", ";
+		}
+		s = s + fields.get(fields.size()-1).toString();
+		return id + " : " + s + ";";
 	}
 
 }

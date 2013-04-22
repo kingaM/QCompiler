@@ -1,3 +1,4 @@
+//Checks type rule 1, expected result: fail
 {
 	a:int = 1.2;
 	b:char = "cba";

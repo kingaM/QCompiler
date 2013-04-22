@@ -1,8 +1,9 @@
+//Checks type rule 3, expected result: pass
 fdef sum(a:float, b:float) :float {
 	return a + b;
 }
 
 {
-	a:int = sum(3,4);
+	a:float = sum(3,4);
 	b:float = sum(3.3, 4.3);
 }

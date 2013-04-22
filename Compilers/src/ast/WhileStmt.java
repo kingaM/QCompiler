@@ -40,7 +40,7 @@ public class WhileStmt extends Stmt{
 		for(int i = 0; i < body.size(); i++){
 			ifs = ifs + body.get(i).toString();
 		}
-		return "while (" + condition + ") {\n" + ifs + "\n}\n";
+		return "while (" + condition + ") do {\n" + ifs + "\n}\n";
 	}
 	
 }

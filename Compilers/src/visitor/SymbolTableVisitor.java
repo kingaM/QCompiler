@@ -315,7 +315,7 @@ public class SymbolTableVisitor implements Visitor {
 	public Object visit(VarExpr e) {
 		SymbolEntry entry = symTab.get(e.getVar());
 		if( entry == null ){
-			eh.printErrorMessage(e.getVar(), "variable undefined",
+			eh.printErrorMessage(e.getVar(), "variable",
 					ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		}
 		return null;
