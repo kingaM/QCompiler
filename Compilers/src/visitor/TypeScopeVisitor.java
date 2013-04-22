@@ -96,9 +96,11 @@ public class TypeScopeVisitor implements Visitor {
 			if(basicTypes.contains(type))
 			for (int i = 0; i < d.getInit().size(); i++) {
 				String test = ( String) d.getInit().get(i).accept(this);
+				if(test == null) test = "string";
 				if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
 						&& !(type.equals("int") && test.equals("bool"))
-						&& !(type.equals("string") && test.equals("char"))
+						&& !( type.equals("string") && test.equals("char"))
+						&& !(test.equals("_ok"))
 						){
 					eh.printErrorMessage(test,
 							"incompatible types for assignment", ErrorHandler.ErrorType.TYPE);
@@ -357,6 +359,8 @@ public class TypeScopeVisitor implements Visitor {
 			return typel;
 		if (typel.equals("float") && typer.equals("int"))
 			return "float";
+		if (typel.equals("int") && typer.equals("bool"))
+			return "float";
 		eh.printErrorMessage(typel + " " + typer, "assingment",
 				ErrorHandler.ErrorType.TYPE);
 		return "error";
@@ -525,7 +529,6 @@ public class TypeScopeVisitor implements Visitor {
 
 	@Override
 	public Object visit(SeqCallExpr e) {
-		// TODO sth is wrong here with the tuple type...
 
 		String id = (String) e.getId();
 		String typer = (String) e.getCall().accept(this);
@@ -536,9 +539,8 @@ public class TypeScopeVisitor implements Visitor {
 			return "error";
 		}
 		if (entry != null
-				&& (entry.getType() == SymbolType.ARG || entry.getType() == SymbolType.VAR)
 				&& typer.equals("int"))
-			return entry.getType();
+			return "_ok";
 
 		eh.printErrorMessage(typer, "sequence call",
 				ErrorHandler.ErrorType.TYPE);
@@ -548,14 +550,15 @@ public class TypeScopeVisitor implements Visitor {
 	@Override
 	public Object visit(SeqExpr e) {
 		if (e.getType().equals("list")) {
-			// TODO type is null if it is a string
 			if (e.getSequence() != null) {
 				String type = (String) e.getSequence().get(0).accept(this);
+				if(type == null) type = "string";
 				for (int i = 1; i < e.getSequence().size(); i++) {
 
 					String typeToCheck = (String) e.getSequence().get(i)
 							.accept(this);
-					if (!type.equals(typeToCheck)) {
+					if(typeToCheck == null) typeToCheck = "string";
+					if (!type.equals(typeToCheck)){
 						eh.printErrorMessage(typeToCheck,
 								"sequence definition",
 								ErrorHandler.ErrorType.TYPE);
