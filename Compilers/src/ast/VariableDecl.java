@@ -23,9 +23,12 @@ public class VariableDecl extends Decl {
     
 	@Override
 	public String toString() {
-		return id + ":" + type + " = " + init.toString() + ";\n";
-		/*return "VariableDecl [id=" + id + ", type=" + type + ", init=" + init
-				+ "]";*/
+		String ifs = "";
+		for(int i = 0; i < init.size() - 1; i++){
+			ifs = ifs + init.get(i).toString() + ",";
+		}
+		ifs = ifs + init.get(init.size()-1).toString();
+		return id + ":" + type + " = " + ifs + ";\n";
 	}
 
 	public String getId() {

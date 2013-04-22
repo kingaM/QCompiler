@@ -29,10 +29,7 @@ public class SeqExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return sequence.toString() + " : " + type;
-		/*return "SeqExpr ["
-				+ (sequence != null ? "sequence=" + sequence + ", " : "")
-				+ (type != null ? "type=" + type : "") + "]";*/
+		return sequence + " : " + type;
 	}
 
 }

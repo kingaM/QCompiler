@@ -36,7 +36,11 @@ public class WhileStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "while (" + condition + ") {\n" + body + "\n}\n";
+		String ifs = "";
+		for(int i = 0; i < body.size(); i++){
+			ifs = ifs + body.get(i).toString();
+		}
+		return "while (" + condition + ") {\n" + ifs + "\n}\n";
 	}
 	
 }

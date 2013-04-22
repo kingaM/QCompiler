@@ -36,7 +36,11 @@ public class IfStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "if(" + condition + ")" + "{\n" + body + "\n}";
+		String ifs = "";
+		for(int i = 0; i < body.size(); i++){
+			ifs = ifs + body.get(i).toString();
+		}
+		return "if(" + condition + ")" + "{\n" + ifs + "\n}";
 	}
 	
 }

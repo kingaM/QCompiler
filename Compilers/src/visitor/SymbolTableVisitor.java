@@ -282,7 +282,6 @@ public class SymbolTableVisitor implements Visitor {
 
 	@Override
 	public Object visit(SeqExpr e) {
-		System.out.println("Seq expression: " + e.toString());
 		if (e.getSequence() != null)
 			for (int i = 0; i < e.getSequence().size(); i++) {
 				e.getSequence().get(i).accept(this);

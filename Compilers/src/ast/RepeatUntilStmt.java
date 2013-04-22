@@ -28,7 +28,11 @@ public class RepeatUntilStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "repeat {\n" + body + "\n} until (\n"  + condition + "\n)\n";
+		String ifs = "";
+		for(int i = 0; i < body.size(); i++){
+			ifs = ifs + body.get(i).toString();
+		}
+		return "repeat {\n" + ifs + "\n} until (\n"  + condition + "\n)\n";
 
 	}
 }

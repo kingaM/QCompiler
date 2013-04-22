@@ -53,7 +53,6 @@ public class SymbolTable {
 	}
 	
 	public int put(String key, SymbolType t, String type){
-		System.out.println("PUT ENTRY 1");
 		SymbolEntry e = new SymbolEntry(key, type, t);
 		if(!entries.containsKey(key)) {
 			

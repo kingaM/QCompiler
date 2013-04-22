@@ -14,7 +14,12 @@ public class MainDecl {
 
 	@Override
 	public String toString() {
-		return stmts.toString();
+		String s = "";
+		for(int i = 0; i < stmts.size(); i++){
+			s = s + stmts.get(i).toString();
+		}
+		return s;
+		//return stmts.toString();
 	}
 
 	public ArrayList<Stmt> getStmts() {

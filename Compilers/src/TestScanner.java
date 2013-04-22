@@ -12,9 +12,8 @@ public class TestScanner {
 	public static void main(String args[]) throws Exception {
 
 		System.setIn(new FileInputStream("testfile.txt"));
-		 //System.setIn(new FileInputStream("test05"));
+		 System.setIn(new FileInputStream("test05"));
 		System.setIn(new FileInputStream("t1p"));
-
 
 		Yylex myScanner = new Yylex(System.in);
 		QCup myParser = new QCup(myScanner);
@@ -22,13 +21,17 @@ public class TestScanner {
 		Symbol result = myParser.parse();
 		Program p = (Program) result.value;
 		if (p != null) {
-			System.out.println(p.toString());
+			
 			ErrorHandler eh = new ErrorHandler(QCup.numOfErrors);
 			SymbolTable st = new SymbolTable(eh); 
 			
 			p.accept(new SymbolTableVisitor(st, eh));
 			p.accept(new TypeScopeVisitor(st, eh));
-			eh.printSummary();
+			boolean success = eh.printSummary();
+			if(success) {
+				System.out.println("\nCode generated via the AST:");
+				System.out.println(p.toString());
+			}
 		}
 	}
 }

@@ -1,3 +1,5 @@
+//Checks scope rule 4, expected result: pass
+
 tdef person: age:int, name:string;
 
 {

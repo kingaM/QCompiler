@@ -67,11 +67,11 @@ public class ErrorHandler {
 	public boolean printSummary() {
 		if (syntaxErrors == 0 && typeErrors == 0 && scopeErrors == 0){
 			System.out
-					.println("\n\nProgram compiled successfully, no errors found.");
+					.println("\nProgram compiled successfully, no errors found.");
 			return true;
 		}
 		else {
-			System.out.println("\n\nYou had :");
+			System.out.println("\nYou had :");
 			System.out.println("\t" + syntaxErrors + " syntax"
 					+ (syntaxErrors == 1 ? " error" : " errors"));
 			System.out.println("\t" + typeErrors + " type"

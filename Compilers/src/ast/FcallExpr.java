@@ -29,8 +29,12 @@ public class FcallExpr extends Expr {
 
 	@Override
 	public String toString() {
-		return id + "(" + parameters.toString() + ")";
-		//return "FcallExpr [id=" + id + ", parameters=" + parameters + "]";
+		String s = "";
+		for(int i = 0; i < parameters.size() - 1; i++){
+			s = s + parameters.get(i).toString() + ",";
+		}
+		s = s + parameters.get(parameters.size()-1).toString();
+		return id + "(" + s + ")";
 	}
 	
 	

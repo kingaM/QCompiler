@@ -1,3 +1,4 @@
+//Checks scope rule 2, expected result: fail
 {
 	a:int;
 	a:float;

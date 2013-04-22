@@ -46,7 +46,15 @@ public class IfElseStmt extends Stmt{
 
 	@Override
 	public String toString() {
-		return "if(" + condition + ")" + "{\n" + ifBody + "\n} else {\n" + elseBody + "\n}\n"; 
+		String ifs = "";
+		for(int i = 0; i < ifBody.size(); i++){
+			ifs = ifs + ifBody.get(i).toString();
+		}
+		String elses = "";
+		for(int i = 0; i < elseBody.size(); i++){
+		elses = elses + elseBody.get(i).toString();
+		}
+		return "if(" + condition + ")" + "{\n" + ifs + "\n} else {\n" + elses + "\n}\n"; 
 
 	}		
 

@@ -1,3 +1,4 @@
+//Checks scope rule 1, expected result: fail
 {
 	a = a + 1;
 	a:int = 0;

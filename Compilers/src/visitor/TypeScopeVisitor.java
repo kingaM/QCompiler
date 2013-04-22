@@ -366,8 +366,6 @@ public class TypeScopeVisitor implements Visitor {
 			if (symTab.get(e.getId() + ">int;float") != null)
 				return symTab.get(e.getId() + ">int;float").getRetType();
 			if (symTab.get(e.getId() + ">float;float") != null) {
-				System.out.println("TEST:"
-						+ symTab.get(e.getId() + ">float;float").getRetType());
 				return symTab.get(e.getId() + ">float;float").getRetType();
 			}
 		}
@@ -513,7 +511,6 @@ public class TypeScopeVisitor implements Visitor {
 			// TODO type is null if it is a string
 			if (e.getSequence() != null) {
 				String type = (String) e.getSequence().get(0).accept(this);
-				System.out.println("TYPE: " + type);
 				for (int i = 1; i < e.getSequence().size(); i++) {
 
 					String typeToCheck = (String) e.getSequence().get(i)
