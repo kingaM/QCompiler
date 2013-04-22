@@ -1,18 +1,5 @@
-s1:string = "Alice in Wonderland";
-s2:string = "Gilgamesh";
-s3:string = "One Thousand and One Nights";
-
+tdef person: age:int, name:string;
 {
-  key:string="ic";  
-  books:list=[s1,s2,s3];
-
-  found : bool = false;
-  i : int = 0;
-
-  while (i<len(books)) do {
-     tmp : string = books[i];
-     if (true) { found = true; }
-     else {}
-     i = true;
-  }
+p:person = 10, "name";
+p.age+1;
 }

@@ -116,6 +116,7 @@ public class TypeScopeVisitor implements Visitor {
 				StringTokenizer st = new StringTokenizer(entry.getVarType(), ";");
 				for (int i = 0; i < d.getInit().size(); i++) {
 					String test = ( String) d.getInit().get(i).accept(this);
+					if(test == null ) test = "string";
 					if(st.hasMoreTokens()) {
 						String s = st.nextToken();
 						if (!s.contains(test)) {
@@ -124,10 +125,14 @@ public class TypeScopeVisitor implements Visitor {
 							return "error";
 						}
 					}
+					else {
 					eh.printErrorMessage(id, "type mismatch for fields",
 							ErrorHandler.ErrorType.SCOPE_NOTDECL);
 					return "error";
+					}
+					
 				}
+				
 			}
 			
 		}
@@ -322,20 +327,24 @@ public class TypeScopeVisitor implements Visitor {
 			return "error";
 		}
 
-		if (entry != null) {
+		else {
+			String type = entry.getVarType();
+			SymbolEntry userType = symTab.get(type);
 
-			StringTokenizer st = new StringTokenizer(entry.getVarType(), ";");
+			StringTokenizer st = new StringTokenizer(userType.getVarType(), ";");
 			while (st.hasMoreTokens()) {
 				String test = st.nextToken();
+				System.out.println(test);
 				if (test.contains(field)) {
 					StringTokenizer st1 = new StringTokenizer(test, ":");
 					return st1.nextToken();
 				}
 			}
-		}
+		
 		eh.printErrorMessage(id, "wrong user defined type accessor",
 				ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
+		}
 
 	}
 
@@ -450,7 +459,7 @@ public class TypeScopeVisitor implements Visitor {
 		e.getLhs().accept(this);
 		String type = (String) e.getRhs().accept(this);
 		if (type.equals("list") || type.equals("tuple")
-				|| type.equals("string"))
+				|| type.equals("string") || type == null)
 			return "bool";
 
 		eh.printErrorMessage(type, "in expression", ErrorHandler.ErrorType.TYPE);
