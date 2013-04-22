@@ -302,7 +302,7 @@ public class TypeScopeVisitor implements Visitor {
 				}
 			}
 		}
-		eh.printErrorMessage(id, "user defined type accessor",
+		eh.printErrorMessage(id, "wrong user defined type accessor",
 				ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 
