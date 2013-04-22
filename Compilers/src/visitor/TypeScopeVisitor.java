@@ -97,7 +97,6 @@ public class TypeScopeVisitor implements Visitor {
 			for (int i = 0; i < d.getInit().size(); i++) {
 				String test = ( String) d.getInit().get(i).accept(this);
 				if(test == null) test = "string";
-				System.out.println(test);
 				if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
 						&& !(type.equals("int") && test.equals("bool"))
 						&& !( type.equals("string") && test.equals("char"))
