@@ -359,6 +359,8 @@ public class TypeScopeVisitor implements Visitor {
 			return typel;
 		if (typel.equals("float") && typer.equals("int"))
 			return "float";
+		if (typel.equals("int") && typer.equals("bool"))
+			return "float";
 		eh.printErrorMessage(typel + " " + typer, "assingment",
 				ErrorHandler.ErrorType.TYPE);
 		return "error";
@@ -550,15 +552,17 @@ public class TypeScopeVisitor implements Visitor {
 		if (e.getType().equals("list")) {
 			if (e.getSequence() != null) {
 				String type = (String) e.getSequence().get(0).accept(this);
+				if(type == null) type = "string";
 				for (int i = 1; i < e.getSequence().size(); i++) {
 
 					String typeToCheck = (String) e.getSequence().get(i)
 							.accept(this);
-					if (!type.equals(typeToCheck))
+					if(typeToCheck == null) typeToCheck = "string";
+					if (!type.equals(typeToCheck)){
 						eh.printErrorMessage(typeToCheck,
 								"sequence defninition",
 								ErrorHandler.ErrorType.TYPE);
-					return "error";
+					return "error";}
 				}
 			}
 			return "list";
