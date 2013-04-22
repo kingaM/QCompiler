@@ -1,7 +1,9 @@
 package visitor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
+import static java.util.Arrays.asList;
 
 import ast.AndExpr;
 import ast.BoolValueExpr;
@@ -54,6 +56,8 @@ public class TypeScopeVisitor implements Visitor {
 	private SymbolTable symTab;
 
 	private ErrorHandler eh;
+	
+	private List<String> basicTypes = new ArrayList<String>(asList("int", "float", "char", "bool", "string", "list", "tuple"));
 
 	public TypeScopeVisitor(SymbolTable st, ErrorHandler eh) {
 		symTab = st;
@@ -88,17 +92,44 @@ public class TypeScopeVisitor implements Visitor {
 	public Object visit(VariableDecl d) {
 		String id = d.getId();
 		String type = d.getType();
-		if(d.getInit()!=null)
-		for (int i = 0; i < d.getInit().size(); i++) {
-			String test = ( String) d.getInit().get(i).accept(this);
-			if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
-					&& !(type.equals("int") && test.equals("bool"))
-					&& !(type.equals("string") && test.equals("char"))
-					){
-				eh.printErrorMessage(test,
-						"incompatible types for assigment", ErrorHandler.ErrorType.TYPE);
-				return "error";
+		if(d.getInit()!=null){
+			if(basicTypes.contains(type))
+			for (int i = 0; i < d.getInit().size(); i++) {
+				String test = ( String) d.getInit().get(i).accept(this);
+				if(! type.equals(test) && !(type.equals("float") && test.equals("int")) 
+						&& !(type.equals("int") && test.equals("bool"))
+						&& !(type.equals("string") && test.equals("char"))
+						){
+					eh.printErrorMessage(test,
+							"incompatible types for assigment", ErrorHandler.ErrorType.TYPE);
+					return "error";
+				}
 			}
+			
+			else {
+				SymbolEntry entry = symTab.get(type);
+				if (entry == null) {
+					eh.printErrorMessage(id, "unknown type",
+							ErrorHandler.ErrorType.SCOPE_NOTDECL);
+					return "error";
+				}
+				StringTokenizer st = new StringTokenizer(entry.getVarType(), ";");
+				for (int i = 0; i < d.getInit().size(); i++) {
+					String test = ( String) d.getInit().get(i).accept(this);
+					if(st.hasMoreTokens()) {
+						String s = st.nextToken();
+						if (!s.contains(test)) {
+							eh.printErrorMessage(id, "type mismatch for fields",
+									ErrorHandler.ErrorType.SCOPE_NOTDECL);
+							return "error";
+						}
+					}
+					eh.printErrorMessage(id, "type mismatch for fields",
+							ErrorHandler.ErrorType.SCOPE_NOTDECL);
+					return "error";
+				}
+			}
+			
 		}
 		return d.getType();
 	}
@@ -302,7 +333,7 @@ public class TypeScopeVisitor implements Visitor {
 				}
 			}
 		}
-		eh.printErrorMessage(id, "user defined type accessor",
+		eh.printErrorMessage(id, "wrong user defined type accessor",
 				ErrorHandler.ErrorType.SCOPE_NOTDECL);
 		return "error";
 
