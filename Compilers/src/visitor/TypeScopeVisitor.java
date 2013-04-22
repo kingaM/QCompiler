@@ -246,11 +246,20 @@ public class TypeScopeVisitor implements Visitor {
 		if (fieldDecl != null) {
 			String sig = "";
 			for (int i = 0; i < fieldDecl.size(); i++) {
+				String type = fieldDecl.get(i).getType();
+				SymbolEntry userType = symTab.get(type);
+				
+				if(!basicTypes.contains(type)&& ((userType == null) || (userType.getType() != SymbolType.TDEF)) ){
+					eh.printErrorMessage(type, "unkown or wrong type",
+							ErrorHandler.ErrorType.TYPE);
+					return "error";
+				}
+				
 				if (i > 0)
-					sig = sig + ";" + fieldDecl.get(i).getType() + ":"
+					sig = sig + ";" + type + ":"
 							+ fieldDecl.get(i).getId();
 				else
-					sig = sig + fieldDecl.get(i).getType() + ":"
+					sig = sig + type + ":"
 							+ fieldDecl.get(i).getId();
 			}
 			return sig;
